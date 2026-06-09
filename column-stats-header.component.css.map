@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;6adc654e87ef7681b8e8de9f20ca569f0187cd97332dcb2fa5177439819c2374;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/column-stats-header.component.ts"],
+  "sourcesContent": ["\n    .csh-root {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      cursor: pointer;\n      gap: 1px;\n      padding: 2px 0;\n      user-select: none;\n    }\n    .csh-title {\n      font-weight: 700;\n      font-size: 12px;\n      white-space: nowrap;\n    }\n    .csh-sort {\n      font-size: 10px;\n      color: #0078d4;\n    }\n    .csh-stats {\n      font-size: 9px;\n      color: #0078d4;\n      font-weight: 600;\n      white-space: nowrap;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACT,kBAAgB;AAChB,eAAa;AACb,UAAQ;AACR,OAAK;AACL,WAAS,IAAI;AACb,uBAAa;AAAb,eAAa;AACf;AACA,CAAC;AACC,eAAa;AACb,aAAW;AACX,eAAa;AACf;AACA,CAAC;AACC,aAAW;AACX,SAAO;AACT;AACA,CAAC;AACC,aAAW;AACX,SAAO;AACP,eAAa;AACb,eAAa;AACf;",
+  "names": []
+}

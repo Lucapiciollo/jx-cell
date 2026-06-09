@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;2bbf1365be8aa2f3b546648a42b07b91cd6498fa10a3cf71f6823ae5d5ac7360;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/group-nested-header.component.ts"],
+  "sourcesContent": ["\n    .gnh-root {\n      display: flex;\n      align-items: center;\n      gap: 5px;\n      padding: 0 4px;\n      height: 100%;\n      font-size: 11px;\n      font-weight: 700;\n      letter-spacing: .4px;\n      text-transform: uppercase;\n      white-space: nowrap;\n      overflow: hidden;\n      color: inherit;\n    }\n    .gnh-empty { opacity: .25; }\n    .gnh-icon { font-style: normal; }\n    .gnh-title {\n      flex: 1;\n      overflow: hidden;\n      text-overflow: ellipsis;\n    }\n    .gnh-badge {\n      flex-shrink: 0;\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      min-width: 18px;\n      height: 18px;\n      padding: 0 5px;\n      border-radius: 9px;\n      background: #6366f1;\n      color: #fff;\n      font-size: 10px;\n      font-weight: 800;\n      line-height: 1;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACT,eAAa;AACb,OAAK;AACL,WAAS,EAAE;AACX,UAAQ;AACR,aAAW;AACX,eAAa;AACb,kBAAgB;AAChB,kBAAgB;AAChB,eAAa;AACb,YAAU;AACV,SAAO;AACT;AACA,CAAC;AAAY,WAAS;AAAK;AAC3B,CAAC;AAAW,cAAY;AAAQ;AAChC,CAAC;AACC,QAAM;AACN,YAAU;AACV,iBAAe;AACjB;AACA,CAAC;AACC,eAAa;AACb,WAAS;AACT,eAAa;AACb,mBAAiB;AACjB,aAAW;AACX,UAAQ;AACR,WAAS,EAAE;AACX,iBAAe;AACf,cAAY;AACZ,SAAO;AACP,aAAW;AACX,eAAa;AACb,eAAa;AACf;",
+  "names": []
+}

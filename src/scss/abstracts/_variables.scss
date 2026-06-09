@@ -1,0 +1,58 @@
+﻿// ─── Typography ─────────────────────────────────────────────────────────────
+$font-family-base: "Inter", system-ui, -apple-system, sans-serif !default;
+$font-size-sm: 12px !default;
+$font-size-base: 13px !default;
+
+// ─── Brand palette ──────────────────────────────────────────────────────────
+$primary: #4f6ef7 !default;
+$primary-hover: #3b5bf0 !default;
+$primary-soft: #eef1fe !default;
+$primary-light: #f4f6ff !default;
+
+$accent: #06b6d4 !default;
+$success: #10b981 !default;
+$warning: #f59e0b !default;
+$danger: #ef4444 !default;
+
+// ─── Surfaces ───────────────────────────────────────────────────────────────
+$body-bg: #f0f2f8 !default;
+$surface: #ffffff !default;
+$surface-soft: #f8f9fb !default;
+$surface-header: #f1f3f9 !default;
+$surface-row-alt: #fafbff !default;
+
+// ─── Text & borders ─────────────────────────────────────────────────────────
+$text-color: #1e2740 !default;
+$muted: #7b84a0 !default;
+$border-color: #dde0ec !default;
+$border-color-strong: #c5cadc !default;
+
+// ─── Dark toolbar ───────────────────────────────────────────────────────────
+$dark: #1b2035 !default;
+$dark-secondary: #252d47 !default;
+
+// ─── Log ────────────────────────────────────────────────────────────────────
+$log-bg: #0f1629 !default;
+$log-color: #c9d1e8 !default;
+
+// ─── Misc tokens ────────────────────────────────────────────────────────────
+$formula-color: #7c3aed !default;
+$radius-sm: 5px !default;
+$radius-md: 9px !default;
+$radius-lg: 14px !default;
+$shadow-toolbar: 0 3px 14px rgba(31, 41, 71, 0.22) !default;
+$shadow-card: 0 2px 10px rgba(31, 41, 71, 0.10) !default;
+$transition-fast: 0.15s ease !default;
+
+$space-scale: (
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 12px,
+  4: 16px,
+  5: 20px,
+  6: 24px,
+  8: 32px,
+  10: 40px,
+  12: 48px,
+) !default;

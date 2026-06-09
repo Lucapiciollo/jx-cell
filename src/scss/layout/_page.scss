@@ -1,0 +1,15 @@
+﻿@use "../abstracts" as *;
+
+.page {
+  padding: space(5) space(6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-color;
+  letter-spacing: -0.3px;
+  margin: 0 0 space(4);
+}

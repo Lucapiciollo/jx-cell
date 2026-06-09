@@ -1,0 +1,6 @@
+@use "sass:map";
+@use "variables" as *;
+
+@function space($key) {
+  @return map.get($space-scale, $key);
+}

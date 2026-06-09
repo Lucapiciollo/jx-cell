@@ -1,0 +1,20 @@
+﻿@use "../abstracts" as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: $font-size-base;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $text-color;
+  background: $body-bg;
+  -webkit-font-smoothing: antialiased;
+}

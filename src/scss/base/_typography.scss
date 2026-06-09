@@ -1,0 +1,11 @@
+@use "../abstracts" as *;
+
+h1,
+h2,
+h3 {
+  margin: 0 0 space(3);
+}
+
+pre {
+  margin: 0;
+}

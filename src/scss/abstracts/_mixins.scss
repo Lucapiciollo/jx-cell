@@ -1,0 +1,23 @@
+@use "variables" as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin focus-ring($color: $primary) {
+  outline: 2px solid $color;
+  outline-offset: -2px;
+}
+
+@mixin button-reset {
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@mixin scroll-container {
+  overflow: auto;
+  max-width: 100%;
+}

@@ -1,0 +1,47 @@
+@use "../abstracts" as *;
+@use "sass:color";
+
+.toolbar button,
+.demo-button {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: space(1);
+  border-radius: $radius-md;
+  padding: space(1) space(3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: background $transition-fast, border-color $transition-fast,
+    box-shadow $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  &.btn-primary {
+    background: $primary;
+    border-color: $primary-hover;
+    &:hover:not(:disabled) {
+      background: $primary-hover;
+    }
+  }
+
+  &.btn-danger {
+    background: rgba($danger, 0.15);
+    border-color: rgba($danger, 0.35);
+    color: color.adjust($danger, $lightness: 12%);
+    &:hover:not(:disabled) {
+      background: rgba($danger, 0.25);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+}

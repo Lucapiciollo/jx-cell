@@ -4,18 +4,18 @@ import { JxAddressService } from './jx-address.service';
 import { JxFormulaService } from './jx-formula.service';
 import * as i0 from "@angular/core";
 /**
- * Core state-management service for a single `jx-spreadsheet` grid instance.
+ * Core state-management service for a single `jx-table` grid instance.
  *
  * `JxWorkbookService` is the single source of truth for all grid data, configuration,
  * selection, styles, merges, history, formula evaluation, search, persistence, and
  * event dispatch.  It is provided **per-component** via the `providers` array of
- * `JxSpreadsheetComponent`, so every grid instance gets its own isolated workbook.
+ * `JxTableComponent`, so every grid instance gets its own isolated workbook.
  *
  * ---
  * **Typical usage** — access via the `ready` output:
  *
  * ```html
- * <jx-spreadsheet [options]="opts" (ready)="onReady($event)"></jx-spreadsheet>
+ * <jx-table [options]="opts" (ready)="onReady($event)"></jx-table>
  * ```
  * ```typescript
  * onReady(wb: JxWorkbookService) {
@@ -206,7 +206,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /**
      * Initialises (or re-initialises) the workbook with a new set of options.
      *
-     * Called automatically by `JxSpreadsheetComponent` after the first
+     * Called automatically by `JxTableComponent` after the first
      * `ngAfterViewInit` and on every `ngOnChanges` that carries a new `options`
      * reference.  You can also call it imperatively to completely reset the grid.
      *
@@ -814,7 +814,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * - Already-merged cells at the origin are silently skipped.
      * - Merging is guarded by the `beforeMerge` cancellable event.
      *
-     * Equivalent to jSpreadsheet `setMerge(cellName, colspan, rowspan)`.
+     * Equivalent to jExcel `setMerge(cellName, colspan, rowspan)`.
      *
      * @param cellName               - Top-left cell address, e.g. `'A1'`.
      * @param colspan                - Number of columns to span.
@@ -832,7 +832,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * - `getMerge('A1')` → `[colspan, rowspan]` or `null`
      * - `getMerge()` → `{ A1: [colspan, rowspan], … }`
      *
-     * Equivalent to jSpreadsheet `getMerge(cellName?)`.
+     * Equivalent to jExcel `getMerge(cellName?)`.
      *
      * @param cellName - Optional cell address.
      * @returns Merge dimensions for the given cell, or the full merge map.
@@ -951,7 +951,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     search(query: string): void;
     /**
      * Clears the current search query and makes all rows visible again.
-     * Equivalent to jSpreadsheet `resetSearch()`.
+     * Equivalent to jExcel `resetSearch()`.
      *
      * @example
      * workbook.resetSearch();
@@ -1242,7 +1242,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     appendData(data: any[][] | Record<string, any>[]): void;
     /**
      * Replaces all values in a row at `rowIndex`.
-     * Equivalent to jSpreadsheet `setRowData(rowNumber, data)`.
+     * Equivalent to jExcel `setRowData(rowNumber, data)`.
      *
      * @param rowIndex - Zero-based row index.
      * @param data     - Flat array of values (positional, one per column).
@@ -1253,7 +1253,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     setRowData(rowIndex: number, data: any[]): void;
     /**
      * Replaces all values in a column at `colIndex`.
-     * Equivalent to jSpreadsheet `setColumnData(columnNumber, data)`.
+     * Equivalent to jExcel `setColumnData(columnNumber, data)`.
      *
      * @param colIndex - Zero-based column index.
      * @param data     - Array of values, one per row (positional).
@@ -1264,7 +1264,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     setColumnData(colIndex: number, data: any[]): void;
     /**
      * Returns the processed display value for a cell by address.
-     * Equivalent to jSpreadsheet `getLabel(cellName)`.
+     * Equivalent to jExcel `getLabel(cellName)`.
      *
      * @param cellName - Cell address string, e.g. `'A1'`.
      * @returns Evaluated cell value (formula results, not raw formulas).
@@ -1275,7 +1275,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     getLabel(cellName: string): any;
     /**
      * Returns the processed display value for a cell by zero-based coordinates.
-     * Equivalent to jSpreadsheet `getLabelFromCoords(x, y)`.
+     * Equivalent to jExcel `getLabelFromCoords(x, y)`.
      *
      * @param x - Zero-based column index.
      * @param y - Zero-based row index.
@@ -1287,7 +1287,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     getLabelFromCoords(x: number, y: number): any;
     /**
      * Returns the current pixel width of column `col` (reading from `options.columns[col].width`).
-     * Equivalent to jSpreadsheet `getWidth(col)`.
+     * Equivalent to jExcel `getWidth(col)`.
      *
      * @param col - Zero-based column index.
      * @returns Column width in pixels.
@@ -1298,7 +1298,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     getWidth(col: number): number;
     /**
      * Sets the pixel width of column `col` and triggers a config refresh.
-     * Equivalent to jSpreadsheet `setWidth(col, width)`.
+     * Equivalent to jExcel `setWidth(col, width)`.
      *
      * @param col   - Zero-based column index.
      * @param width - New width in pixels (minimum enforced: 40 px).
@@ -1310,7 +1310,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /**
      * Sets the pixel height of row `row` and triggers a config refresh.
      * The component synchronises its `rowHeights` map on the next `config$` emission.
-     * Equivalent to jSpreadsheet `setHeight(row, height)`.
+     * Equivalent to jExcel `setHeight(row, height)`.
      *
      * @param row    - Zero-based row index.
      * @param height - New height in pixels (minimum enforced: 22 px).
@@ -1321,7 +1321,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     setHeight(row: number, height: number): void;
     /**
      * Returns the current pixel height of row `row`.
-     * Equivalent to jSpreadsheet `getHeight(row)`.
+     * Equivalent to jExcel `getHeight(row)`.
      *
      * @param row - Zero-based row index.
      * @returns Row height in pixels.
@@ -1335,7 +1335,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /**
      * Hides a row by its zero-based index.  The row is excluded from rendering
      * (effectively `display: none`).
-     * Equivalent to jSpreadsheet `hideRow(rowNumber)`.
+     * Equivalent to jExcel `hideRow(rowNumber)`.
      *
      * @param row - Zero-based row index.
      *
@@ -1345,7 +1345,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     hideRow(row: number): void;
     /**
      * Makes a previously hidden row visible again.
-     * Equivalent to jSpreadsheet `showRow(rowNumber)`.
+     * Equivalent to jExcel `showRow(rowNumber)`.
      *
      * @param row - Zero-based row index.
      *
@@ -1367,7 +1367,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     getHiddenRows(): Set<number>;
     /**
      * Hides a column by its zero-based index.  The column is excluded from rendering.
-     * Equivalent to jSpreadsheet `hideColumn(col)`.
+     * Equivalent to jExcel `hideColumn(col)`.
      *
      * @param col - Zero-based column index.
      *
@@ -1377,7 +1377,7 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     hideColumn(col: number): void;
     /**
      * Makes a previously hidden column visible again.
-     * Equivalent to jSpreadsheet `showColumn(col)`.
+     * Equivalent to jExcel `showColumn(col)`.
      *
      * @param col - Zero-based column index.
      *

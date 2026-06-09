@@ -1,6 +1,6 @@
 # JxCell
 
-> **Componente spreadsheet per Angular** — v6.2.0
+> **Componente table per Angular** — v6.2.0
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
 > API TypeScript tipizzata · Temi via CSS custom properties · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
@@ -12,7 +12,7 @@
 1. [Installazione](#installazione)
 2. [Avvio rapido](#avvio-rapido)
 3. [Configurazione del modulo](#configurazione-del-modulo)
-4. [API del componente `jx-spreadsheet`](#api-del-componente-jx-spreadsheet)
+4. [API del componente `jx-table`](#api-del-componente-jx-table)
    - [Input](#input)
    - [Output](#output)
    - [Metodi pubblici del componente](#metodi-pubblici-del-componente)
@@ -96,10 +96,10 @@ Importa il tema nel tuo `styles.scss` globale:
 
 ```html
 <!-- app.component.html -->
-<jx-spreadsheet
+<jx-table
   [options]="gridOptions"
   (ready)="onReady($event)">
-</jx-spreadsheet>
+</jx-table>
 ```
 
 ```typescript
@@ -156,7 +156,7 @@ export class AppModule {}
 
 ---
 
-## API del componente `jx-spreadsheet`
+## API del componente `jx-table`
 
 ### Input
 
@@ -173,7 +173,7 @@ export class AppModule {}
 
 ### Metodi pubblici del componente
 
-Accessibili tramite `@ViewChild(JxSpreadsheetComponent)`.
+Accessibili tramite `@ViewChild(JxTableComponent)`.
 
 | Metodo | Firma | Descrizione |
 |---|---|---|
@@ -1066,7 +1066,7 @@ columns: [
 
 ## Servizio Workbook (`JxWorkbookService`)
 
-Ricevuto tramite l'evento `(ready)`. Oppure: `@ViewChild(JxSpreadsheetComponent).workbook`.
+Ricevuto tramite l'evento `(ready)`. Oppure: `@ViewChild(JxTableComponent).workbook`.
 
 ### Dati: lettura e scrittura
 
@@ -1818,7 +1818,7 @@ import { Subscription } from 'rxjs';
       context.column       = JxCellColumn
       context.column.options = opzioni extra passate nella definizione colonna
       context.api          = JxWorkbookService (accesso completo al workbook)
-      context.instance     = JxSpreadsheetComponent
+      context.instance     = JxTableComponent
     -->
 
     <!-- Visualizzazione -->
@@ -1896,7 +1896,7 @@ export class AppModule {}
 | `column` | `JxCellColumn?` | Definizione della colonna. `column.options` = opzioni custom. |
 | `editable` | `boolean` | `true` se la cella è modificabile dall'utente. |
 | `api` | `JxWorkbookService` | Accesso completo al workbook. |
-| `instance` | `JxSpreadsheetComponent` | Istanza del componente spreadsheet. |
+| `instance` | `JxTableComponent` | Istanza del componente table. |
 | `setValue(v)` | `(v: any) => void` | Salva il valore (registra undo, emette eventi). |
 | `getValue()` | `() => any` | Legge il valore processato corrente. |
 | `startEdit()` | `() => void` | Apre l'editor inline built-in. |
@@ -1978,7 +1978,7 @@ export class MioHeaderComponent implements JxCustomHeaderComponent, OnInit, OnDe
 | `sortDirection` | `'asc' | 'desc' | null` | Ordinamento corrente. |
 | `sort()` | `() => void` | Attiva l'ordinamento (cicla asc→desc→originale). |
 | `api` | `JxWorkbookService` | Accesso al workbook. |
-| `instance` | `JxSpreadsheetComponent` | Istanza spreadsheet. |
+| `instance` | `JxTableComponent` | Istanza table. |
 
 ---
 
@@ -2075,7 +2075,7 @@ footers: [[{
 | `displayValue` | `any` | Valore calcolato/visualizzato. |
 | `column` | `JxCellColumn?` | Colonna a `logicalCol`. `column.options` è la fusione di opzioni colonna+cella. |
 | `api` | `JxWorkbookService` | Accesso al workbook. |
-| `instance` | `JxSpreadsheetComponent` | Istanza spreadsheet. |
+| `instance` | `JxTableComponent` | Istanza table. |
 
 ---
 
@@ -2300,7 +2300,7 @@ get colspan(): number      // context.colspan
 | `colspan` | `number` | Colonne coperte. |
 | `title` | `string` | Titolo risolto (formule calcolate). |
 | `api` | `JxWorkbookService` | Accesso al workbook. |
-| `instance` | `JxSpreadsheetComponent` | Istanza spreadsheet. |
+| `instance` | `JxTableComponent` | Istanza table. |
 
 ---
 
@@ -2359,14 +2359,14 @@ buildOptions(): JxCellOptions {
 | `row` | `readonly any[]` | Array completo della riga. |
 | `columnDef` | `JxCellColumn | null` | Definizione colonna. |
 | `workbook` | `JxWorkbookService` | Workbook per operazioni. |
-| `instance` | `JxSpreadsheetComponent` | Istanza spreadsheet. |
+| `instance` | `JxTableComponent` | Istanza table. |
 | `close()` | `() => void` | Chiude il menu. |
 
 ---
 
 ## Temi e stili
 
-`jx-spreadsheet` usa un sistema di temi a **tre livelli** identico a quello di `jx-grid`:
+`jx-table` usa un sistema di temi a **tre livelli** identico a quello di `jx-grid`:
 compile-time SCSS, runtime globale e runtime per istanza.
 
 ### 1 — Compile-time: variabili SCSS (massima priorità)
@@ -2448,7 +2448,7 @@ Funziona quando i sorgenti SCSS della libreria sono disponibili nell'app.
 );
 ```
 
-### 2 — Runtime globale: tutti i `jx-spreadsheet` della pagina
+### 2 — Runtime globale: tutti i `jx-table` della pagina
 
 ```css
 :root {
@@ -2462,10 +2462,10 @@ Funziona quando i sorgenti SCSS della libreria sono disponibili nell'app.
 }
 ```
 
-### 3 — Runtime per istanza: solo un `jx-spreadsheet` specifico
+### 3 — Runtime per istanza: solo un `jx-table` specifico
 
 L'override si applica su `.jexcel_container` (l'elemento radice renderizzato dalla libreria)
-oppure direttamente su `jx-spreadsheet`:
+oppure direttamente su `jx-table`:
 
 ```css
 /* via classe sull'elemento padre */
@@ -2475,12 +2475,12 @@ oppure direttamente su `jx-spreadsheet`:
 }
 
 /* oppure direttamente sull'host Angular */
-.mia-sezione jx-spreadsheet {
+.mia-sezione jx-table {
   --jx-primary: #059669;
 }
 ```
 
-### Esempio: skin scura per `jx-spreadsheet`
+### Esempio: skin scura per `jx-table`
 
 ```css
 .dark-sheet .jexcel_container {
@@ -2699,7 +2699,7 @@ footers: [[
 
 ```typescript
 import { Component, ViewChild } from '@angular/core';
-import { JxCellOptions, JxWorkbookService, JxSpreadsheetComponent } from 'jx-cell';
+import { JxCellOptions, JxWorkbookService, JxTableComponent } from 'jx-cell';
 
 interface Prodotto {
   id: number;
@@ -2712,14 +2712,14 @@ interface Prodotto {
 @Component({
   selector: 'app-prodotti',
   template: `
-    <jx-spreadsheet [options]="opzioni" (ready)="onReady($event)"></jx-spreadsheet>
+    <jx-table [options]="opzioni" (ready)="onReady($event)"></jx-table>
     <button (click)="wb.undo()" [disabled]="!wb?.canUndo()">↩</button>
     <button (click)="wb.download(true)">Esporta CSV</button>
   `,
 })
 export class ProdottiComponent {
-  @ViewChild(JxSpreadsheetComponent)
-  grid!: JxSpreadsheetComponent<Prodotto>;
+  @ViewChild(JxTableComponent)
+  grid!: JxTableComponent<Prodotto>;
 
   wb!: JxWorkbookService<Prodotto>;
 
@@ -2810,12 +2810,12 @@ MIT
 Usa `*ngFor` + `<jx-cell-host>` dinamico e si integra perfettamente con
 il sistema di dependency injection Angular.
 
-### Quando usare `jx-grid` vs `jx-spreadsheet`
+### Quando usare `jx-grid` vs `jx-table`
 
-| Caratteristica | `jx-spreadsheet` | `jx-grid` |
+| Caratteristica | `jx-table` | `jx-grid` |
 |---|---|---|
 | Motore | motore interno della libreria | Angular nativo (`*ngFor`) |
-| Spreadsheet (merge, formula engine, sticky header, …) | ✅ | ❌ |
+| Funzionalità avanzate (merge, formula engine, sticky header, …) | ✅ | ❌ |
 | API RxJS / `JxWorkbookService` | ✅ | ❌ |
 | Dataset molto grandi con virtual scroll | ⚠️ sperimentale | ✅ built-in |
 | Tipizzazione generica `T` | ❌ (array di array) | ✅ `JxGridComponent<T>` |

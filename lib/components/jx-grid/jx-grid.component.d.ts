@@ -6,8 +6,8 @@ import * as i0 from "@angular/core";
 /**
  * Lightweight data-grid component for displaying and editing typed row arrays.
  *
- * `JxGridComponent` is the Angular-native counterpart of `JxSpreadsheetComponent`.
- * Rather than wrapping the jSpreadsheet library, it renders rows via Angular's
+ * `JxGridComponent` is the Angular-native counterpart of `JxTableComponent`.
+ * Rather than wrapping the jtable library, it renders rows via Angular's
  * own `*ngFor` + a dynamic cell-host (`<jx-cell-host>`) so Angular change
  * detection and DI work seamlessly.
  *

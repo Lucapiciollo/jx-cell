@@ -21,7 +21,7 @@ import * as i0 from "@angular/core";
  * // <jx-checkbox-cell [context]="ctx" (valueChange)="onToggle($event)"></jx-checkbox-cell>
  */
 export declare class CheckboxCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * Emits the new boolean value when the user toggles the checkbox.

@@ -121,9 +121,9 @@ export declare abstract class JxCustomCellBase<T extends Record<string, any> = R
     protected commitValue(value: any, focusBack?: boolean): void;
     /** Request formula recalculation. */
     protected recalculate(): void;
-    /** Give focus back to the spreadsheet cell. */
+    /** Give focus back to the table cell. */
     protected focusCell(): void;
-    /** Delegate to the default spreadsheet editor. */
+    /** Delegate to the default grid editor. */
     protected startEdit(): void;
     /** Helper for button/keyboard events inside custom components. */
     protected stopEvent(event?: Event): void;

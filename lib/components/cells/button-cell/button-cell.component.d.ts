@@ -28,7 +28,7 @@ import * as i0 from "@angular/core";
  * }
  */
 export declare class ButtonCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * Emits when the button is clicked.

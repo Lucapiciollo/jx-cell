@@ -20,7 +20,7 @@ import * as i0 from "@angular/core";
  * }
  */
 export declare class TextCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * Emits the new string value when the user commits a change.

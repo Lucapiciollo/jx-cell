@@ -1,5 +1,5 @@
 /**
- * Exhaustive list of CSS class names used by jSpreadsheet (jExcel) v4 in its
+ * Exhaustive list of CSS class names used by jExcel (jExcel) v4 in its
  * rendered DOM.  Sourced from the original `jexcel.js` v4 source file.
  *
  * The `JexcelCssClass` union type is derived from this array so any template

@@ -21,7 +21,7 @@ import * as i0 from "@angular/core";
  * }
  */
 export declare class NumberCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * Emits the committed numeric value when the user saves the edit.

@@ -6,7 +6,7 @@ import { JxCustomCellComponent } from './jx-custom-cell.base';
  */
 export type JxCellValue = string | number | boolean | Date | null | undefined | Record<string, unknown> | JxCellValue[];
 /**
- * Spreadsheet cell address in A1 notation (e.g. `'A1'`, `'B3'`, `'AA10'`).
+ * table cell address in A1 notation (e.g. `'A1'`, `'B3'`, `'AA10'`).
  * Use `JxAddressService.cellName(x, y)` to generate and `JxAddressService.parse()` to convert.
  */
 export type JxCellAddress = string;
@@ -149,7 +149,7 @@ export interface JxHeaderCellContext<T extends Record<string, any> = Record<stri
     sortDirection: 'asc' | 'desc' | null;
     /** Triggers sorting on this column (same as clicking the header). */
     sort: () => void;
-    /** The JxSpreadsheetComponent instance. */
+    /** The JxTableComponent instance. */
     instance: any;
 }
 /**
@@ -172,7 +172,7 @@ export interface JxFooterCellContext<T extends Record<string, any> = Record<stri
     column?: JxCellColumn<T>;
     /** Direct reference to the workbook service. */
     api: any;
-    /** The JxSpreadsheetComponent instance. */
+    /** The JxTableComponent instance. */
     instance: any;
 }
 /**
@@ -221,7 +221,7 @@ export interface JxCustomCellContext<T extends Record<string, any> = Record<stri
     editable: boolean;
     /** The `JxWorkbookService` instance (typed as `any` to avoid circular dep — cast in your component). */
     api: any;
-    /** The JxSpreadsheetComponent instance — gives access to all public methods. */
+    /** The JxTableComponent instance — gives access to all public methods. */
     instance: any;
     /** Commits a new value to this cell and exits edit mode. */
     setValue: (value: any) => void;
@@ -323,12 +323,12 @@ export interface JxNestedHeaderCellContext<T extends Record<string, any> = Recor
      */
     api: any;
     /**
-     * The `JxSpreadsheetComponent` instance.
+     * The `JxTableComponent` instance.
      * Typed as `any` to avoid a circular dependency from the model layer.
      * Cast inside your component when needed:
      * ```ts
-     * import { JxSpreadsheetComponent } from 'jx-cell';
-     * get sheet(): JxSpreadsheetComponent { return this.context.instance as JxSpreadsheetComponent; }
+     * import { JxTableComponent } from 'jx-cell';
+     * get sheet(): JxTableComponent { return this.context.instance as JxTableComponent; }
      * ```
      */
     instance: any;
@@ -395,7 +395,7 @@ export interface JxContextMenuContext {
     /** Istanza del workbook service per invocare operazioni. */
     workbook: any;
     /**
-     * Istanza del componente `JxSpreadsheetComponent`.
+     * Istanza del componente `JxTableComponent`.
      * Permette al template custom di chiamare tutti i metodi pubblici del foglio
      * (es. `instance.copy()`, `instance.selectRow(y)`, `instance.workbook.insertRow(y)`).
      */
@@ -556,7 +556,7 @@ export interface JxToolbarPlugin {
     readonly items: JxToolbarItem[];
 }
 /**
- * Root configuration object passed to `JxSpreadsheetComponent` via the `[options]` input.
+ * Root configuration object passed to `JxTableComponent` via the `[options]` input.
  *
  * All properties are optional.  The minimal working configuration only requires `columns`
  * and either `data` or `url`/`csv`.
@@ -699,7 +699,7 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     pagination?: number;
     /** Show the built-in search box above the grid.  Default: `false`. */
     search?: boolean;
-    /** Reserved / not yet implemented.  Accepted for jSpreadsheet compat. */
+    /** Reserved / not yet implemented.  Accepted for jExcel compat. */
     tabs?: boolean;
     /**
      * Footer data rows.  Alias: `footer` (singular).
@@ -738,7 +738,7 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
      * meta: { 'A1': { tooltip: 'Required field' } }
      */
     meta?: Record<string, any>;
-    /** Fired after any cell value changes.  Signature mirrors jSpreadsheet. */
+    /** Fired after any cell value changes.  Signature mirrors jExcel. */
     onchange?: (...args: any[]) => void;
     /** Pre-event fired before a cell value is committed.  Return `false` to cancel or a new value to override. */
     onbeforechange?: (...args: any[]) => any;
@@ -750,7 +750,7 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     oneditionstart?: (...args: any[]) => void;
     /** Fired when a cell editor closes and the value is committed. */
     oneditionend?: (...args: any[]) => void;
-    /** Fired after the DOM editor element is created (jSpreadsheet compat). */
+    /** Fired after the DOM editor element is created (jExcel compat). */
     oncreateeditor?: (...args: any[]) => void;
     /** Pre-event: return false to cancel row insertion. */
     onbeforeinsertrow?: (el: null, rowIndex: number, amount: number) => boolean | void;
@@ -851,7 +851,7 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     /** Custom sort comparator function. Receives two cell values, returns -1/0/1. */
     sorting?: ((a: any, b: any) => number) | null;
     /**
-     * When true, copy uses plain text compatible with older spreadsheets
+     * When true, copy uses plain text compatible with other applications like Excel
      * (tab-separated, no rich formatting). Default: false.
      */
     copyCompatibility?: boolean;

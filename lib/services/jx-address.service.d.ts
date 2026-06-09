@@ -1,10 +1,10 @@
 import * as i0 from "@angular/core";
 /**
- * Utility service for converting between spreadsheet cell addresses (e.g. `"A1"`)
+ * Utility service for converting between table cell addresses (e.g. `"A1"`)
  * and zero-based `{x, y}` coordinate pairs.
  *
  * This service is provided in root and consumed internally by `JxWorkbookService`
- * and `JxSpreadsheetComponent`. You can also inject it directly when you need
+ * and `JxTableComponent`. You can also inject it directly when you need
  * address arithmetic in your own code.
  *
  * @example
@@ -22,9 +22,9 @@ import * as i0 from "@angular/core";
  */
 export declare class JxAddressService {
     /**
-     * Converts a zero-based column index to its spreadsheet letter name.
+     * Converts a zero-based column index to its grid letter name.
      *
-     * Uses the same alphabetical encoding as Excel / jSpreadsheet:
+     * Uses the same alphabetical encoding as Excel / jExcel:
      * 0→A, 25→Z, 26→AA, 51→AZ, 52→BA …
      *
      * @param index - Zero-based column index.
@@ -37,7 +37,7 @@ export declare class JxAddressService {
      */
     columnName(index: number): string;
     /**
-     * Returns the spreadsheet cell name for a given pair of zero-based coordinates.
+     * Returns the table cell name for a given pair of zero-based coordinates.
      *
      * @param x - Zero-based column index.
      * @param y - Zero-based row index.
@@ -49,7 +49,7 @@ export declare class JxAddressService {
      */
     cellName(x: number, y: number): string;
     /**
-     * Parses a spreadsheet cell address string into zero-based `{x, y}` coordinates.
+     * Parses a table cell address string into zero-based `{x, y}` coordinates.
      *
      * Accepts uppercase or lowercase input (e.g. `'A1'`, `'b3'`, `'AA10'`).
      * Returns `null` for any string that does not match the `<letters><digits>` pattern.

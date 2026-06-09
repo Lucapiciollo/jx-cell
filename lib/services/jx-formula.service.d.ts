@@ -3,7 +3,7 @@ import * as i0 from "@angular/core";
 /**
  * Lightweight built-in formula engine used by `JxWorkbookService`.
  *
- * Supports a subset of spreadsheet formulas sufficient for common aggregation
+ * Supports a subset of grid formulas sufficient for common aggregation
  * and cross-reference use-cases:
  * - Cell references: `B1`, `$A$5`
  * - Range aggregates: `SUM(A1:C3)`, `AVERAGE(A1:B5)`, `COUNTA(B:B)`
@@ -16,7 +16,7 @@ import * as i0 from "@angular/core";
  * For a richer formula engine (VLOOKUP, IF, nested functions, etc.) you can
  * replace this service by implementing the same interface and providing it in
  * your module, or use the `JxCellOptions.parseFormulas` flag to delegate
- * evaluation to jSpreadsheet's native engine.
+ * evaluation to jExcel's native engine.
  *
  * @example
  * // Inject and use directly

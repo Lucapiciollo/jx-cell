@@ -1,5 +1,5 @@
 export * from './lib/jx-cell.module';
-export * from './lib/components/jx-spreadsheet/jx-spreadsheet.component';
+export * from './lib/components/jx-table/jx-table.component';
 export * from './lib/components/jx-grid/jx-grid.component';
 export * from './lib/models/jx-cell.models';
 export * from './lib/models/jx-column.model';

@@ -25,7 +25,7 @@ import * as i0 from "@angular/core";
  * }
  */
 export declare class AttachmentCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * Emits when the user clicks the attachment badge.

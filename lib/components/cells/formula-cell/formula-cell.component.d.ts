@@ -24,7 +24,7 @@ import * as i0 from "@angular/core";
  * }
  */
 export declare class FormulaCellComponent implements JxCellComponent {
-    /** Grid cell context injected by `JxSpreadsheetComponent`. */
+    /** Grid cell context injected by `JxTableComponent`. */
     context: JxCellContext;
     /**
      * The raw computed value before formatting.

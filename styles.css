@@ -368,22 +368,55 @@ table.jexcel {
 .jexcel thead td[data-x].jx-col-sortable {
   cursor: pointer;
 }
+.jx-col-header-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  max-width: 100%;
+  overflow: hidden;
+}
+.jx-col-header-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  text-align: center;
+}
 .jx-sort-icon {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 9px;
-  opacity: 0.25;
-  transition: opacity var(--jx-transition);
+  display: inline-flex;
+  align-items: center;
+  font-size: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.35;
   cursor: pointer;
   pointer-events: auto;
+  transition: opacity var(--jx-transition), color var(--jx-transition);
+  -webkit-user-select: none;
+  user-select: none;
 }
 .jx-sort-icon:hover {
-  opacity: 1;
+  opacity: 0.75;
+}
+.jx-sort-icon--push-right {
+  margin-left: auto;
+}
+.jx-col-header-inner:has(.jx-sort-icon--push-right) {
+  display: flex;
+  width: 100%;
+}
+.jx-col-header-inner:has(.jx-sort-icon--push-right) .jx-col-header-label {
+  flex: 1;
+}
+.jx-sort-icon--order-first {
+  order: -1;
 }
 .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,
-.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon {
+.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--order-first,
+.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--push-right,
+.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon,
+.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--order-first,
+.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--push-right {
   opacity: 1;
   color: var(--jx-primary);
 }
@@ -488,6 +521,97 @@ select.jexcel_toolbar_item:focus {
   cursor: pointer;
   padding: 0;
   border: none;
+}
+.jx-toolbar-combo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.jx-toolbar-combo__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px 0 8px;
+  height: 28px;
+  min-width: 64px;
+  border: 1px solid var(--jx-border);
+  border-radius: var(--jx-radius-sm);
+  background: var(--jx-cell-bg);
+  color: var(--jx-text);
+  font-size: var(--jx-font-size-sm);
+  font-family: var(--jx-font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--jx-transition), color var(--jx-transition);
+  width: 100%;
+}
+.jx-toolbar-combo__btn:hover {
+  border-color: var(--jx-primary);
+  color: var(--jx-primary);
+}
+.jx-toolbar-combo__label {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+.jx-toolbar-combo__arrow {
+  font-style: normal;
+  font-size: 9px;
+  font-family: sans-serif;
+  flex-shrink: 0;
+  opacity: 0.6;
+  margin-top: 1px;
+}
+.jx-toolbar-combo__anchor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+  display: block;
+}
+.jx-toolbar-combo-menu {
+  background: var(--jx-header-bg, #1a1a2e);
+  border: 1px solid var(--jx-border);
+  border-radius: var(--jx-radius-sm);
+  padding: 4px 0;
+  list-style: none;
+  margin: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  font-family: var(--jx-font-family);
+  font-size: var(--jx-font-size-sm);
+  z-index: 9999;
+  scrollbar-width: thin;
+  scrollbar-color: var(--jx-border) transparent;
+}
+.jx-toolbar-combo-menu::-webkit-scrollbar {
+  width: 5px;
+}
+.jx-toolbar-combo-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.jx-toolbar-combo-menu::-webkit-scrollbar-thumb {
+  background: var(--jx-border);
+  border-radius: 3px;
+}
+.jx-toolbar-combo-menu__item {
+  padding: 5px 14px;
+  color: var(--jx-text);
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.4;
+  transition: background var(--jx-transition), color var(--jx-transition);
+}
+.jx-toolbar-combo-menu__item:hover,
+.jx-toolbar-combo-menu__item.active {
+  background: var(--jx-primary-bg-mid);
+  color: var(--jx-primary);
 }
 .jx-pagination {
   display: flex;

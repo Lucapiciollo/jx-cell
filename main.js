@@ -59865,7 +59865,7 @@ var AppComponent = class _AppComponent {
     secureFormulas: false,
     autoIncrement: false,
     // context menu
-    contextMenuEnabled: true,
+    contextMenuEnabled: false,
     contextMenuCustomTemplate: false,
     contextMenuDisabledCols: "",
     // es: "0,2" per disabilitare col 0 e 2

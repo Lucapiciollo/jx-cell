@@ -1,6 +1,6 @@
 # JxCell
 
-> **Componente table per Angular** — v6.2.0
+> **Componente table per Angular** — v6.9.0
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
 > API TypeScript tipizzata · Temi via CSS custom properties · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
@@ -68,7 +68,7 @@
 14. [Componente `jx-grid` — data-grid nativo Angular](#componente-jx-grid--data-grid-nativo-angular)
     - [Personalizzazione SCSS di `jx-grid`](#personalizzazione-scss-di-jx-grid)
 
-> Documentazione aggiornata al 2026-06-09
+> Documentazione aggiornata al 2026-06-10
 
 ---
 
@@ -978,6 +978,7 @@ Riferimento rapido di tutte le proprietà:
 | `align` | `string` | `'left'` | Allineamento: `left` | `center` | `right`. |
 | `readOnly` | `boolean` | `false` | Cella non modificabile dall'utente. |
 | `hidden` | `boolean` | `false` | Nasconde la colonna dal DOM. |
+| `defaultFormula` | `string` | — | Template formula auto-inserita quando una riga è aggiunta via API (`insertRow()` senza dati). Usa `{row}` come segnaposto per il numero riga 1-based. Es. `'=B{row}*C{row}'` → `'=B5*C5'` per la riga 5. |
 | `sortable` | `boolean` | `true` | Abilita ordinamento tramite click header. |
 | `sortFn` | `function` | — | Comparatore `(rowA, rowB, col) => number`. |
 | `filterable` | `boolean` | `true` | Mostra input filtro colonna. |
@@ -2306,49 +2307,192 @@ get colspan(): number      // context.colspan
 
 ## Context menu personalizzato
 
-```typescript
-@ViewChild('menuTpl') menuTpl!: TemplateRef<any>;
+### Come funziona il menu built-in
 
-buildOptions(): JxCellOptions {
-  return {
-    contextMenu: {
-      template: this.menuTpl,   // TemplateRef ottenuto da ngAfterViewInit
-      showDefaultItems: false,  // nasconde le voci built-in
-    },
-  };
+Il menu contestuale usa la `ContextMenuDirective` di `ux-directives`.
+La direttiva crea il template Angular come elemento DOM `<div class="context-menu">`,
+lo appende al `<body>` e lo posiziona al punto del click destro.
+Il tema UX è già incluso in `JxCellModule` (non è necessario importare nulla di extra).
+
+**CSS classes del menu (UX ContextMenuDirective):**
+
+| Elemento | Classi | Descrizione |
+|---|---|---|
+| Contenitore | `.context-menu` (auto) + `menuClass` custom | Applicata automaticamente dalla direttiva. |
+| Voce | `button` (senza classi extra) | Stile via `.context-menu > button`. |
+| Separatore | `div.divider` | Linea divisoria. |
+| Azione distruttiva | `button.danger` | Testo rosso + hover sfondo rosso chiaro. |
+
+### Attivare il menu built-in
+
+```typescript
+const options: JxCellOptions = {
+  contextMenu: {},  // abilita il menu con tutte le voci standard
+};
+```
+
+Voci built-in incluse: **Copia / Incolla**, **Inserisci riga** (sopra/sotto),
+**Elimina riga**, **Inserisci colonna** (prima/dopo), **Elimina colonna**,
+**Ordina crescente/decrescente**.
+
+Le voci di inserimento/eliminazione rispettano i flag `allowInsertRow`,
+`allowDeleteRow`, `allowInsertColumn`, `allowDeleteColumn`.
+
+### Disabilitare il menu
+
+```typescript
+// Disabilita globalmente
+contextMenu: { disabled: true }
+
+// Disabilita su una colonna specifica (x=0)
+contextMenu: { disabled: (x, _y) => x === 0 }
+
+// Nessuna proprietà contextMenu = menu non abilitato
+```
+
+### Aggiungere voci extra al menu built-in
+
+Passa un `template` e richiama `ctx.instance` / `ctx.workbook` per replicare
+le voci built-in che vuoi mantenere, poi aggiungi le tue.
+La variabile di contesto `$implicit` è `JxContextMenuContext`; `close` è
+la callback che chiude il pannello.
+
+```typescript
+// app.component.ts
+import { Component, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { JxCellOptions, JxContextMenuContext } from 'jx-cell';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+})
+export class AppComponent implements AfterViewInit {
+  @ViewChild('myMenuTpl') myMenuTpl!: TemplateRef<any>;
+
+  options!: JxCellOptions;
+
+  ngAfterViewInit(): void {
+    this.options = {
+      // ... altre opzioni ...
+      contextMenu: {
+        template: this.myMenuTpl,
+        menuClass: 'my-extra-menu',  // classe aggiuntiva opzionale
+      },
+    };
+  }
+
+  apriDettaglio(ctx: JxContextMenuContext): void {
+    console.log('Riga:', ctx.row);
+  }
 }
 ```
 
 ```html
+<!-- app.component.html -->
 <!--
-  $implicit = JxContextMenuContext
-  close     = callback per chiudere il menu
+  let-ctx      = JxContextMenuContext ($implicit)
+  let-close    = callback per chiudere il menu
+  ctx.instance = JxTableComponent (accesso a copyCells, pasteCells, workbook, ...)
+  ctx.workbook = JxWorkbookService (insertRow, deleteRow, sort, ...)
 -->
-<ng-template #menuTpl let-ctx="$implicit" let-close="close">
-  <div class="menu">
-    <div style="padding:4px 8px;opacity:.6;font-size:11px">
-      <strong>{{ ctx.cellName }}</strong> = {{ ctx.value }}
-    </div>
-    <hr />
-    <button (click)="ctx.workbook.insertRow(ctx.y, 1); close()">
-      ➕ Inserisci riga sopra
+<ng-template #myMenuTpl let-ctx let-close="close">
+  <div>
+    <!-- ── Voci built-in che vuoi mantenere ────────────────────── -->
+    <button (click)="ctx.instance.copyCells(); close()">
+      <span>&#x2398;</span> Copia
     </button>
-    <button (click)="ctx.workbook.deleteRow(ctx.y, 1); close()"
-            [disabled]="ctx.workbook.getRowCount() <= 1">
-      🗑️ Elimina riga {{ ctx.y + 1 }}
+    <button (click)="ctx.instance.pasteCells(); close()">
+      <span>&#x2399;</span> Incolla
     </button>
-    <hr />
-    <button (click)="ctx.workbook.setCellStyle(ctx.cellName, { fontWeight:'bold' }); close()">
-      B Grassetto
+    <div class="divider"></div>
+
+    <button (click)="ctx.workbook.insertRow(ctx.y); close()">
+      <span>&#x2912;</span> Inserisci riga sopra
     </button>
-    <button (click)="ctx.workbook.resetStyle(ctx.cellName); close()">
-      ✕ Rimuovi stile
+    <button (click)="ctx.workbook.insertRow(ctx.y + 1); close()">
+      <span>&#x2913;</span> Inserisci riga sotto
+    </button>
+    <button class="danger" (click)="ctx.workbook.deleteRow(ctx.y); close()">
+      <span>&#x2715;</span> Elimina riga
+    </button>
+    <div class="divider"></div>
+
+    <!-- ── Voci extra ────────────────────────────────────────────── -->
+    <button (click)="apriDettaglio(ctx); close()">
+      &#x21E8; Apri dettaglio
+    </button>
+    <button (click)="ctx.workbook.setCellStyle(ctx.cellName, { fontWeight: 'bold' }); close()">
+      <strong>B</strong> Grassetto
+    </button>
+    <button class="danger" (click)="ctx.workbook.resetStyle(ctx.cellName); close()">
+      &#x2715; Rimuovi stile
     </button>
   </div>
 </ng-template>
 ```
 
-**Proprietà di `JxContextMenuContext`:**
+> **Nota**: se non hai bisogno di alcune voci built-in (es. colonne),
+> basta non includerle nel template.
+
+### Menu completamente custom (`showDefaultItems: false`)
+
+Impostare `showDefaultItems: false` è una convenzione documentativa;
+poiché stai già fornendo il tuo `template`, nessuna voce built-in appare
+(il template built-in non è mai invocato).
+
+```typescript
+contextMenu: {
+  template: this.myMenuTpl,
+  showDefaultItems: false,  // nessun built-in — solo le voci del tuo template
+}
+```
+
+```html
+<ng-template #myMenuTpl let-ctx let-close="close">
+  <div>
+    <!-- Header informativo -->
+    <button disabled style="opacity:.6;cursor:default;font-size:11px">
+      {{ ctx.cellName }} = {{ ctx.value }}
+    </button>
+    <div class="divider"></div>
+
+    <button (click)="ctx.workbook.insertRow(ctx.y, 1); close()">
+      &#x2912; Inserisci riga sopra
+    </button>
+    <button class="danger"
+            [disabled]="ctx.workbook.getRowCount() <= 1"
+            (click)="ctx.workbook.deleteRow(ctx.y, 1); close()">
+      &#x2715; Elimina riga {{ ctx.y + 1 }}
+    </button>
+    <div class="divider"></div>
+
+    <button (click)="ctx.workbook.sort(ctx.x, 'asc'); close()">&#x25B2; Ordine A→Z</button>
+    <button (click)="ctx.workbook.sort(ctx.x, 'desc'); close()">&#x25BC; Ordine Z→A</button>
+  </div>
+</ng-template>
+```
+
+### Classi CSS aggiuntive sul contenitore
+
+```typescript
+contextMenu: {
+  menuClass: ['mio-menu', 'tema-scuro'],  // aggiunge classi al div.context-menu
+}
+```
+
+```css
+/* stile personalizzato sovrapposto al tema UX */
+.mio-menu {
+  min-width: 220px;
+  border-radius: 8px;
+}
+.mio-menu button:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+```
+
+### Proprietà di `JxContextMenuContext`
 
 | Proprietà | Tipo | Descrizione |
 |---|---|---|
@@ -2357,9 +2501,9 @@ buildOptions(): JxCellOptions {
 | `cellName` | `string` | Indirizzo A1 (es. `'B3'`). |
 | `value` | `any` | Valore corrente della cella. |
 | `row` | `readonly any[]` | Array completo della riga. |
-| `columnDef` | `JxCellColumn | null` | Definizione colonna. |
+| `columnDef` | `JxCellColumn \| null` | Definizione colonna. |
 | `workbook` | `JxWorkbookService` | Workbook per operazioni. |
-| `instance` | `JxTableComponent` | Istanza table. |
+| `instance` | `JxTableComponent` | Istanza table (accesso a `copyCells()`, `pasteCells()`, ecc.). |
 | `close()` | `() => void` | Chiude il menu. |
 
 ---

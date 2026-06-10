@@ -219,6 +219,10 @@ export declare class JxTableComponent<T extends Record<string, any> = Record<str
      * @param y - Zero-based row index.
      */
     displayValue(x: number, y: number): any;
+    /** Normalizza la maschera della colonna `x` come JxMaskConfig, o `null`. */
+    getColMaskConfig(x: number): import('../../models/jx-cell.models').JxMaskConfig | null;
+    /** Formatta `value` applicando il pattern della maschera della colonna `x`. */
+    private _applyMaskFormat;
     /**
      * Returns `true` when the raw value of cell `(x, y)` is a formula string
      * (starts with `=`).
@@ -465,6 +469,10 @@ export declare class JxTableComponent<T extends Record<string, any> = Record<str
     setRowReadonly(row: number, value?: boolean): void;
     setColumnReadonly(col: number, value?: boolean): void;
     clearAllReadonly(): void;
+    /** Imposta/rimuove la maschera di input per la colonna `col`. */
+    setColumnMask(col: number, mask: string | import('../../models/jx-cell.models').JxMaskConfig | undefined): void;
+    /** Restituisce la configurazione maschera della colonna `col` normalizzata, o `null`. */
+    getColumnMask(col: number): import('../../models/jx-cell.models').JxMaskConfig | null;
     setLocked(value: boolean): void;
     isLocked(): boolean;
     getColumnOptions(col: number): JxCellColumn<Record<string, any>>;
@@ -507,6 +515,12 @@ export declare class JxTableComponent<T extends Record<string, any> = Record<str
     onToolbarSelectChange(event: Event, item: import('../../models/jx-cell.models').JxToolbarItem): void;
     onToolbarColorChange(event: Event, item: import('../../models/jx-cell.models').JxToolbarItem): void;
     private _applyToolbarStyle;
+    /** Returns the label of the currently active value for a combo item, reading the top-left cell of the selection. */
+    getToolbarComboValue(item: import('../../models/jx-cell.models').JxToolbarItem): string;
+    /** Applies the selected combo option to all cells in the current selection. */
+    onToolbarComboSelect(item: import('../../models/jx-cell.models').JxToolbarItem, opt: import('../../models/jx-cell.models').JxToolbarComboOption): void;
+    /** Dispatches a synthetic left-click on the hidden anchor element so ContextMenuDirective opens the menu aligned below the combo button. */
+    triggerComboMenu(event: MouseEvent, anchor: HTMLElement): void;
     closeFilter(): void;
     setDictionary(dict: Partial<import('../../models/jx-cell.models').JxCellText>): void;
     setExtensions(extensions: Record<string, any>): void;

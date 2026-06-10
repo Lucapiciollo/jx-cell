@@ -62,6 +62,13 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     readonly footers$: BehaviorSubject<any[][]>;
     readonly styles$: BehaviorSubject<void>;
     readonly sort$: BehaviorSubject<JxSortState>;
+    /**
+     * Emette il numero corrente di righe ad ogni cambiamento strutturale
+     * (insertRow, deleteRow, moveRow, sort, setData, init).
+     * Utile per i componenti custom (custom cell, custom footer) che devono
+     * reagire ai cambiamenti di struttura della tabella.
+     */
+    readonly rows$: BehaviorSubject<number>;
     /** Set degli indici di riga attualmente nascosti dalla ricerca. Emette ad ogni search()/resetSearch(). */
     readonly search$: BehaviorSubject<Set<number>>;
     /** Set degli indici di riga attualmente nascosti dai filtri di colonna. Emette ad ogni setColumnFilter()/clearColumnFilters(). */
@@ -271,6 +278,17 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     setConfig(patch: Partial<JxCellOptions<T>>): void;
     /** Imposta l'allineamento testo di una colonna a runtime. */
     setColumnAlign(x: number, align: string): void;
+    /**
+     * Imposta la maschera di input per la colonna `x`.
+     * Accetta una stringa pattern o un oggetto `JxMaskConfig`.
+     * Passare `undefined` rimuove la maschera.
+     */
+    setColumnMask(x: number, mask: string | import('../models/jx-cell.models').JxMaskConfig | undefined): void;
+    /**
+     * Restituisce la configurazione maschera della colonna `x`,
+     * normalizzata come `JxMaskConfig`, o `null` se non impostata.
+     */
+    getColumnMask(x: number): import('../models/jx-cell.models').JxMaskConfig | null;
     /**
      * Returns a deep-copy of the current **processed** (formula-evaluated) data
      * as a 2-D array of rows × columns.  Each row is a new array so mutations do
@@ -728,6 +746,19 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     private autoIncrementValue;
     private positiveModulo;
     private adjustFormulaRowRefs;
+    /**
+     * For all rows in `rawData[fromRowIdx .. toRowIdx)`, shifts every formula row
+     * reference where the 1-based row number >= `thresholdRow1` by `delta`.
+     * Used by insertRow (delta=+amount) and deleteRow (delta=-amount).
+     */
+    private applyRowRefShift;
+    /** Same as applyRowRefShift but for footer raw data. */
+    private applyFooterRowRefShift;
+    /**
+     * Shifts all row references in `formula` where the 1-based row number
+     * is >= `thresholdRow1` by `delta`. Absolute row refs (`$`) are adjusted too.
+     */
+    private shiftRefsAbove;
     private adjustFormulaColumnRefs;
     /**
      * Programmatically sets (or extends) the cell selection.
@@ -1118,6 +1149,14 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * workbook.clearSort();
      */
     clearSort(): void;
+    /**
+     * Rewrites row-number references in a formula string when a row moves from
+     * `oldRow` to `newRow` (both 1-based).  Only adjusts formulas where **all**
+     * numeric row references point to `oldRow` — i.e., purely self-referencing
+     * formulas like `=B3*C3` or `=D3*E3/100`.  Range formulas such as
+     * `=SUM(A1:A12)` that reference multiple row numbers are left unchanged.
+     */
+    private adjustSelfRefFormulaRow;
     private defaultCompareCells;
     /** Set or merge style properties on a single cell (e.g. "A1"). */
     setCellStyle(cellName: string, style: JxCellStyle): void;

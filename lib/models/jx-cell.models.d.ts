@@ -71,6 +71,25 @@ export interface JxCellFilterContext {
     /** Testo digitato (solo per `autocomplete`, stringa vuota per `dropdown`). */
     query: string;
 }
+/**
+ * Configurazione maschera di input per una colonna.
+ * Può essere una stringa pattern (es. `'+## ### ### ####'`) oppure un oggetto con
+ * tutte le opzioni della `MaskDirective` di `ux-directives`.
+ */
+export interface JxMaskConfig {
+    /** Pattern con token (default `#`) che rappresentano i caratteri editabili. */
+    pattern: string;
+    /** Regex o stringa che limita i caratteri ammessi. */
+    allowedRegex?: RegExp | string;
+    /** Carattere token del pattern. Default `'#'`. */
+    token?: string;
+    /** Se true, accetta il campo vuoto come valido. */
+    allowEmpty?: boolean;
+    /** Attributo HTML aggiunto all'input quando il valore non è valido. */
+    invalidAttribute?: string;
+    /** Classe CSS aggiunta all'input quando il valore non è valido. */
+    invalidClass?: string;
+}
 export interface JxCellColumn<T extends Record<string, any> = Record<string, any>> {
     type?: string;
     /** Optional semantic value type used by custom/component cells for validation. */
@@ -108,7 +127,11 @@ export interface JxCellColumn<T extends Record<string, any> = Record<string, any
      * Se non fornita, la colonna usa `source` (retrocompatibilità con dropdown).
      */
     autocompleteSource?: JxAutocompleteSource;
-    mask?: string;
+    /**
+     * Maschera di input applicata durante l'editing tramite `MaskDirective` (ux-directives).
+     * Può essere una stringa pattern (es. `'###-####'`) o un oggetto `JxMaskConfig`.
+     */
+    mask?: string | JxMaskConfig;
     decimal?: string;
     options?: Record<string, any>;
     editor?: JxCellEditorDefinition;
@@ -120,6 +143,12 @@ export interface JxCellColumn<T extends Record<string, any> = Record<string, any
     sortFn?: (rowA: any[], rowB: any[], columnIndex: number) => number;
     /** Se true (o type === 'hidden'), la colonna è completamente nascosta nel DOM. */
     hidden?: boolean;
+    /**
+     * Default formula template auto-inserted when an empty row is added (via `autoAddRow` or
+     * `insertRow` without data). Use `{row}` as placeholder for the 1-based row number.
+     * @example defaultFormula: '=B{row}*C{row}'  // → '=B5*C5' for row 5
+     */
+    defaultFormula?: string;
     /**
      * Custom Angular component rendered inside the header cell of this column.
      * The component receives @Input() context: JxHeaderCellContext.
@@ -433,10 +462,20 @@ export interface JxContextMenuOptions {
     showDefaultItems?: boolean;
 }
 /** A single item in the jExcel-compatible built-in toolbar. */
+/** Single option entry for a `'combo'` toolbar item. */
+export interface JxToolbarComboOption {
+    /** Displayed label in the dropdown list. */
+    label: string;
+    /** Value passed to setCellStyle (or the `onclick` callback). */
+    value: string;
+    /** Optional inline styles applied to the list item (e.g. for font preview). */
+    style?: Record<string, string>;
+}
 export interface JxToolbarItem {
-    /** Item type: 'i' = icon button, 'select' = dropdown, 'color' = color picker, 'divisor' = separator */
-    type: 'i' | 'select' | 'color' | 'divisor';
-    /** CSS property key applied via setStyle when clicked (e.g. 'font-weight') */
+    /** Item type: 'i' = icon button, 'select' = native dropdown, 'color' = color picker,
+     *  'divisor' = separator, 'combo' = custom dropdown via ContextMenuDirective */
+    type: 'i' | 'select' | 'color' | 'divisor' | 'combo';
+    /** CSS property key applied via setStyle when clicked (e.g. 'fontWeight') */
     k?: string;
     /** CSS value applied via setStyle (for type 'i') or list of options (for type 'select') */
     v?: string | string[];
@@ -450,6 +489,12 @@ export interface JxToolbarItem {
     onclick?: (el: HTMLElement, obj: any, item: HTMLElement) => void;
     /** Custom change handler for type 'select' */
     onchange?: (event: Event) => void;
+    /** Options list for type 'combo'. */
+    options?: JxToolbarComboOption[];
+    /** Minimum pixel width of the combo button. Default: 80. */
+    comboWidth?: number;
+    /** Label shown when no value is selected / no cell is focused. */
+    comboPlaceholder?: string;
 }
 /**
  * Context injected into `JxToolbarPlugin.init()`.
@@ -786,6 +831,13 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     /** Enable sorting on all columns by default. Individual columns can override with column.sortable. */
     sortable?: boolean;
     onsort?: (columnIndex: number, direction: 'asc' | 'desc') => void;
+    /**
+     * Position of the sort icon inside the column header.
+     * - `'right'` (default) — icon appears at the far right edge of the header cell.
+     * - `'left'`  — icon appears at the far left edge, before the label.
+     * - `'inline'` — icon appears immediately after the label text (no absolute positioning).
+     */
+    sortIconPosition?: 'left' | 'right' | 'inline';
     /**
      * Se true, aggiunge automaticamente una riga vuota in coda ogni volta che
      * tutte le righe presenti hanno almeno una cella popolata.

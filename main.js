@@ -50329,13 +50329,14 @@ var $ = class _$ {
       if (e2) return "string" == typeof e2 ? e2 : String(e2.description ?? e2.name ?? e2.label ?? e2.id);
     }
     if ("function" == typeof r && !this._acLabelPrefetched.has(e)) {
-      this._acLabelPrefetched.add(e), this.column(e);
-      const t2 = r("", {
+      this._acLabelPrefetched.add(e);
+      const t2 = this.column(e), o2 = null != t2?.name ? String(t2.name) : null != t2?.field ? String(t2.field) : void 0, n2 = r("", {
         x: e,
         y: -1,
-        row: [],
+        field: o2,
+        row: {},
         value: ""
-      }), o2 = (t3) => {
+      }), i = (t3) => {
         this._acLabelCache.has(e) || this._acLabelCache.set(e, /* @__PURE__ */ new Map());
         const o3 = this._acLabelCache.get(e);
         for (const e2 of t3) {
@@ -50344,14 +50345,14 @@ var $ = class _$ {
         }
         this.cdr.markForCheck();
       };
-      if (t2 instanceof Promise) t2.then(o2).catch(() => {
+      if (n2 instanceof Promise) n2.then(i).catch(() => {
       });
-      else if (t2 && "function" == typeof t2.subscribe) {
-        const e2 = t2.subscribe({
-          next: o2
+      else if (n2 && "function" == typeof n2.subscribe) {
+        const e2 = n2.subscribe({
+          next: i
         });
         setTimeout(() => e2?.unsubscribe?.(), 5e3);
-      } else Array.isArray(t2) && o2(t2);
+      } else Array.isArray(n2) && i(n2);
     }
     return String(o);
   }
@@ -50390,35 +50391,36 @@ var $ = class _$ {
       activeIndex: -1,
       loading: false
     }, void this.cdr.markForCheck();
-    const i = o.toLowerCase(), s = {
+    const i = o.toLowerCase(), s = this.workbook.getRow(t), a = this.workbook.getObject(t, true) ?? {}, l = this.column(e), c = null != l?.name ? String(l.name) : null != l?.field ? String(l.field) : void 0, d = {
       x: e,
       y: t,
-      row: this.workbook.getRow(t),
+      field: c,
+      row: a,
       value: this.rawValue(e, t)
-    }, a = (r2) => {
+    }, h = (r2) => {
       const a2 = (n?.filterFn ? n.filterFn({
-        value: s.value,
+        value: d.value,
         x: e,
         y: t,
-        row: s.row,
+        row: s,
         query: o,
         items: r2
       }) : r2).map((e2) => this.normalizeAcItem(e2));
       this._acLabelCache.has(e) || this._acLabelCache.set(e, /* @__PURE__ */ new Map());
-      const l = this._acLabelCache.get(e);
-      for (const e2 of a2) null != e2.id && l.set(e2.id, e2.label);
-      const c = i ? a2.filter((e2) => e2.label.toLowerCase().includes(i)) : a2;
+      const l2 = this._acLabelCache.get(e);
+      for (const e2 of a2) null != e2.id && l2.set(e2.id, e2.label);
+      const c2 = i ? a2.filter((e2) => e2.label.toLowerCase().includes(i)) : a2;
       this.acState = {
         x: e,
         y: t,
         query: o,
-        items: c,
+        items: c2,
         activeIndex: -1,
         loading: false
       }, this.cdr.markForCheck();
     };
     if ("function" == typeof r) {
-      const n2 = r(o, s);
+      const n2 = r(o, d);
       if (n2 && "function" == typeof n2.subscribe) {
         this.acState = {
           x: e,
@@ -50431,7 +50433,7 @@ var $ = class _$ {
         let r2 = false;
         const i2 = n2.subscribe({
           next: (e2) => {
-            r2 = true, a(e2);
+            r2 = true, h(e2);
           },
           error: () => {
             r2 || (this.acState = this.acState ? __spreadProps(__spreadValues({}, this.acState), {
@@ -50449,12 +50451,12 @@ var $ = class _$ {
         items: [],
         activeIndex: -1,
         loading: true
-      }, this.cdr.markForCheck(), n2.then(a).catch(() => {
+      }, this.cdr.markForCheck(), n2.then(h).catch(() => {
         this.acState && (this.acState = __spreadProps(__spreadValues({}, this.acState), {
           loading: false
         }), this.cdr.markForCheck());
-      })) : a(n2);
-    } else a(r);
+      })) : h(n2);
+    } else h(r);
   }
   acClose() {
     this.acSub?.(), this.acSub = null, this.acScrollSub?.(), this.acScrollSub = null, this.acState = null, this.cdr.markForCheck();
@@ -52077,7 +52079,7 @@ var _ = class __ {
     }]
   });
 })();
-var B = class _B {
+var O = class _O {
   context;
   action = new EventEmitter();
   get count() {
@@ -52092,11 +52094,11 @@ var B = class _B {
       }
     });
   }
-  static \u0275fac = function B_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _B)();
+  static \u0275fac = function O_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _O)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _B,
+    type: _O,
     selectors: [["jx-attachment-cell"]],
     inputs: {
       context: "context"
@@ -52108,10 +52110,10 @@ var B = class _B {
     decls: 3,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-attachment"], ["type", "button", 1, "jx-cell-attachment-btn", 3, "click"]],
-    template: function B_Template(rf, ctx) {
+    template: function O_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "button", 1);
-        \u0275\u0275listener("click", function B_Template_button_click_1_listener($event) {
+        \u0275\u0275listener("click", function O_Template_button_click_1_listener($event) {
           return ctx.openAttachments($event);
         });
         \u0275\u0275text(2);
@@ -52126,7 +52128,7 @@ var B = class _B {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52142,16 +52144,16 @@ var B = class _B {
     }]
   });
 })();
-var O = class _O {
+var B = class _B {
   constructor(e) {
-    e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", V), e.register("button", _), e.register("attachment", B);
+    e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", V), e.register("button", _), e.register("attachment", O);
   }
-  static \u0275fac = function O_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _O)(\u0275\u0275inject(A));
+  static \u0275fac = function B_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _B)(\u0275\u0275inject(A));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
-    type: _O,
-    declarations: [$, N, H, z, E, P, T, V, _, B],
+    type: _B,
+    declarations: [$, N, H, z, E, P, T, V, _, O],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
     exports: [$, N]
   });
@@ -52161,10 +52163,10 @@ var O = class _O {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: NgModule,
     args: [{
-      declarations: [$, N, H, z, E, P, T, V, _, B],
+      declarations: [$, N, H, z, E, P, T, V, _, O],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
       providers: [A],
       exports: [$, N]
@@ -76256,7 +76258,7 @@ var AppModule = class _AppModule {
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    O,
+    B,
     PlLoadingTraceModule.forRoot({
       shared: { debounceMs: 200 },
       http: { animationType: "bar", modal: false },
@@ -76281,7 +76283,7 @@ var AppModule = class _AppModule {
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        O,
+        B,
         PlLoadingTraceModule.forRoot({
           shared: { debounceMs: 200 },
           http: { animationType: "bar", modal: false },

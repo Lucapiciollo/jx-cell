@@ -46445,6 +46445,8 @@ var F = class _F {
     return o;
   }
   setConfig(e) {
+    const t = ["defaultCellStyle", "defaultHeaderStyle", "defaultNestedHeaderStyle", "defaultFooterStyle"];
+    for (const o of t) o in e && void 0 === e[o] && delete this.options[o];
     Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++), "data" in e && void 0 !== e.data && (this.rawData = this.normalizeData(e.data, this.options.columns ?? []), this.padToMinRows(), this.options.data = this.rawData, this.rebuildFormulaIndex(), this.recalculateAll(), this.checkAutoAddRow()), this.config$.next();
   }
   setColumnAlign(e, t) {
@@ -71012,7 +71014,35 @@ var AppComponent = class _AppComponent {
       })() : void 0,
       persistence: this.cfg.persistenceEnabled && this.cfg.persistenceKey ? this.cfg.persistenceKey : void 0,
       searchMode: this.cfg.searchHideRows ? "hide" : "dim",
-      searchDimOpacity: this.cfg.searchDimOpacity
+      searchDimOpacity: this.cfg.searchDimOpacity,
+      defaultCellStyle: this.cfg.defaultCellStyleInput ? (() => {
+        try {
+          return JSON.parse(this.cfg.defaultCellStyleInput);
+        } catch {
+          return void 0;
+        }
+      })() : void 0,
+      defaultHeaderStyle: this.cfg.defaultHeaderStyleInput ? (() => {
+        try {
+          return JSON.parse(this.cfg.defaultHeaderStyleInput);
+        } catch {
+          return void 0;
+        }
+      })() : void 0,
+      defaultNestedHeaderStyle: this.cfg.defaultNestedHeaderStyleInput ? (() => {
+        try {
+          return JSON.parse(this.cfg.defaultNestedHeaderStyleInput);
+        } catch {
+          return void 0;
+        }
+      })() : void 0,
+      defaultFooterStyle: this.cfg.defaultFooterStyleInput ? (() => {
+        try {
+          return JSON.parse(this.cfg.defaultFooterStyleInput);
+        } catch {
+          return void 0;
+        }
+      })() : void 0
     });
     this.log("info", "setConfig applicato senza reinizializzazione");
   }

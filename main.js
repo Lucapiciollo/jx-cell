@@ -46559,7 +46559,7 @@ var F = class _F {
     return this.address.columnName(e);
   }
   getIdFromColumnName(e) {
-    return this.address.parse(e + "1")?.x ?? 0;
+    return e && /^[A-Za-z]+$/.test(e.trim()) ? this.address.parse(e.trim() + "1")?.x ?? -1 : -1;
   }
   getColumnByKey(e) {
     const t = this.options.columns;

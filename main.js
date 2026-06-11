@@ -44716,7 +44716,7 @@ function __tr_12_ng_container_2_td_1_ng_container_2_ng_template_2_select_2_optio
     const item_r39 = ctx.$implicit;
     \u0275\u0275property("ngValue", (tmp_17_0 = item_r39 == null ? null : item_r39.id) !== null && tmp_17_0 !== void 0 ? tmp_17_0 : item_r39);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate((tmp_18_0 = item_r39 == null ? null : item_r39.name) !== null && tmp_18_0 !== void 0 ? tmp_18_0 : item_r39);
+    \u0275\u0275textInterpolate((tmp_18_0 = (tmp_18_0 = item_r39 == null ? null : item_r39.description) !== null && tmp_18_0 !== void 0 ? tmp_18_0 : item_r39 == null ? null : item_r39.name) !== null && tmp_18_0 !== void 0 ? tmp_18_0 : item_r39);
   }
 }
 function __tr_12_ng_container_2_td_1_ng_container_2_ng_template_2_select_2_Template(rf, ctx) {
@@ -46207,6 +46207,7 @@ var F = class _F {
   footerRawData = [];
   footerData = [];
   evaluatedHeaderTitles = [];
+  _pendingItemMeta = void 0;
   evaluatedNestedHeaderTitles = [];
   undoStack = [];
   redoStack = [];
@@ -46444,7 +46445,7 @@ var F = class _F {
     return o;
   }
   setConfig(e) {
-    Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++), this.config$.next();
+    Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++), "data" in e && void 0 !== e.data && (this.rawData = this.normalizeData(e.data, this.options.columns ?? []), this.padToMinRows(), this.options.data = this.rawData, this.rebuildFormulaIndex(), this.recalculateAll(), this.checkAutoAddRow()), this.config$.next();
   }
   setColumnAlign(e, t) {
     if (!Array.isArray(this.options.columns)) return;
@@ -46567,11 +46568,20 @@ var F = class _F {
       return o?.name === e || o?.field === e;
     }) : -1;
   }
+  _lookupSourceItem(e, t) {
+    const o = this.options.columns?.[e], n = Array.isArray(o?.autocompleteSource) ? o.autocompleteSource : Array.isArray(o?.source) ? o.source : void 0;
+    if (!n) return;
+    const r = n.find((e2) => "string" == typeof e2 ? e2 === t : String(e2.id ?? e2.value ?? e2.key) === String(t));
+    return r && "string" != typeof r ? {
+      extras: r.extras,
+      description: r.description ?? r.name ?? r.label ?? void 0
+    } : void 0;
+  }
   getDropDownValue(e, t) {
     const o = this.options.columns?.[e];
     if (!o?.source || !Array.isArray(o.source)) return String(t ?? "");
     for (const e2 of o.source) if ("object" == typeof e2 && null !== e2) {
-      const o2 = e2.name ?? e2.label ?? e2.text;
+      const o2 = e2.description ?? e2.name ?? e2.label ?? e2.text;
       if (String(e2.id ?? e2.value ?? e2.key) === String(t)) return String(o2 ?? t);
     } else if (String(e2) === String(t)) return String(e2);
     return String(t ?? "");
@@ -46642,39 +46652,45 @@ var F = class _F {
       const o = this.address.parse(e);
       if (!o) return;
       this.ensureSize(o.y + 1, o.x + 1);
-      const n = this.rawData[o.y][o.x], r = this.parseValueForColumn(o.x, t), i = this.getColumnDef(o.x), s = this.fireBefore(this.events.beforeChange$, "onbeforechange", {
+      const n = this._pendingItemMeta;
+      this._pendingItemMeta = void 0;
+      const r = n ?? this._lookupSourceItem(o.x, t), i = this.rawData[o.y][o.x], s = this.parseValueForColumn(o.x, t), a = this.getColumnDef(o.x), l = this.fireBefore(this.events.beforeChange$, "onbeforechange", {
         x: o.x,
         y: o.y,
         cellName: e,
-        value: r,
-        oldValue: n,
-        columnDef: i,
-        rowData: this.getRow(o.y)
-      }, null, null, e, r, n);
-      if (s.cancelled) return;
-      const a = void 0 !== s.result ? s.result : r;
-      this.rawData[o.y][o.x] = a, this.syncFormulaIndex(e, a), this.recalculateAll(), n !== a && (this.fireAfter(this.events.change$, "onchange", {
+        value: s,
+        oldValue: i,
+        columnDef: a,
+        rowData: this.getRow(o.y),
+        extras: r?.extras,
+        description: r?.description
+      }, null, null, e, s, i);
+      if (l.cancelled) return;
+      const c = void 0 !== l.result ? l.result : s;
+      this.rawData[o.y][o.x] = c, this.syncFormulaIndex(e, c), this.recalculateAll(), i !== c && (this.fireAfter(this.events.change$, "onchange", {
         x: o.x,
         y: o.y,
         cellName: e,
-        value: a,
-        oldValue: n,
-        columnDef: i,
-        rowData: this.getRow(o.y)
-      }, null, null, e, a, n), this.fireAfter(this.events.afterChanges$, "onafterchanges", {
+        value: c,
+        oldValue: i,
+        columnDef: a,
+        rowData: this.getRow(o.y),
+        extras: r?.extras,
+        description: r?.description
+      }, null, null, e, c, i), this.fireAfter(this.events.afterChanges$, "onafterchanges", {
         changes: [{
           x: o.x,
           y: o.y,
           name: e,
-          oldValue: n,
-          newValue: a
+          oldValue: i,
+          newValue: c
         }]
       }, null, [{
         x: o.x,
         y: o.y,
         name: e,
-        oldValue: n,
-        newValue: a
+        oldValue: i,
+        newValue: c
       }]));
     }), this.checkAutoAddRow();
   }
@@ -46688,31 +46704,35 @@ var F = class _F {
         const e2 = this.address.parse(n);
         if (!e2) continue;
         this.ensureSize(e2.y + 1, e2.x + 1);
-        const r = this.rawData[e2.y][e2.x], i = this.parseValueForColumn(e2.x, t), s = this.getColumnDef(e2.x), a = this.fireBefore(this.events.beforeChange$, "onbeforechange", {
+        const r = this.rawData[e2.y][e2.x], i = this.parseValueForColumn(e2.x, t), s = this.getColumnDef(e2.x), a = this._lookupSourceItem(e2.x, i), l = this.fireBefore(this.events.beforeChange$, "onbeforechange", {
           x: e2.x,
           y: e2.y,
           cellName: n,
           value: i,
           oldValue: r,
           columnDef: s,
-          rowData: this.getRow(e2.y)
+          rowData: this.getRow(e2.y),
+          extras: a?.extras,
+          description: a?.description
         }, null, null, n, i, r);
-        if (a.cancelled) continue;
-        const l = void 0 !== a.result ? a.result : i;
-        this.rawData[e2.y][e2.x] = l, this.syncFormulaIndex(n, l), r !== l && (this.fireAfter(this.events.change$, "onchange", {
+        if (l.cancelled) continue;
+        const c = void 0 !== l.result ? l.result : i;
+        this.rawData[e2.y][e2.x] = c, this.syncFormulaIndex(n, c), r !== c && (this.fireAfter(this.events.change$, "onchange", {
           x: e2.x,
           y: e2.y,
           cellName: n,
-          value: l,
+          value: c,
           oldValue: r,
           columnDef: s,
-          rowData: this.getRow(e2.y)
-        }, null, null, n, l, r), o.push({
+          rowData: this.getRow(e2.y),
+          extras: a?.extras,
+          description: a?.description
+        }, null, null, n, c, r), o.push({
           x: e2.x,
           y: e2.y,
           name: n,
           oldValue: r,
-          newValue: l
+          newValue: c
         }));
       }
       this.recalculateAll(), o.length > 0 && this.fireAfter(this.events.afterChanges$, "onafterchanges", {
@@ -48412,6 +48432,8 @@ var $ = class _$ {
   acSub = null;
   acScrollSub = null;
   acFocusingFilter = false;
+  _acLabelCache = /* @__PURE__ */ new Map();
+  _acLabelPrefetched = /* @__PURE__ */ new Set();
   get searchMode() {
     return this.options.searchMode ?? "hide";
   }
@@ -48450,7 +48472,7 @@ var $ = class _$ {
     }));
   }
   ngOnChanges(e) {
-    e.options && !e.options.firstChange && (this._destroyPlugins(e.options.previousValue?.toolbarPlugins), this.init(), this.zone.run(() => queueMicrotask(() => {
+    e.options && !e.options.firstChange && (this._destroyPlugins(e.options.previousValue?.toolbarPlugins), this._acLabelCache.clear(), this._acLabelPrefetched.clear(), this.init(), this.zone.run(() => queueMicrotask(() => {
       this._initPlugins(), this.ready.emit(this.workbook);
     })));
   }
@@ -49842,7 +49864,8 @@ var $ = class _$ {
     return t;
   }
   updateInlineValue(e, t, o) {
-    this.workbook.setValue(this.cellName(e, t), o);
+    const n = this.column(e);
+    "dropdown" !== n?.type && "autocomplete" !== n?.type || (this.workbook._pendingItemMeta = this.workbook._lookupSourceItem(e, o) ?? void 0), this.workbook.setValue(this.cellName(e, t), o);
   }
   changeCheckbox(e, t, o) {
     this.updateInlineValue(e, t, o);
@@ -50281,10 +50304,37 @@ var $ = class _$ {
   getAcLabel(e, t) {
     const o = this.rawValue(e, t);
     if (null == o || "" === o) return "";
-    const n = this.column(e)?.autocompleteSource ?? this.column(e)?.source;
-    if (Array.isArray(n)) {
-      const e2 = n.find((e3) => "string" == typeof e3 ? e3 === o : (e3.id ?? e3.value) == o);
-      if (e2) return "string" == typeof e2 ? e2 : String(e2.name ?? e2.label ?? e2.id);
+    const n = this._acLabelCache.get(e);
+    if (n?.has(o)) return n.get(o);
+    const r = this.column(e)?.autocompleteSource ?? this.column(e)?.source;
+    if (Array.isArray(r)) {
+      const e2 = r.find((e3) => "string" == typeof e3 ? e3 === o : (e3.id ?? e3.value) == o);
+      if (e2) return "string" == typeof e2 ? e2 : String(e2.description ?? e2.name ?? e2.label ?? e2.id);
+    }
+    if ("function" == typeof r && !this._acLabelPrefetched.has(e)) {
+      this._acLabelPrefetched.add(e), this.column(e);
+      const t2 = r("", {
+        x: e,
+        y: -1,
+        row: [],
+        value: ""
+      }), o2 = (t3) => {
+        this._acLabelCache.has(e) || this._acLabelCache.set(e, /* @__PURE__ */ new Map());
+        const o3 = this._acLabelCache.get(e);
+        for (const e2 of t3) {
+          const t4 = this.normalizeAcItem(e2);
+          null != t4.id && o3.set(t4.id, t4.label);
+        }
+        this.cdr.markForCheck();
+      };
+      if (t2 instanceof Promise) t2.then(o2).catch(() => {
+      });
+      else if (t2 && "function" == typeof t2.subscribe) {
+        const e2 = t2.subscribe({
+          next: o2
+        });
+        setTimeout(() => e2?.unsubscribe?.(), 5e3);
+      } else Array.isArray(t2) && o2(t2);
     }
     return String(o);
   }
@@ -50301,12 +50351,15 @@ var $ = class _$ {
     return n.filterFn(i);
   }
   normalizeAcItem(e) {
-    return "string" == typeof e ? {
+    if ("string" == typeof e) return {
       id: e,
       label: e
-    } : {
+    };
+    const t = String(e.description ?? e.name ?? e.label ?? e.id);
+    return {
       id: e.id ?? e.value ?? e.name,
-      label: String(e.name ?? e.label ?? e.id)
+      label: t,
+      extras: e.extras
     };
   }
   acFetch(e, t, o) {
@@ -50320,25 +50373,35 @@ var $ = class _$ {
       activeIndex: -1,
       loading: false
     }, void this.cdr.markForCheck();
-    const i = o.toLowerCase(), s = (r2) => {
-      const s2 = (n?.filterFn ? n.filterFn({
-        value: this.rawValue(e, t),
+    const i = o.toLowerCase(), s = {
+      x: e,
+      y: t,
+      row: this.workbook.getRow(t),
+      value: this.rawValue(e, t)
+    }, a = (r2) => {
+      const a2 = (n?.filterFn ? n.filterFn({
+        value: s.value,
         x: e,
         y: t,
-        row: this.workbook.getRow(t),
-        query: o
-      }) : r2).map((e2) => this.normalizeAcItem(e2)), a = i ? s2.filter((e2) => e2.label.toLowerCase().includes(i)) : s2;
+        row: s.row,
+        query: o,
+        items: r2
+      }) : r2).map((e2) => this.normalizeAcItem(e2));
+      this._acLabelCache.has(e) || this._acLabelCache.set(e, /* @__PURE__ */ new Map());
+      const l = this._acLabelCache.get(e);
+      for (const e2 of a2) null != e2.id && l.set(e2.id, e2.label);
+      const c = i ? a2.filter((e2) => e2.label.toLowerCase().includes(i)) : a2;
       this.acState = {
         x: e,
         y: t,
         query: o,
-        items: a,
+        items: c,
         activeIndex: -1,
         loading: false
       }, this.cdr.markForCheck();
     };
     if ("function" == typeof r) {
-      const n2 = r(o);
+      const n2 = r(o, s);
       if (n2 && "function" == typeof n2.subscribe) {
         this.acState = {
           x: e,
@@ -50351,7 +50414,7 @@ var $ = class _$ {
         let r2 = false;
         const i2 = n2.subscribe({
           next: (e2) => {
-            r2 = true, s(e2);
+            r2 = true, a(e2);
           },
           error: () => {
             r2 || (this.acState = this.acState ? __spreadProps(__spreadValues({}, this.acState), {
@@ -50369,12 +50432,12 @@ var $ = class _$ {
         items: [],
         activeIndex: -1,
         loading: true
-      }, this.cdr.markForCheck(), n2.then(s).catch(() => {
+      }, this.cdr.markForCheck(), n2.then(a).catch(() => {
         this.acState && (this.acState = __spreadProps(__spreadValues({}, this.acState), {
           loading: false
         }), this.cdr.markForCheck());
-      })) : s(n2);
-    } else s(r);
+      })) : a(n2);
+    } else a(r);
   }
   acClose() {
     this.acSub?.(), this.acSub = null, this.acScrollSub?.(), this.acScrollSub = null, this.acState = null, this.cdr.markForCheck();
@@ -50450,7 +50513,10 @@ var $ = class _$ {
       x: o,
       y: n
     } = this.acState;
-    this.acClose(), this.editing && this.editing.x === o && this.editing.y === n && (this.editing = __spreadProps(__spreadValues({}, this.editing), {
+    this.acClose(), this.workbook._pendingItemMeta = {
+      extras: t.extras,
+      description: t.label
+    }, this._acLabelCache.has(o) || this._acLabelCache.set(o, /* @__PURE__ */ new Map()), this._acLabelCache.get(o).set(t.id, t.label), this.editing && this.editing.x === o && this.editing.y === n && (this.editing = __spreadProps(__spreadValues({}, this.editing), {
       value: t.id
     })), this.commitEditWith(o, n, t.id);
   }
@@ -50895,7 +50961,7 @@ var $ = class _$ {
                   (keydown)="onInlineComponentKey($event,x,y)"\r
                   (ngModelChange)="updateInlineValue(x,y,$event)"\r
                 >\r
-                  <option *ngFor="let item of getFilteredSource(x, y)" [ngValue]="item?.id ?? item">{{ item?.name ?? item }}</option>\r
+                  <option *ngFor="let item of getFilteredSource(x, y)" [ngValue]="item?.id ?? item">{{ item?.description ?? item?.name ?? item }}</option>\r
                 </select>\r
 \r
                 <!-- Autocomplete: display mode \u2192 mostra label risolta; edit mode usa editTpl -->\r
@@ -70163,7 +70229,9 @@ var AppComponent = class _AppComponent {
       this.eventSub.add(ev.change$.subscribe((e) => {
         const col = e.columnDef?.title ?? `col ${e.x}`;
         this.lastEvent = `change ${e.cellName} [${col}]: "${e.oldValue}" \u2192 "${e.value}"`;
-        this.log("change", `change ${e.cellName} [${col}]: "${e.oldValue}" \u2192 "${e.value}" | riga: [${e.rowData.join(", ")}]`);
+        const labelPart = e.description ? ` | label: "${e.description}"` : "";
+        const extrasPart = e.extras !== void 0 ? ` | extras: ${JSON.stringify(e.extras)}` : "";
+        this.log("change", `change ${e.cellName} [${col}]: "${e.oldValue}" \u2192 "${e.value}"${labelPart}${extrasPart} | riga: [${e.rowData.join(", ")}]`);
         this.cdr.markForCheck();
       }));
     }
@@ -70540,8 +70608,14 @@ var AppComponent = class _AppComponent {
           width: 140,
           readOnly: false,
           sortable: true,
-          source: ["Nuovo", "In lavorazione", "Approvato", "Respinto"],
-          options: { autocomplete: false }
+          // id = valore salvato in cella, description = testo visibile, extras = metadati extra
+          source: [
+            { id: "Nuovo", description: "Nuovo", extras: { color: "#3498db", step: 1 } },
+            { id: "In lavorazione", description: "In lavorazione", extras: { color: "#f39c12", step: 2 } },
+            { id: "Approvato", description: "Approvato", extras: { color: "#2ecc71", step: 3 } },
+            { id: "Respinto", description: "Respinto", extras: { color: "#e74c3c", step: 4 } }
+          ],
+          options: { autocomplete: true }
         },
         {
           title: "Autocomplete",
@@ -70551,18 +70625,19 @@ var AppComponent = class _AppComponent {
           readOnly: false,
           sortable: true,
           // Sorgente async: simula una chiamata al server con 200ms di latenza
+          // id = valore salvato, description = label visibile, extras = metadati passati nell'evento onchange
           autocompleteSource: (q) => new Promise((resolve) => {
             const items = [
-              { id: "electronics", name: "Elettronica" },
-              { id: "clothing", name: "Abbigliamento" },
-              { id: "food", name: "Alimentari" },
-              { id: "sports", name: "Sport" },
-              { id: "books", name: "Libri" },
-              { id: "home", name: "Casa & Giardino" },
-              { id: "toys", name: "Giocattoli" },
-              { id: "health", name: "Salute & Bellezza" }
+              { id: "electronics", description: "Elettronica", extras: { icon: "\u{1F4BB}", sortOrder: 1 } },
+              { id: "clothing", description: "Abbigliamento", extras: { icon: "\u{1F455}", sortOrder: 2 } },
+              { id: "food", description: "Alimentari", extras: { icon: "\u{1F34E}", sortOrder: 3 } },
+              { id: "sports", description: "Sport", extras: { icon: "\u26BD", sortOrder: 4 } },
+              { id: "books", description: "Libri", extras: { icon: "\u{1F4DA}", sortOrder: 5 } },
+              { id: "home", description: "Casa & Giardino", extras: { icon: "\u{1F3E0}", sortOrder: 6 } },
+              { id: "toys", description: "Giocattoli", extras: { icon: "\u{1F3AE}", sortOrder: 7 } },
+              { id: "health", description: "Salute & Bellezza", extras: { icon: "\u{1F48A}", sortOrder: 8 } }
             ];
-            const filtered = q ? items.filter((i) => i.name.toLowerCase().includes(q.toLowerCase())) : items;
+            const filtered = q ? items.filter((i) => i.description.toLowerCase().includes(q.toLowerCase())) : items;
             setTimeout(() => resolve(filtered), 200);
           })
         },
@@ -70575,26 +70650,26 @@ var AppComponent = class _AppComponent {
           sortable: true,
           // Tutte le opzioni possibili — il filterFn le filtra in base al valore di Status (col 8)
           source: [
-            { id: "bozza", name: "Bozza", _parent: "Nuovo" },
-            { id: "inviato", name: "Inviato", _parent: "Nuovo" },
-            { id: "in_rev", name: "In revisione", _parent: "In lavorazione" },
-            { id: "sospeso", name: "Sospeso", _parent: "In lavorazione" },
-            { id: "ok_parz", name: "Approvato parzialmente", _parent: "Approvato" },
-            { id: "ok_tot", name: "Approvato totalmente", _parent: "Approvato" },
-            { id: "resp_mot", name: "Risposto con motivo", _parent: "Respinto" },
-            { id: "resp_defi", name: "Rifiuto definitivo", _parent: "Respinto" }
+            { id: "bozza", description: "Bozza", _parent: "Nuovo", extras: { weight: 1 } },
+            { id: "inviato", description: "Inviato", _parent: "Nuovo", extras: { weight: 2 } },
+            { id: "in_rev", description: "In revisione", _parent: "In lavorazione", extras: { weight: 3 } },
+            { id: "sospeso", description: "Sospeso", _parent: "In lavorazione", extras: { weight: 4 } },
+            { id: "ok_parz", description: "Approvato parzialmente", _parent: "Approvato", extras: { weight: 5 } },
+            { id: "ok_tot", description: "Approvato totalmente", _parent: "Approvato", extras: { weight: 6 } },
+            { id: "resp_mot", description: "Risposto con motivo", _parent: "Respinto", extras: { weight: 7 } },
+            { id: "resp_defi", description: "Rifiuto definitivo", _parent: "Respinto", extras: { weight: 8 } }
           ],
           filterFn: ({ row }) => {
             const parentStatus = row[8];
             const all = [
-              { id: "bozza", name: "Bozza", _parent: "Nuovo" },
-              { id: "inviato", name: "Inviato", _parent: "Nuovo" },
-              { id: "in_rev", name: "In revisione", _parent: "In lavorazione" },
-              { id: "sospeso", name: "Sospeso", _parent: "In lavorazione" },
-              { id: "ok_parz", name: "Approvato parzialmente", _parent: "Approvato" },
-              { id: "ok_tot", name: "Approvato totalmente", _parent: "Approvato" },
-              { id: "resp_mot", name: "Risposto con motivo", _parent: "Respinto" },
-              { id: "resp_defi", name: "Rifiuto definitivo", _parent: "Respinto" }
+              { id: "bozza", description: "Bozza", _parent: "Nuovo", extras: { weight: 1 } },
+              { id: "inviato", description: "Inviato", _parent: "Nuovo", extras: { weight: 2 } },
+              { id: "in_rev", description: "In revisione", _parent: "In lavorazione", extras: { weight: 3 } },
+              { id: "sospeso", description: "Sospeso", _parent: "In lavorazione", extras: { weight: 4 } },
+              { id: "ok_parz", description: "Approvato parzialmente", _parent: "Approvato", extras: { weight: 5 } },
+              { id: "ok_tot", description: "Approvato totalmente", _parent: "Approvato", extras: { weight: 6 } },
+              { id: "resp_mot", description: "Risposto con motivo", _parent: "Respinto", extras: { weight: 7 } },
+              { id: "resp_defi", description: "Rifiuto definitivo", _parent: "Respinto", extras: { weight: 8 } }
             ];
             return parentStatus ? all.filter((i) => i._parent === parentStatus) : all;
           }

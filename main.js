@@ -44251,13 +44251,12 @@ function __thead_10_tr_1_td_2_Template(rf, ctx) {
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const nestedCell_r19 = ctx.$implicit;
     const ni_r18 = ctx.index;
     const defaultNestedTpl_r20 = \u0275\u0275reference(3);
     const nh_r17 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("ngStyle", ctx_r3.getNestedHeaderCellStyle(nh_r17, ni_r18));
-    \u0275\u0275attribute("colspan", nestedCell_r19.colspan);
+    \u0275\u0275property("hidden", ctx_r3.isNestedHeaderCellHidden(nh_r17, ni_r18))("ngStyle", ctx_r3.getNestedHeaderCellStyle(nh_r17, ni_r18));
+    \u0275\u0275attribute("colspan", ctx_r3.getNestedHeaderEffectiveColspan(nh_r17, ni_r18) > 1 ? ctx_r3.getNestedHeaderEffectiveColspan(nh_r17, ni_r18) : null);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.hasCustomNestedHeaderComponent(nh_r17, ni_r18))("ngIfElse", defaultNestedTpl_r20);
   }
@@ -44265,7 +44264,7 @@ function __thead_10_tr_1_td_2_Template(rf, ctx) {
 function __thead_10_tr_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tr");
-    \u0275\u0275template(1, __thead_10_tr_1_td_1_Template, 1, 1, "td", 52)(2, __thead_10_tr_1_td_2_Template, 4, 4, "td", 53);
+    \u0275\u0275template(1, __thead_10_tr_1_td_1_Template, 1, 1, "td", 52)(2, __thead_10_tr_1_td_2_Template, 4, 5, "td", 53);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45892,7 +45891,7 @@ function __div_20_Template(rf, ctx) {
   }
 }
 var _c5 = ["container"];
-function H_ng_template_0_Template(rf, ctx) {
+function A_ng_template_0_Template(rf, ctx) {
 }
 var _c6 = ["scrollContainer"];
 var _c7 = (a0, a1, a2, a3, a4, a5, a6) => ({
@@ -48731,6 +48730,23 @@ var $ = class _$ {
       colspan: Math.max(1, Number(e3?.colspan || 1))
     }))) : [];
   }
+  nestedHeaderCellStart(e, t) {
+    const o = this.nestedHeaderRows[e] ?? [];
+    let n = 0;
+    for (let e2 = 0; e2 < t; e2++) n += o[e2]?.colspan ?? 1;
+    return n;
+  }
+  getNestedHeaderEffectiveColspan(e, t) {
+    const o = this.nestedHeaderRows[e]?.[t];
+    if (!o) return 1;
+    const n = this.nestedHeaderCellStart(e, t);
+    let r = 0;
+    for (let e2 = n; e2 < n + o.colspan; e2++) this.isHiddenColumn(e2) || r++;
+    return r;
+  }
+  isNestedHeaderCellHidden(e, t) {
+    return 0 === this.getNestedHeaderEffectiveColspan(e, t);
+  }
   isCoveredCell(e, t) {
     return this.workbook.isCoveredByMerge(e, t);
   }
@@ -50714,7 +50730,7 @@ var $ = class _$ {
     features: [\u0275\u0275ProvidersFeature([I]), \u0275\u0275NgOnChangesFeature],
     decls: 21,
     vars: 35,
-    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], [3, "height", "hidden", "opacity", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngStyle", "click", 4, "ngIf"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-col-draggable", "jx-col-resizable", "jx-col-dragging", "jx-col-resizing", "jx-col-drag-left", "jx-col-drag-right", "jx-col-sortable", "jx-col-sort-asc", "jx-col-sort-desc", "selected", "mousedown", "mousemove", "mouseenter", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngStyle", 4, "ngIf"], [3, "ngStyle", 4, "ngFor", "ngForOf"], [1, "jexcel_selectall", 3, "ngStyle"], [3, "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngStyle"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [1, "jx-sort-icon"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "value", "input", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngStyle"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-row", "highlight", "highlight-selected", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "innerHTML"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
+    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], [3, "height", "hidden", "opacity", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngStyle", "click", 4, "ngIf"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-col-draggable", "jx-col-resizable", "jx-col-dragging", "jx-col-resizing", "jx-col-drag-left", "jx-col-drag-right", "jx-col-sortable", "jx-col-sort-asc", "jx-col-sort-desc", "selected", "mousedown", "mousemove", "mouseenter", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngStyle", 4, "ngIf"], [3, "hidden", "ngStyle", 4, "ngFor", "ngForOf"], [1, "jexcel_selectall", 3, "ngStyle"], [3, "hidden", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngStyle"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [1, "jx-sort-icon"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "value", "input", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngStyle"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-row", "highlight", "highlight-selected", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "innerHTML"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
     template: function __Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = \u0275\u0275getCurrentView();
@@ -50879,7 +50895,8 @@ var $ = class _$ {
           <td *ngIf="options.rowHeaders !== false" class="jexcel_selectall" [ngStyle]="getNestedHeaderSelectAllStyle(nh)"></td>\r
           <td\r
             *ngFor="let nestedCell of nestedRow; let ni = index"\r
-            [attr.colspan]="nestedCell.colspan"\r
+            [hidden]="isNestedHeaderCellHidden(nh, ni)"\r
+            [attr.colspan]="getNestedHeaderEffectiveColspan(nh, ni) > 1 ? getNestedHeaderEffectiveColspan(nh, ni) : null"\r
             [ngStyle]="getNestedHeaderCellStyle(nh, ni)"\r
           ><ng-container *ngIf="hasCustomNestedHeaderComponent(nh, ni); else defaultNestedTpl">\r
               <ng-container *ngComponentOutlet="getCustomNestedHeaderComponent(nh, ni); inputs: customNestedHeaderInputs(nh, ni)"></ng-container>\r
@@ -51461,7 +51478,7 @@ var $ = class _$ {
     }]
   });
 })();
-var A = class _A {
+var H = class _H {
   registry = /* @__PURE__ */ new Map();
   register(e, t) {
     this.registry.set(e, t);
@@ -51475,20 +51492,20 @@ var A = class _A {
   clear() {
     this.registry.clear();
   }
-  static \u0275fac = function A_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _A)();
+  static \u0275fac = function H_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _H)();
   };
   static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({
-    token: _A,
-    factory: _A.\u0275fac
+    token: _H,
+    factory: _H.\u0275fac
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(A, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(H, [{
     type: Injectable
   }], null, null);
 })();
-var H = class _H {
+var A = class _A {
   registry;
   context;
   valueChange = new EventEmitter();
@@ -51517,13 +51534,13 @@ var H = class _H {
   resolveComponent() {
     return this.context.column.component ? this.context.column.component : this.registry.get(this.context.column.type ?? "text");
   }
-  static \u0275fac = function H_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _H)(\u0275\u0275directiveInject(A));
+  static \u0275fac = function A_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _A)(\u0275\u0275directiveInject(H));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _H,
+    type: _A,
     selectors: [["jx-cell-host"]],
-    viewQuery: function H_Query(rf, ctx) {
+    viewQuery: function A_Query(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275viewQuery(_c5, 7, ViewContainerRef);
       }
@@ -51544,16 +51561,16 @@ var H = class _H {
     decls: 2,
     vars: 0,
     consts: [["container", ""]],
-    template: function H_Template(rf, ctx) {
+    template: function A_Template(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275template(0, H_ng_template_0_Template, 0, 0, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+        \u0275\u0275template(0, A_ng_template_0_Template, 0, 0, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
       }
     },
     styles: ["[_nghost-%COMP%]{display:block;width:100%;height:100%;overflow:hidden}"]
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(H, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(A, [{
     type: Component,
     args: [{
       standalone: false,
@@ -51562,7 +51579,7 @@ var H = class _H {
       styles: [":host{display:block;width:100%;height:100%;overflow:hidden}\n"]
     }]
   }], () => [{
-    type: A
+    type: H
   }], {
     context: [{
       type: Input
@@ -51768,7 +51785,7 @@ var N = class _N {
         \u0275\u0275property("ngIf", !ctx.data || ctx.data.length === 0);
       }
     },
-    dependencies: [NgClass, NgForOf, NgIf, H, z],
+    dependencies: [NgClass, NgForOf, NgIf, A, z],
     styles: ["[_nghost-%COMP%]{display:block}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-editor{display:block;width:100%;height:100%;border:none;outline:none;background:transparent;font:inherit;color:inherit;padding:0;margin:0;box-sizing:border-box}.jx-grid[_ngcontent-%COMP%]{width:100%;overflow:auto;border:var(--jx-grid-border-width) solid var(--jx-grid-border-color);border-radius:var(--jx-grid-radius);background:var(--jx-grid-bg)}.jx-grid-table[_ngcontent-%COMP%]{width:100%;border-collapse:collapse;table-layout:fixed}.jx-grid-header-cell[_ngcontent-%COMP%]{padding:var(--jx-grid-header-padding-y) var(--jx-grid-header-padding-x);border-bottom:1px solid var(--jx-grid-header-border-color);vertical-align:middle;font-weight:var(--jx-grid-header-font-weight);text-align:left;background:var(--jx-grid-header-bg);color:var(--jx-grid-header-color);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-grid-cell[_ngcontent-%COMP%]{padding:0;border-bottom:1px solid var(--jx-grid-cell-border-color);vertical-align:middle;overflow:hidden;max-width:0;position:relative}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell{display:flex;align-items:center;width:100%;height:100%;min-height:var(--jx-grid-cell-min-height);padding:0 var(--jx-grid-cell-padding-x);box-sizing:border-box;overflow:hidden;background:transparent;border:none;outline:none}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-editor{display:block;width:100%;height:100%;border:none;outline:none;background:transparent;font:var(--jx-grid-cell-font);color:var(--jx-grid-cell-color);padding:0;margin:0;box-sizing:border-box}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-checkbox{justify-content:center}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-number, .jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-money{justify-content:flex-end;font-variant-numeric:var(--jx-grid-number-font-variant)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-formula{font-weight:var(--jx-grid-formula-font-weight)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-total{font-weight:var(--jx-grid-total-font-weight)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-attachment-btn{background:none;border:none;cursor:pointer;padding:0;font:inherit;color:var(--jx-grid-attachment-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.jx-grid-row[_ngcontent-%COMP%]:hover   .jx-grid-cell[_ngcontent-%COMP%]{background:var(--jx-grid-row-hover-bg)}.jx-grid-row-selected[_ngcontent-%COMP%]   .jx-grid-cell[_ngcontent-%COMP%]{background:var(--jx-grid-row-selected-bg)}.jx-grid-empty[_ngcontent-%COMP%]{padding:var(--jx-grid-empty-padding);text-align:center;color:var(--jx-grid-empty-color)}.jx-grid-virtual[_ngcontent-%COMP%]{overflow-y:auto}.jx-grid-virtual[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]{position:sticky;top:0;z-index:1}.jx-grid-spacer[_ngcontent-%COMP%]{pointer-events:none}.jx-grid-spacer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:0;border:none;height:inherit}.jx-col-align-right[_ngcontent-%COMP%]{text-align:right}.jx-col-align-center[_ngcontent-%COMP%]{text-align:center}"]
   });
 };
@@ -52266,16 +52283,16 @@ var B = class _B {
     e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", _), e.register("button", V), e.register("attachment", O);
   }
   static \u0275fac = function B_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _B)(\u0275\u0275inject(A));
+    return new (__ngFactoryType__ || _B)(\u0275\u0275inject(H));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
     type: _B,
-    declarations: [$, N, H, z, E, P, T, _, V, O],
+    declarations: [$, N, A, z, E, P, T, _, V, O],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
     exports: [$, N]
   });
   static \u0275inj = /* @__PURE__ */ \u0275\u0275defineInjector({
-    providers: [A],
+    providers: [H],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule]
   });
 };
@@ -52283,13 +52300,13 @@ var B = class _B {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: NgModule,
     args: [{
-      declarations: [$, N, H, z, E, P, T, _, V, O],
+      declarations: [$, N, A, z, E, P, T, _, V, O],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
-      providers: [A],
+      providers: [H],
       exports: [$, N]
     }]
   }], () => [{
-    type: A
+    type: H
   }], null);
 })();
 var W = class _W {

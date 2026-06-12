@@ -52553,93 +52553,159 @@ var StatusBadgeCellComponent = class _StatusBadgeCellComponent extends W {
 
 // src/app/custom-cells/custom-number-cell.component.ts
 var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
+  cdr;
   context = void 0;
-  get draftValue() {
-    return this.value === null || this.value === void 0 ? "" : String(this.value);
+  /** Valore visualizzato nell'input — stato locale indipendente dal workbook */
+  draft = "";
+  /** Valore al momento dell'apertura dell'editing — usato per il ripristino */
+  _holdValue = void 0;
+  constructor(cdr) {
+    super();
+    this.cdr = cdr;
   }
-  hold(event) {
-    this.stopEvent(event);
+  /** Blocca la propagazione di qualsiasi mousedown sull'host — impedisce che il
+   *  grid chiami setSelection() e colori di blu la cella. */
+  onHostMouseDown(event) {
+    event.stopPropagation();
+  }
+  ngOnInit() {
+    this._holdValue = this.value;
+    this.draft = this._fmt(this.value);
+    this.wireLifecycle();
+  }
+  onCellAttached() {
+    this._holdValue = this.value;
+    this.draft = this._fmt(this.value);
+  }
+  // ── Validazione ─────────────────────────────────────────────────────────────
+  // Personalizza qui i criteri: devi restituire true se il valore è accettabile.
+  isValid(n) {
+    return Number.isFinite(n) && n >= 0 && n <= 9999;
+  }
+  // ── Hook beforeChange (solo questa cella) ───────────────────────────────────
+  jxOnBeforeChange(e) {
+    if (e.data.x !== this.x || e.data.y !== this.y)
+      return;
+    const raw = e.data.value;
+    if (raw === "" || raw === null || raw === void 0)
+      return;
+    const n = Number(raw);
+    if (!Number.isNaN(n) && !this.isValid(n)) {
+      e.cancel();
+      this.draft = this._fmt(this._holdValue);
+      this.cdr.detectChanges();
+    }
+  }
+  // ── Hook change (solo questa cella) ─────────────────────────────────────────
+  jxOnChange(p) {
+    if (p.x !== this.x || p.y !== this.y)
+      return;
+    this._holdValue = p.value;
+    this.draft = this._fmt(p.value);
+    this.cdr.detectChanges();
+  }
+  // ── Gestione input ───────────────────────────────────────────────────────────
+  onFocus() {
+    this._holdValue = this.getValue() ?? this.value;
+    this.draft = this._fmt(this._holdValue);
   }
   onInput(event) {
     event.stopPropagation();
+    this.draft = event.target.value;
   }
   onKey(event) {
     event.stopPropagation();
     if (event.key === "Enter") {
       event.preventDefault();
-      this.commitDraft(event);
+      this._commit();
       this.focusCell();
     }
     if (event.key === "Escape") {
       event.preventDefault();
+      this.draft = this._fmt(this._holdValue);
+      this.cdr.detectChanges();
       this.focusCell();
     }
   }
-  commitDraft(event) {
-    event?.stopPropagation();
-    const input2 = event?.target;
-    const raw = input2?.value ?? "";
+  onBlur() {
+    this._commit();
+  }
+  // ── Commit ───────────────────────────────────────────────────────────────────
+  _commit() {
+    if (!this.editable)
+      return;
+    const raw = this.draft.trim();
     if (raw === "") {
       this.commitValue("", false);
       return;
     }
-    const value = Number(raw);
-    this.commitValue(Number.isNaN(value) ? "" : value, false);
+    const n = Number(raw);
+    this.commitValue(Number.isNaN(n) ? "" : n, false);
   }
-  static \u0275fac = /* @__PURE__ */ (() => {
-    let \u0275CustomNumberCellComponent_BaseFactory;
-    return function CustomNumberCellComponent_Factory(__ngFactoryType__) {
-      return (\u0275CustomNumberCellComponent_BaseFactory || (\u0275CustomNumberCellComponent_BaseFactory = \u0275\u0275getInheritedFactory(_CustomNumberCellComponent)))(__ngFactoryType__ || _CustomNumberCellComponent);
-    };
-  })();
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CustomNumberCellComponent, selectors: [["app-custom-number-cell"]], inputs: { context: "context" }, standalone: false, features: [\u0275\u0275InheritDefinitionFeature], decls: 1, vars: 2, consts: [["type", "text", "inputmode", "decimal", 1, "demo-custom-number", 3, "mousedown", "click", "keydown", "input", "blur", "disabled", "value"]], template: function CustomNumberCellComponent_Template(rf, ctx) {
+  _fmt(v) {
+    return v === null || v === void 0 || v === "" ? "" : String(v);
+  }
+  static \u0275fac = function CustomNumberCellComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _CustomNumberCellComponent)(\u0275\u0275directiveInject(ChangeDetectorRef));
+  };
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CustomNumberCellComponent, selectors: [["app-custom-number-cell"]], hostBindings: function CustomNumberCellComponent_HostBindings(rf, ctx) {
+    if (rf & 1) {
+      \u0275\u0275listener("mousedown", function CustomNumberCellComponent_mousedown_HostBindingHandler($event) {
+        return ctx.onHostMouseDown($event);
+      });
+    }
+  }, inputs: { context: "context" }, standalone: false, features: [\u0275\u0275InheritDefinitionFeature], decls: 1, vars: 2, consts: [["type", "text", "inputmode", "decimal", "autocomplete", "off", 1, "jx-num-ghost", 3, "mousedown", "click", "focus", "keydown", "input", "blur", "value"]], template: function CustomNumberCellComponent_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "input", 0);
       \u0275\u0275listener("mousedown", function CustomNumberCellComponent_Template_input_mousedown_0_listener($event) {
-        return ctx.hold($event);
+        return $event.stopPropagation();
       })("click", function CustomNumberCellComponent_Template_input_click_0_listener($event) {
-        return ctx.hold($event);
+        return $event.stopPropagation();
+      })("focus", function CustomNumberCellComponent_Template_input_focus_0_listener() {
+        return ctx.onFocus();
       })("keydown", function CustomNumberCellComponent_Template_input_keydown_0_listener($event) {
         return ctx.onKey($event);
       })("input", function CustomNumberCellComponent_Template_input_input_0_listener($event) {
         return ctx.onInput($event);
-      })("blur", function CustomNumberCellComponent_Template_input_blur_0_listener($event) {
-        return ctx.commitDraft($event);
+      })("blur", function CustomNumberCellComponent_Template_input_blur_0_listener() {
+        return ctx.onBlur();
       });
       \u0275\u0275elementEnd();
     }
     if (rf & 2) {
-      \u0275\u0275property("disabled", !ctx.editable)("value", ctx.draftValue);
+      \u0275\u0275property("value", ctx.draft);
+      \u0275\u0275attribute("disabled", ctx.editable ? null : "");
     }
-  }, encapsulation: 2 });
+  }, styles: ["\n\n[_nghost-%COMP%] {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.jx-num-ghost[_ngcontent-%COMP%] {\n  flex: 1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost[_ngcontent-%COMP%]:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CustomNumberCellComponent, [{
     type: Component,
-    args: [{
-      standalone: false,
-      selector: "app-custom-number-cell",
-      template: `
+    args: [{ standalone: false, selector: "app-custom-number-cell", template: `
     <input
-      class="demo-custom-number"
+      class="jx-num-ghost"
       type="text"
       inputmode="decimal"
-      [disabled]="!editable"
-      [value]="draftValue"
-      (mousedown)="hold($event)"
-      (click)="hold($event)"
+      autocomplete="off"
+      [attr.disabled]="editable ? null : ''"
+      [value]="draft"
+      (mousedown)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()"
+      (focus)="onFocus()"
       (keydown)="onKey($event)"
       (input)="onInput($event)"
-      (blur)="commitDraft($event)"
+      (blur)="onBlur()"
     />
-  `
-    }]
-  }], null, { context: [{
+  `, styles: ["/* angular:styles/component:css;6dcb889dfb8df6215afcc4f71dacad328946a10bb7275ee5ae00607342708f80;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/custom-number-cell.component.ts */\n:host {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.jx-num-ghost {\n  flex: 1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */\n"] }]
+  }], () => [{ type: ChangeDetectorRef }], { context: [{
     type: Input
+  }], onHostMouseDown: [{
+    type: HostListener,
+    args: ["mousedown", ["$event"]]
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CustomNumberCellComponent, { className: "CustomNumberCellComponent", filePath: "src/app/custom-cells/custom-number-cell.component.ts", lineNumber: 26 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CustomNumberCellComponent, { className: "CustomNumberCellComponent", filePath: "src/app/custom-cells/custom-number-cell.component.ts", lineNumber: 44 });
 })();
 
 // src/app/custom-cells/column-stats-header.component.ts

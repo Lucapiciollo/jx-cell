@@ -47589,13 +47589,7 @@ var I = class _I {
     return t;
   }
   normalizeFooters(e) {
-    if (!Array.isArray(e)) return [];
-    const t = this.getColumnCount();
-    return e.map((e2) => {
-      const o = Array.isArray(e2) ? [...e2] : [];
-      for (; o.length < t; ) o.push("");
-      return o.slice(0, t);
-    });
+    return Array.isArray(e) ? e.map((e2) => Array.isArray(e2) ? [...e2] : []) : [];
   }
   rebuildFormulaIndex() {
     this.formulas.clear();

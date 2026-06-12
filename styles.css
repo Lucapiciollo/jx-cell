@@ -107,7 +107,7 @@
   --jx-grid-total-font-weight: 700;
   --jx-grid-number-font-variant: tabular-nums;
 }
-.jexcel_container {
+jx-table .jexcel_container {
   position: relative;
   background: var(--jx-container-bg);
   border: 1px solid var(--jx-border);
@@ -119,40 +119,40 @@
   font-size: var(--jx-font-size-md);
   color: var(--jx-text);
 }
-.jexcel_container.jx-sticky-active {
+jx-table .jexcel_container.jx-sticky-active {
   overflow: clip;
 }
-.jexcel_container.jx-freeze-active {
+jx-table .jexcel_container.jx-freeze-active {
   overflow: hidden;
 }
-.jexcel_content {
+jx-table .jexcel_content {
   overflow: auto;
   background: var(--jx-cell-bg);
   scrollbar-width: thin;
   scrollbar-color: var(--jx-scrollbar-thumb) var(--jx-scrollbar-track);
 }
-.jexcel_content::-webkit-scrollbar {
+jx-table .jexcel_content::-webkit-scrollbar {
   width: var(--jx-scrollbar-size);
   height: var(--jx-scrollbar-size);
 }
-.jexcel_content::-webkit-scrollbar-track {
+jx-table .jexcel_content::-webkit-scrollbar-track {
   background: var(--jx-scrollbar-track);
 }
-.jexcel_content::-webkit-scrollbar-thumb {
+jx-table .jexcel_content::-webkit-scrollbar-thumb {
   background: var(--jx-scrollbar-thumb);
   border-radius: 999px;
 }
-.jexcel_content::-webkit-scrollbar-thumb:hover {
+jx-table .jexcel_content::-webkit-scrollbar-thumb:hover {
   background: var(--jx-scrollbar-thumb-hover);
 }
-table.jexcel {
+jx-table table.jexcel {
   width: max-content;
   min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background: var(--jx-cell-bg);
 }
-.jexcel thead td {
+jx-table .jexcel thead td {
   height: var(--jx-header-height);
   padding: 0 10px;
   border: 1px solid var(--jx-border);
@@ -171,10 +171,10 @@ table.jexcel {
   text-overflow: ellipsis;
   transition: background var(--jx-transition);
 }
-.jexcel thead td:hover {
+jx-table .jexcel thead td:hover {
   background: color-mix(in srgb, var(--jx-header-bg) 85%, var(--jx-primary) 15%);
 }
-.jexcel tbody td {
+jx-table .jexcel tbody td {
   height: var(--jx-row-height);
   padding: 3px 9px;
   border: 1px solid var(--jx-border);
@@ -188,13 +188,13 @@ table.jexcel {
   vertical-align: middle;
   transition: background var(--jx-transition);
 }
-.jexcel tbody tr:nth-child(even) td:not(.jexcel_row) {
+jx-table .jexcel tbody tr:nth-child(even) td:not(.jexcel_row) {
   background: var(--jx-cell-alt-bg);
 }
-.jexcel tbody tr:hover td:not(.jexcel_row) {
+jx-table .jexcel tbody tr:hover td:not(.jexcel_row) {
   background: var(--jx-row-hover);
 }
-.jexcel tfoot td {
+jx-table .jexcel tfoot td {
   height: var(--jx-header-height);
   padding: 3px 9px;
   border: 1px solid var(--jx-border);
@@ -207,8 +207,8 @@ table.jexcel {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.jexcel_selectall,
-.jexcel_row {
+jx-table .jexcel_selectall,
+jx-table .jexcel_row {
   background: var(--jx-header-bg) !important;
   border: 1px solid var(--jx-border) !important;
   color: var(--jx-text-muted);
@@ -218,7 +218,7 @@ table.jexcel {
   -webkit-user-select: none;
   user-select: none;
 }
-.jexcel input.editor {
+jx-table .jexcel input.editor {
   width: 100%;
   height: calc(var(--jx-row-height) - 2px);
   box-sizing: border-box;
@@ -232,9 +232,9 @@ table.jexcel {
   color: var(--jx-text);
   border-radius: var(--jx-radius-sm) var(--jx-radius-sm) 0 0;
 }
-.jexcel select,
-.jexcel input[type=date],
-.jexcel input[type=color] {
+jx-table .jexcel select,
+jx-table .jexcel input[type=date],
+jx-table .jexcel input[type=color] {
   width: 100%;
   height: calc(var(--jx-row-height) - 4px);
   box-sizing: border-box;
@@ -246,7 +246,7 @@ table.jexcel {
   background: var(--jx-cell-bg);
   color: var(--jx-text);
 }
-.jexcel button {
+jx-table .jexcel button {
   border: 1px solid var(--jx-border);
   border-radius: var(--jx-radius-sm);
   background: var(--jx-cell-soft-bg);
@@ -258,10 +258,24 @@ table.jexcel {
   cursor: pointer;
   transition: background var(--jx-transition), border-color var(--jx-transition);
 }
-.jexcel button:hover {
+jx-table .jexcel button:hover {
   background: var(--jx-primary-bg-mid);
   border-color: var(--jx-primary);
   color: var(--jx-primary);
+}
+jx-table .jexcel thead .jx-nested-header td {
+  background: var(--jx-header-bg);
+  color: var(--jx-header-text);
+  font-weight: 600;
+  font-size: var(--jx-font-size-xs);
+  border: 1px solid var(--jx-border);
+  text-align: center;
+  padding: 0 8px;
+}
+jx-table .jexcel thead tr.jx-filter-row td {
+  background: var(--jx-filter-bg);
+  border-bottom: 1px solid var(--jx-filter-border);
+  padding: 2px 3px;
 }
 .jdropdown-container,
 .jcontextmenu {
@@ -273,69 +287,55 @@ table.jexcel {
   overflow: hidden;
   font-family: var(--jx-font-family);
 }
-.jexcel thead .jx-nested-header td {
-  background: var(--jx-header-bg);
-  color: var(--jx-header-text);
-  font-weight: 600;
-  font-size: var(--jx-font-size-xs);
-  border: 1px solid var(--jx-border);
-  text-align: center;
-  padding: 0 8px;
-}
-.jexcel thead tr.jx-filter-row td {
-  background: var(--jx-filter-bg);
-  border-bottom: 1px solid var(--jx-filter-border);
-  padding: 2px 3px;
-}
-.jexcel tbody td.highlight {
+jx-table .jexcel tbody td.highlight {
   outline: 2px solid var(--jx-selection-border);
   outline-offset: -2px;
   position: relative;
   z-index: 1;
 }
-.jexcel tbody td.highlight-selected {
+jx-table .jexcel tbody td.highlight-selected {
   background-color: var(--jx-primary-bg-mid);
 }
-.jexcel tbody td.selected {
+jx-table .jexcel tbody td.selected {
   background-color: var(--jx-selection);
 }
-.jexcel thead td[data-x].selected {
+jx-table .jexcel thead td[data-x].selected {
   box-shadow: inset 0 -2px 0 var(--jx-selection-border);
 }
-.jexcel tfoot td.selected {
+jx-table .jexcel tfoot td.selected {
   box-shadow: inset 0 2px 0 var(--jx-selection-border);
 }
-.jexcel tbody td.readonly {
+jx-table .jexcel tbody td.readonly {
   background: var(--jx-cell-soft-bg);
   color: var(--jx-text-muted);
   cursor: default;
 }
-.jexcel thead td[data-x].jx-col-drag-left {
+jx-table .jexcel thead td[data-x].jx-col-drag-left {
   box-shadow: inset 3px 0 0 var(--jx-accent);
 }
-.jexcel thead td[data-x].jx-col-drag-right {
+jx-table .jexcel thead td[data-x].jx-col-drag-right {
   box-shadow: inset -3px 0 0 var(--jx-accent);
 }
-.jexcel thead td[data-x].jx-col-resizing {
+jx-table .jexcel thead td[data-x].jx-col-resizing {
   box-shadow: inset -2px 0 0 var(--jx-accent);
 }
-.jexcel thead.draggable td[data-x].dragging {
+jx-table .jexcel thead.draggable td[data-x].dragging {
   opacity: 0.45;
   background: var(--jx-primary-bg-mid) !important;
 }
-.jexcel td.jexcel_row.jx-row-resizing {
+jx-table .jexcel td.jexcel_row.jx-row-resizing {
   box-shadow: inset 0 -2px 0 var(--jx-accent);
 }
-.jexcel td.jexcel_row.jx-row-drop-top {
+jx-table .jexcel td.jexcel_row.jx-row-drop-top {
   box-shadow: inset 0 3px 0 var(--jx-accent);
 }
-.jexcel td.jexcel_row.jx-row-drop-bottom {
+jx-table .jexcel td.jexcel_row.jx-row-drop-bottom {
   box-shadow: inset 0 -3px 0 var(--jx-accent);
 }
-.jexcel tbody td.jx-cell-copying {
+jx-table .jexcel tbody td.jx-cell-copying {
   border: 1px dashed var(--jx-accent) !important;
 }
-.jx-fill-handle {
+jx-table .jx-fill-handle {
   position: absolute;
   width: 6px;
   height: 6px;
@@ -350,39 +350,39 @@ table.jexcel {
   user-select: none;
   pointer-events: auto;
 }
-.jexcel tbody td.jx-fill-preview {
+jx-table .jexcel tbody td.jx-fill-preview {
   background-color: transparent;
 }
-.jexcel tbody td.jx-fill-preview.jx-fill-preview-top {
+jx-table .jexcel tbody td.jx-fill-preview.jx-fill-preview-top {
   box-shadow: inset 0 1px 0 var(--jx-fill-handle);
 }
-.jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom {
+jx-table .jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom {
   box-shadow: inset 0 -1px 0 var(--jx-fill-handle);
 }
-.jexcel tbody td.jx-fill-preview.jx-fill-preview-left {
+jx-table .jexcel tbody td.jx-fill-preview.jx-fill-preview-left {
   border-left: 1px solid var(--jx-fill-handle);
 }
-.jexcel tbody td.jx-fill-preview.jx-fill-preview-right {
+jx-table .jexcel tbody td.jx-fill-preview.jx-fill-preview-right {
   border-right: 1px solid var(--jx-fill-handle);
 }
-.jexcel thead td[data-x].jx-col-sortable {
+jx-table .jexcel thead td[data-x].jx-col-sortable {
   cursor: pointer;
 }
-.jx-col-header-inner {
+jx-table .jx-col-header-inner {
   display: inline-flex;
   align-items: center;
   gap: 3px;
   max-width: 100%;
   overflow: hidden;
 }
-.jx-col-header-label {
+jx-table .jx-col-header-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
   text-align: center;
 }
-.jx-sort-icon {
+jx-table .jx-sort-icon {
   display: inline-flex;
   align-items: center;
   font-size: 8px;
@@ -395,32 +395,32 @@ table.jexcel {
   -webkit-user-select: none;
   user-select: none;
 }
-.jx-sort-icon:hover {
+jx-table .jx-sort-icon:hover {
   opacity: 0.75;
 }
-.jx-sort-icon--push-right {
+jx-table .jx-sort-icon--push-right {
   margin-left: auto;
 }
-.jx-col-header-inner:has(.jx-sort-icon--push-right) {
+jx-table .jx-col-header-inner:has(.jx-sort-icon--push-right) {
   display: flex;
   width: 100%;
 }
-.jx-col-header-inner:has(.jx-sort-icon--push-right) .jx-col-header-label {
+jx-table .jx-col-header-inner:has(.jx-sort-icon--push-right) .jx-col-header-label {
   flex: 1;
 }
-.jx-sort-icon--order-first {
+jx-table .jx-sort-icon--order-first {
   order: -1;
 }
-.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,
-.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--order-first,
-.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--push-right,
-.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon,
-.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--order-first,
-.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--push-right {
+jx-table .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,
+jx-table .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--order-first,
+jx-table .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--push-right,
+jx-table .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon,
+jx-table .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--order-first,
+jx-table .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--push-right {
   opacity: 1;
   color: var(--jx-primary);
 }
-.jx-comment-indicator {
+jx-table .jx-comment-indicator {
   position: absolute;
   top: 0;
   right: 0;
@@ -433,7 +433,7 @@ table.jexcel {
   z-index: 10;
   pointer-events: auto;
 }
-.jexcel_toolbar {
+jx-table .jexcel_toolbar {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -447,7 +447,7 @@ table.jexcel {
   font-family: var(--jx-font-family);
   box-sizing: border-box;
 }
-.jexcel_toolbar_item {
+jx-table .jexcel_toolbar_item {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -477,12 +477,12 @@ table.jexcel {
   font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
-.jexcel_toolbar_item:hover {
+jx-table .jexcel_toolbar_item:hover {
   background: var(--jx-primary-bg-mid);
   border-color: var(--jx-primary);
   color: var(--jx-primary);
 }
-select.jexcel_toolbar_item {
+jx-table select.jexcel_toolbar_item {
   height: 28px;
   font-size: var(--jx-font-size-sm);
   font-family: var(--jx-font-family);
@@ -495,11 +495,11 @@ select.jexcel_toolbar_item {
   min-width: 64px;
   outline: none;
 }
-select.jexcel_toolbar_item:hover,
-select.jexcel_toolbar_item:focus {
+jx-table select.jexcel_toolbar_item:hover,
+jx-table select.jexcel_toolbar_item:focus {
   border-color: var(--jx-primary);
 }
-.jx-toolbar-divisor {
+jx-table .jx-toolbar-divisor {
   display: inline-block;
   width: 1px;
   height: 20px;
@@ -508,11 +508,11 @@ select.jexcel_toolbar_item:focus {
   flex-shrink: 0;
   border-radius: 1px;
 }
-.jx-toolbar-color {
+jx-table .jx-toolbar-color {
   position: relative;
   overflow: hidden;
 }
-.jx-toolbar-color .jx-toolbar-color-input {
+jx-table .jx-toolbar-color .jx-toolbar-color-input {
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -522,12 +522,12 @@ select.jexcel_toolbar_item:focus {
   padding: 0;
   border: none;
 }
-.jx-toolbar-combo {
+jx-table .jx-toolbar-combo {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
-.jx-toolbar-combo__btn {
+jx-table .jx-toolbar-combo__btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -545,11 +545,11 @@ select.jexcel_toolbar_item:focus {
   transition: border-color var(--jx-transition), color var(--jx-transition);
   width: 100%;
 }
-.jx-toolbar-combo__btn:hover {
+jx-table .jx-toolbar-combo__btn:hover {
   border-color: var(--jx-primary);
   color: var(--jx-primary);
 }
-.jx-toolbar-combo__label {
+jx-table .jx-toolbar-combo__label {
   flex: 1;
   text-align: left;
   overflow: hidden;
@@ -557,7 +557,7 @@ select.jexcel_toolbar_item:focus {
   white-space: nowrap;
   max-width: 120px;
 }
-.jx-toolbar-combo__arrow {
+jx-table .jx-toolbar-combo__arrow {
   font-style: normal;
   font-size: 9px;
   font-family: sans-serif;
@@ -565,7 +565,7 @@ select.jexcel_toolbar_item:focus {
   opacity: 0.6;
   margin-top: 1px;
 }
-.jx-toolbar-combo__anchor {
+jx-table .jx-toolbar-combo__anchor {
   position: absolute;
   bottom: 0;
   left: 0;

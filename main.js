@@ -46446,8 +46446,10 @@ var F = class _F {
   }
   setConfig(e) {
     const t = ["defaultCellStyle", "defaultHeaderStyle", "defaultNestedHeaderStyle", "defaultFooterStyle"];
-    for (const o of t) o in e && void 0 === e[o] && delete this.options[o];
-    Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++), "data" in e && void 0 !== e.data && (this.rawData = this.normalizeData(e.data, this.options.columns ?? []), this.padToMinRows(), this.options.data = this.rawData, this.rebuildFormulaIndex(), this.recalculateAll(), this.checkAutoAddRow()), this.config$.next();
+    for (const o2 of t) o2 in e && void 0 === e[o2] && delete this.options[o2];
+    Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++);
+    let o = false;
+    "data" in e && void 0 !== e.data && (this.rawData = this.normalizeData(e.data, this.options.columns ?? []), this.padToMinRows(), this.options.data = this.rawData, this.rebuildFormulaIndex(), o = true), ("footers" in e || "footer" in e) && (this.footerRawData = this.normalizeFooters(e.footers ?? e.footer ?? []), this.options.footers = this.footerRawData, o = true), o && (this.recalculateAll(), "data" in e && void 0 !== e.data && this.checkAutoAddRow()), this.config$.next();
   }
   setColumnAlign(e, t) {
     if (!Array.isArray(this.options.columns)) return;
@@ -46569,6 +46571,12 @@ var F = class _F {
       const o = t2;
       return o?.name === e || o?.field === e;
     }) : -1;
+  }
+  getColumnKey(e) {
+    const t = this.options.columns?.[e];
+    if (null == t) return;
+    const o = t?.name ?? t?.field;
+    return null != o ? String(o) : void 0;
   }
   _lookupSourceItem(e, t) {
     const o = this.options.columns?.[e], n = Array.isArray(o?.autocompleteSource) ? o.autocompleteSource : Array.isArray(o?.source) ? o.source : void 0;
@@ -50260,6 +50268,9 @@ var $ = class _$ {
   }
   getColumnByKey(e) {
     return this.workbook.getColumnByKey(e);
+  }
+  getColumnKey(e) {
+    return this.workbook.getColumnKey(e);
   }
   getColKey(e) {
     const t = this.column(e);

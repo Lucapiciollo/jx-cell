@@ -48470,6 +48470,10 @@ var $ = class _$ {
   fillDragPreviewX = null;
   fillDragPreviewY = null;
   fillDragDirection = null;
+  _renderedColWidths = [];
+  _renderedRowHeaderWidth = 0;
+  _colWidthRebuildPending = false;
+  _colWidthObserver = null;
   constructor(e, t, o, n, r) {
     this.workbook = e, this.address = t, this.clipboard = o, this.cdr = n, this.zone = r;
   }
@@ -48478,16 +48482,18 @@ var $ = class _$ {
   }
   ngAfterViewInit() {
     this.init(), this.zone.run(() => queueMicrotask(() => {
-      this._initPlugins(), this.ready.emit(this.workbook);
-    }));
+      this._initPlugins(), this.ready.emit(this.workbook), this.scheduleColWidthsRebuild();
+    })), this._colWidthObserver = new ResizeObserver(() => {
+      this.zone.run(() => this.scheduleColWidthsRebuild());
+    }), this._colWidthObserver.observe(this.host.nativeElement);
   }
   ngOnChanges(e) {
     e.options && !e.options.firstChange && (this._destroyPlugins(e.options.previousValue?.toolbarPlugins), this._acLabelCache.clear(), this._acLabelPrefetched.clear(), this.init(), this.zone.run(() => queueMicrotask(() => {
-      this._initPlugins(), this.ready.emit(this.workbook);
+      this._initPlugins(), this.ready.emit(this.workbook), this.scheduleColWidthsRebuild();
     })));
   }
   ngOnDestroy() {
-    this._destroyPlugins(this.options.toolbarPlugins), this.sub.unsubscribe(), this.stopSelecting(), this.acScrollSub?.(), this.acScrollSub = null;
+    this._destroyPlugins(this.options.toolbarPlugins), this.sub.unsubscribe(), this.stopSelecting(), this.acScrollSub?.(), this.acScrollSub = null, this._colWidthObserver?.disconnect(), this._colWidthObserver = null;
   }
   _initPlugins() {
     const e = {
@@ -48499,7 +48505,7 @@ var $ = class _$ {
     (e ?? []).forEach((e2) => e2.destroy?.());
   }
   init() {
-    this._paginationStableHeight = 0, this.sub.unsubscribe(), this.sub = new Subscription(), this.workbook.init(this.options ?? {}), this.sub.add(this.workbook.data$.subscribe((e) => {
+    this._paginationStableHeight = 0, this._renderedColWidths = [], this._renderedRowHeaderWidth = 0, this.sub.unsubscribe(), this.sub = new Subscription(), this.workbook.init(this.options ?? {}), this.sub.add(this.workbook.data$.subscribe((e) => {
       this.data = e, this.cdr.markForCheck(), this.options.updateTable && queueMicrotask(() => {
         const t = this.options.updateTable, o = this.host?.nativeElement?.querySelectorAll?.("tbody td");
         o?.forEach((o2) => {
@@ -48563,6 +48569,25 @@ var $ = class _$ {
     if (!Array.isArray(this.options.columns)) return;
     const n = this.options.columns[e];
     n && (n.width = o, this.cdr.markForCheck());
+  }
+  scheduleColWidthsRebuild() {
+    this._colWidthRebuildPending || (this._colWidthRebuildPending = true, requestAnimationFrame(() => {
+      this._colWidthRebuildPending = false, this.buildRenderedColWidthsFromDom();
+    }));
+  }
+  buildRenderedColWidthsFromDom() {
+    if (!(this.freezeColumnsCount > 0 || this.freezeRowsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0) || !this.host?.nativeElement) return;
+    if (false !== this.options.rowHeaders) {
+      const e2 = this.host.nativeElement.querySelector("thead tr:last-child .jexcel_selectall");
+      e2?.offsetWidth && (this._renderedRowHeaderWidth = e2.offsetWidth);
+    }
+    const e = this.host.nativeElement.querySelectorAll("thead tr:last-child td[data-x]");
+    if (!e.length) return;
+    let t = false;
+    e.forEach((e2) => {
+      const o = Number(e2.dataset.x);
+      !Number.isNaN(o) && e2.offsetWidth && this._renderedColWidths[o] !== e2.offsetWidth && (this._renderedColWidths[o] = e2.offsetWidth, t = true);
+    }), t && this.cdr.markForCheck();
   }
   getRowHeight(e) {
     return this.rowHeights.get(e) ?? this.options.defaultRowHeight ?? 28;
@@ -48929,8 +48954,8 @@ var $ = class _$ {
     return t;
   }
   getFrozenColumnLeft(e) {
-    let t = false !== this.options.rowHeaders ? this.rowHeaderWidth : 0;
-    for (let o = 0; o < e; o++) this.isFrozenColumn(o) && (t += this.getColumnWidth(o));
+    let t = false !== this.options.rowHeaders ? this._renderedRowHeaderWidth || this.rowHeaderWidth : 0;
+    for (let o = 0; o < e; o++) this.isFrozenColumn(o) && (t += this._renderedColWidths[o] ?? this.getColumnWidth(o));
     return t;
   }
   isCellCopied(e, t) {
@@ -49062,7 +49087,7 @@ var $ = class _$ {
       columnDef: this.workbook.getColumnDef(e)
     }, null, e, l).cancelled) return;
     const c = this.workbook.getColumnDef(e);
-    (true === this.options.wordWrap || true === c?.wordWrap) && this.noWrapCols.add(e), this.setColumnWidth(e, l), this.workbook.events.resizeColumn$.next({
+    (true === this.options.wordWrap || true === c?.wordWrap) && this.noWrapCols.add(e), this.setColumnWidth(e, l), this.scheduleColWidthsRebuild(), this.workbook.events.resizeColumn$.next({
       colIndex: e,
       width: l,
       oldWidth: a,
@@ -49172,7 +49197,7 @@ var $ = class _$ {
         width: n,
         oldWidth: o2,
         columnDef: this.workbook.getColumnDef(t2)
-      }), this.workbook.fireEvent("onresizecolumn", null, t2, n)), e.preventDefault(), void this.cdr.markForCheck();
+      }), this.workbook.fireEvent("onresizecolumn", null, t2, n)), this.scheduleColWidthsRebuild(), e.preventDefault(), void this.cdr.markForCheck();
     }
     if (!this.headerDrag) return;
     const t = this.headerDrag.from, o = this.getColumnDragDestination();
@@ -52031,7 +52056,7 @@ var T = class _T {
     }]
   });
 })();
-var V = class _V {
+var _ = class __ {
   context;
   get rawValue() {
     const e = this.context.column;
@@ -52046,11 +52071,11 @@ var V = class _V {
     let t = this.rawValue;
     return null == t && (t = ""), "number" == typeof t && (t = t.toFixed(e.decimals ?? 2)), `${e.prefix ?? ""}${t}${e.suffix ?? ""}`;
   }
-  static \u0275fac = function V_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _V)();
+  static \u0275fac = function __Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _V,
+    type: __,
     selectors: [["jx-formula-cell"]],
     inputs: {
       context: "context"
@@ -52059,7 +52084,7 @@ var V = class _V {
     decls: 2,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-formula"]],
-    template: function V_Template(rf, ctx) {
+    template: function __Template1(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0);
         \u0275\u0275text(1);
@@ -52074,7 +52099,7 @@ var V = class _V {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(V, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52087,7 +52112,7 @@ var V = class _V {
     }]
   });
 })();
-var _ = class __ {
+var V = class _V {
   context;
   action = new EventEmitter();
   get label() {
@@ -52099,11 +52124,11 @@ var _ = class __ {
       payload: this.context.config?.payload
     });
   }
-  static \u0275fac = function __Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || __)();
+  static \u0275fac = function V_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _V)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: __,
+    type: _V,
     selectors: [["jx-button-cell"]],
     inputs: {
       context: "context"
@@ -52115,10 +52140,10 @@ var _ = class __ {
     decls: 3,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-button"], ["type", "button", 1, "jx-cell-btn", 3, "click"]],
-    template: function __Template1(rf, ctx) {
+    template: function V_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "button", 1);
-        \u0275\u0275listener("click", function __Template1_button_click_1_listener($event) {
+        \u0275\u0275listener("click", function V_Template_button_click_1_listener($event) {
           return ctx.click($event);
         });
         \u0275\u0275text(2);
@@ -52133,7 +52158,7 @@ var _ = class __ {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(V, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52216,14 +52241,14 @@ var O = class _O {
 })();
 var B = class _B {
   constructor(e) {
-    e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", V), e.register("button", _), e.register("attachment", O);
+    e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", _), e.register("button", V), e.register("attachment", O);
   }
   static \u0275fac = function B_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _B)(\u0275\u0275inject(A));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
     type: _B,
-    declarations: [$, N, H, z, E, P, T, V, _, O],
+    declarations: [$, N, H, z, E, P, T, _, V, O],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
     exports: [$, N]
   });
@@ -52236,7 +52261,7 @@ var B = class _B {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: NgModule,
     args: [{
-      declarations: [$, N, H, z, E, P, T, V, _, O],
+      declarations: [$, N, H, z, E, P, T, _, V, O],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
       providers: [A],
       exports: [$, N]
@@ -52245,7 +52270,7 @@ var B = class _B {
     type: A
   }], null);
 })();
-var L = class _L {
+var W = class _W {
   context;
   _lifeSub = new Subscription();
   ngOnDestroy() {
@@ -52312,19 +52337,19 @@ var L = class _L {
   }
   onCellDetached() {
   }
-  static \u0275fac = function L_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _L)();
+  static \u0275fac = function W_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _W)();
   };
   static \u0275dir = /* @__PURE__ */ \u0275\u0275defineDirective({
-    type: _L
+    type: _W
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(L, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(W, [{
     type: Directive
   }], null, null);
 })();
-var W = class _W {
+var L = class _L {
   context = void 0;
   get title() {
     return this.context?.title ?? "";
@@ -52341,15 +52366,15 @@ var W = class _W {
   sort() {
     this.context?.sort?.();
   }
-  static \u0275fac = function W_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _W)();
+  static \u0275fac = function L_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _L)();
   };
   static \u0275dir = /* @__PURE__ */ \u0275\u0275defineDirective({
-    type: _W
+    type: _L
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(W, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(L, [{
     type: Directive
   }], null, null);
 })();
@@ -52419,7 +52444,7 @@ var U = class _U {
 })();
 
 // src/app/custom-cells/status-badge-cell.component.ts
-var StatusBadgeCellComponent = class _StatusBadgeCellComponent extends L {
+var StatusBadgeCellComponent = class _StatusBadgeCellComponent extends W {
   context = void 0;
   statuses = ["Nuovo", "In lavorazione", "Approvato", "Respinto"];
   cycle(event) {
@@ -52493,7 +52518,7 @@ var StatusBadgeCellComponent = class _StatusBadgeCellComponent extends L {
 })();
 
 // src/app/custom-cells/custom-number-cell.component.ts
-var CustomNumberCellComponent = class _CustomNumberCellComponent extends L {
+var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
   context = void 0;
   get draftValue() {
     return this.value === null || this.value === void 0 ? "" : String(this.value);
@@ -52608,7 +52633,7 @@ function ColumnStatsHeaderComponent_span_4_Template(rf, ctx) {
     \u0275\u0275textInterpolate2(" \u03A3\xA0", ctx_r0.fmt(ctx_r0.sum), " \xA0/\xA0avg\xA0", ctx_r0.fmt(ctx_r0.avg), " ");
   }
 }
-var ColumnStatsHeaderComponent = class _ColumnStatsHeaderComponent extends W {
+var ColumnStatsHeaderComponent = class _ColumnStatsHeaderComponent extends L {
   context = void 0;
   sum = 0;
   avg = 0;
@@ -52724,7 +52749,7 @@ function PriorityCellComponent_div_3_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r1.log);
   }
 }
-var PriorityCellComponent = class _PriorityCellComponent extends L {
+var PriorityCellComponent = class _PriorityCellComponent extends W {
   cdr;
   context = void 0;
   /** Ultimi 3 eventi ricevuti — visibili direttamente nella cella. */
@@ -52894,7 +52919,7 @@ function BudgetHeaderComponent_span_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r0.colSortDir === "asc" ? "\u25B2" : "\u25BC", " ");
   }
 }
-var BudgetHeaderComponent = class _BudgetHeaderComponent extends W {
+var BudgetHeaderComponent = class _BudgetHeaderComponent extends L {
   cdr;
   context = void 0;
   static DEFAULT_BUDGET = 500;

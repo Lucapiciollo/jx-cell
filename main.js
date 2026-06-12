@@ -48554,6 +48554,7 @@ var $ = class _$ {
     return this.options.columns?.[e];
   }
   getColumnWidth(e) {
+    if (this._renderedColWidths[e]) return this._renderedColWidths[e];
     const t = this.column(e)?.width;
     return "number" == typeof t ? t : "string" == typeof t && Number.parseInt(t, 10) || (this.options.defaultColWidth ?? 100);
   }
@@ -48561,7 +48562,7 @@ var $ = class _$ {
     const o = Math.max(40, Math.round(t));
     if (!Array.isArray(this.options.columns)) return;
     const n = this.options.columns[e];
-    n && (n.width = o, this.cdr.markForCheck());
+    n && (n.width = o, this._renderedColWidths[e] = o, this.cdr.markForCheck());
   }
   scheduleColWidthsRebuild() {
     this._colWidthRebuildPending || (this._colWidthRebuildPending = true, requestAnimationFrame(() => {
@@ -48569,7 +48570,7 @@ var $ = class _$ {
     }));
   }
   buildRenderedColWidthsFromDom() {
-    if (!(this.freezeColumnsCount > 0 || this.freezeRowsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0) || !this.host?.nativeElement) return;
+    if (!this.host?.nativeElement) return;
     if (false !== this.options.rowHeaders) {
       const e2 = this.host.nativeElement.querySelector("thead tr:last-child .jexcel_selectall");
       e2?.offsetWidth && (this._renderedRowHeaderWidth = e2.offsetWidth);

@@ -49560,7 +49560,7 @@ var $ = class _$ {
         x: this.editing.x,
         y: this.editing.y
       } : this.activeCell;
-      return this.commitEdit(), void this.moveFrom(o.x, o.y, t);
+      return this.commitEdit(), void this.moveFrom(o.x, o.y, t, true);
     }
     if ("Escape" === e.key) {
       e.preventDefault();
@@ -49765,9 +49765,9 @@ var $ = class _$ {
       y: r
     };
   }
-  moveFrom(e, t, o) {
-    const n = this.computeNextCell(e, t, o);
-    this.focusAndSelectCell(n.x, n.y);
+  moveFrom(e, t, o, n = false) {
+    const r = this.computeNextCell(e, t, o);
+    this.focusAndSelectCell(r.x, r.y), n && this.isEditable(r.x, r.y) && this.startEdit(r.x, r.y);
   }
   isPrintableEditKey(e) {
     return 1 === e.key.length && !e.ctrlKey && !e.metaKey && !e.altKey;
@@ -49883,7 +49883,7 @@ var $ = class _$ {
   onInlineComponentKey(e, t, o) {
     if (this.handleUndoRedoShortcut(e)) return;
     const n = this.getMovementFromKey(e);
-    return n && ["Tab", "ShiftTab", "Enter", "ShiftEnter"].includes(n) ? (e.preventDefault(), e.stopPropagation(), this.workbook.recalculateAll(), void this.moveFrom(t, o, n)) : "Escape" === e.key ? (e.preventDefault(), e.stopPropagation(), void this.focusAndSelectCell(t, o)) : void e.stopPropagation();
+    return n && ["Tab", "ShiftTab", "Enter", "ShiftEnter"].includes(n) ? (e.preventDefault(), e.stopPropagation(), this.workbook.recalculateAll(), void this.moveFrom(t, o, n, true)) : n && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(n) ? (e.preventDefault(), e.stopPropagation(), this.workbook.recalculateAll(), void this.moveFrom(t, o, n, false)) : "Escape" === e.key ? (e.preventDefault(), e.stopPropagation(), void this.focusAndSelectCell(t, o)) : void e.stopPropagation();
   }
   onInlineComponentBlur(e, t, o) {
     e.stopPropagation(), this.workbook.events.blur$.next({

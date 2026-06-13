@@ -146,8 +146,6 @@ jx-table .jexcel_content::-webkit-scrollbar-thumb:hover {
   background: var(--jx-scrollbar-thumb-hover);
 }
 jx-table table.jexcel {
-  width: max-content;
-  min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background: var(--jx-cell-bg);
@@ -187,6 +185,32 @@ jx-table .jexcel tbody td {
   text-overflow: ellipsis;
   vertical-align: middle;
   transition: background var(--jx-transition);
+  position: relative;
+}
+jx-table .jexcel tbody td > span,
+jx-table .jexcel tbody td > .jx-angular-cell-host,
+jx-table .jexcel tbody td > .jx-ac-editing-label {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+jx-table .jexcel.jx-word-wrap tbody td,
+jx-table .jexcel tbody td.jx-word-wrap {
+  white-space: normal;
+  word-break: break-word;
+  text-overflow: clip;
+}
+jx-table .jexcel.jx-word-wrap tbody td > span,
+jx-table .jexcel.jx-word-wrap tbody td > .jx-angular-cell-host,
+jx-table .jexcel.jx-word-wrap tbody td > .jx-ac-editing-label,
+jx-table .jexcel tbody td.jx-word-wrap > span,
+jx-table .jexcel tbody td.jx-word-wrap > .jx-angular-cell-host,
+jx-table .jexcel tbody td.jx-word-wrap > .jx-ac-editing-label {
+  white-space: normal;
+  word-break: break-word;
+  text-overflow: clip;
 }
 jx-table .jexcel tbody tr:nth-child(even) td:not(.jexcel_row) {
   background: var(--jx-cell-alt-bg);
@@ -864,6 +888,22 @@ jx-table .jx-toolbar-combo__anchor {
 .jx-ac-input {
   width: 100%;
   box-sizing: border-box;
+}
+.jx-ac-input--anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+.jx-ac-editing-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .jx-comment-popup {
   position: absolute;

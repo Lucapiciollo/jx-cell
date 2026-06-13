@@ -45063,17 +45063,20 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template(rf, c
   if (rf & 1) {
     const _r45 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "input", 104, 9);
-    \u0275\u0275listener("click", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_click_1_listener($event) {
+    \u0275\u0275elementStart(1, "span", 104);
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "input", 105, 9);
+    \u0275\u0275listener("click", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_click_3_listener($event) {
       \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
-    })("mousedown", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_mousedown_1_listener($event) {
+    })("mousedown", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_mousedown_3_listener($event) {
       \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
-    })("mouseup", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_mouseup_1_listener($event) {
+    })("mouseup", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_mouseup_3_listener($event) {
       \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
-    })("focus", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_focus_1_listener($event) {
+    })("focus", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_focus_3_listener($event) {
       \u0275\u0275restoreView(_r45);
       const x_r34 = \u0275\u0275nextContext(3).index;
       const y_r32 = \u0275\u0275nextContext().index;
@@ -45081,13 +45084,13 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template(rf, c
       ctx_r3.onEditorFocus($event);
       ctx_r3.acFetch(x_r34, y_r32, "");
       return \u0275\u0275resetView(ctx_r3.scheduleAcFilterFocus());
-    })("keydown", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_keydown_1_listener($event) {
+    })("keydown", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_keydown_3_listener($event) {
       \u0275\u0275restoreView(_r45);
       const x_r34 = \u0275\u0275nextContext(3).index;
       const y_r32 = \u0275\u0275nextContext().index;
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.onAcEditorKey($event, x_r34, y_r32));
-    })("blur", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_blur_1_listener() {
+    })("blur", function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template_input_blur_3_listener() {
       \u0275\u0275restoreView(_r45);
       const ctx_r3 = \u0275\u0275nextContext(5);
       return \u0275\u0275resetView(ctx_r3.onAcEditorBlur());
@@ -45096,16 +45099,22 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template(rf, c
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    let tmp_15_0;
-    const ctx_r3 = \u0275\u0275nextContext(5);
+    let tmp_17_0;
+    const x_r34 = \u0275\u0275nextContext(3).index;
+    const y_r32 = \u0275\u0275nextContext().index;
+    const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275property("value", (tmp_15_0 = ctx_r3.editing.value) !== null && tmp_15_0 !== void 0 ? tmp_15_0 : "");
+    \u0275\u0275property("title", ctx_r3.rawValue(x_r34, y_r32));
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r34, y_r32));
+    \u0275\u0275advance();
+    \u0275\u0275property("value", (tmp_17_0 = ctx_r3.editing.value) !== null && tmp_17_0 !== void 0 ? tmp_17_0 : "");
   }
 }
 function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r46 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 107, 9);
+    \u0275\u0275elementStart(0, "input", 108, 9);
     \u0275\u0275twoWayListener("ngModelChange", function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_0_Template_input_ngModelChange_0_listener($event) {
       \u0275\u0275restoreView(_r46);
       const ctx_r3 = \u0275\u0275nextContext(6);
@@ -45151,7 +45160,7 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_0_T
 function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r48 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 108, 9);
+    \u0275\u0275elementStart(0, "input", 109, 9);
     \u0275\u0275twoWayListener("ngModelChange", function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_1_Template_input_ngModelChange_0_listener($event) {
       \u0275\u0275restoreView(_r48);
       const ctx_r3 = \u0275\u0275nextContext(6);
@@ -45191,7 +45200,7 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_1_T
 }
 function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275template(0, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_0_Template, 2, 6, "input", 105)(1, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_1_Template, 2, 2, "input", 106);
+    \u0275\u0275template(0, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_0_Template, 2, 6, "input", 106)(1, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Conditional_1_Template, 2, 2, "input", 107);
   }
   if (rf & 2) {
     let tmp_14_0;
@@ -45202,7 +45211,7 @@ function __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Template(rf, ct
 }
 function __tr_12_ng_container_2_td_1_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275template(0, __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template, 3, 1, "ng-container", 56)(1, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Template, 2, 1, "ng-template", null, 8, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(0, __tr_12_ng_container_2_td_1_ng_template_3_ng_container_0_Template, 5, 3, "ng-container", 56)(1, __tr_12_ng_container_2_td_1_ng_template_3_ng_template_1_Template, 2, 1, "ng-template", null, 8, \u0275\u0275templateRefExtractor);
   }
   if (rf & 2) {
     const standardEditTpl_r49 = \u0275\u0275reference(2);
@@ -45214,7 +45223,7 @@ function __tr_12_ng_container_2_td_1_ng_template_3_Template(rf, ctx) {
 function __tr_12_ng_container_2_td_1_div_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r50 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 109);
+    \u0275\u0275elementStart(0, "div", 110);
     \u0275\u0275listener("mousedown", function __tr_12_ng_container_2_td_1_div_5_Template_div_mousedown_0_listener($event) {
       \u0275\u0275restoreView(_r50);
       const ctx_r3 = \u0275\u0275nextContext(4);
@@ -45325,7 +45334,7 @@ function __tr_12_Template(rf, ctx) {
 }
 function __tfoot_13_tr_1_td_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "td", 113);
+    \u0275\u0275element(0, "td", 114);
   }
   if (rf & 2) {
     const fy_r53 = \u0275\u0275nextContext().index;
@@ -45365,7 +45374,7 @@ function __tfoot_13_tr_1_td_2_ng_template_2_Template(rf, ctx) {
 }
 function __tfoot_13_tr_1_td_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "td", 114);
+    \u0275\u0275elementStart(0, "td", 115);
     \u0275\u0275template(1, __tfoot_13_tr_1_td_2_ng_container_1_Template, 2, 2, "ng-container", 56)(2, __tfoot_13_tr_1_td_2_ng_template_2_Template, 1, 1, "ng-template", null, 10, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
   }
@@ -45384,7 +45393,7 @@ function __tfoot_13_tr_1_td_2_Template(rf, ctx) {
 function __tfoot_13_tr_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tr", 47);
-    \u0275\u0275template(1, __tfoot_13_tr_1_td_1_Template, 1, 1, "td", 111)(2, __tfoot_13_tr_1_td_2_Template, 4, 10, "td", 112);
+    \u0275\u0275template(1, __tfoot_13_tr_1_td_1_Template, 1, 1, "td", 112)(2, __tfoot_13_tr_1_td_2_Template, 4, 10, "td", 113);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45401,7 +45410,7 @@ function __tfoot_13_tr_1_Template(rf, ctx) {
 function __tfoot_13_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tfoot");
-    \u0275\u0275template(1, __tfoot_13_tr_1_Template, 3, 4, "tr", 110);
+    \u0275\u0275template(1, __tfoot_13_tr_1_Template, 3, 4, "tr", 111);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45414,7 +45423,7 @@ function __tfoot_13_Template(rf, ctx) {
 function __div_14_Template(rf, ctx) {
   if (rf & 1) {
     const _r57 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 115);
+    \u0275\u0275elementStart(0, "div", 116);
     \u0275\u0275listener("click", function __div_14_Template_div_click_0_listener() {
       \u0275\u0275restoreView(_r57);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45426,23 +45435,23 @@ function __div_14_Template(rf, ctx) {
 }
 function __div_15_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 116);
-    \u0275\u0275element(1, "div", 117);
+    \u0275\u0275elementStart(0, "div", 117);
+    \u0275\u0275element(1, "div", 118);
     \u0275\u0275elementEnd();
   }
 }
 function __div_16_Template(rf, ctx) {
   if (rf & 1) {
     const _r58 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 118);
+    \u0275\u0275elementStart(0, "div", 119);
     \u0275\u0275listener("click", function __div_16_Template_div_click_0_listener($event) {
       \u0275\u0275restoreView(_r58);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(1, "div", 119)(2, "span", 120);
+    \u0275\u0275elementStart(1, "div", 120)(2, "span", 121);
     \u0275\u0275text(3, "Commento");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "button", 121);
+    \u0275\u0275elementStart(4, "button", 122);
     \u0275\u0275listener("click", function __div_16_Template_button_click_4_listener() {
       \u0275\u0275restoreView(_r58);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45450,7 +45459,7 @@ function __div_16_Template(rf, ctx) {
     });
     \u0275\u0275text(5, "\u2715");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(6, "div", 122);
+    \u0275\u0275elementStart(6, "div", 123);
     \u0275\u0275text(7);
     \u0275\u0275elementEnd()();
   }
@@ -45463,15 +45472,15 @@ function __div_16_Template(rf, ctx) {
 }
 function __div_17_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 128);
-    \u0275\u0275element(1, "span", 129);
+    \u0275\u0275elementStart(0, "div", 129);
+    \u0275\u0275element(1, "span", 130);
     \u0275\u0275text(2, " Caricamento\u2026 ");
     \u0275\u0275elementEnd();
   }
 }
 function __div_17_ul_4_li_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "li", 133);
+    \u0275\u0275elementStart(0, "li", 134);
     \u0275\u0275text(1, "Nessun risultato");
     \u0275\u0275elementEnd();
   }
@@ -45479,7 +45488,7 @@ function __div_17_ul_4_li_1_Template(rf, ctx) {
 function __div_17_ul_4_li_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r60 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "li", 134);
+    \u0275\u0275elementStart(0, "li", 135);
     \u0275\u0275listener("mousedown", function __div_17_ul_4_li_2_Template_li_mousedown_0_listener($event) {
       \u0275\u0275restoreView(_r60);
       return \u0275\u0275resetView($event.preventDefault());
@@ -45503,8 +45512,8 @@ function __div_17_ul_4_li_2_Template(rf, ctx) {
 }
 function __div_17_ul_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "ul", 130);
-    \u0275\u0275template(1, __div_17_ul_4_li_1_Template, 2, 0, "li", 131)(2, __div_17_ul_4_li_2_Template, 2, 4, "li", 132);
+    \u0275\u0275elementStart(0, "ul", 131);
+    \u0275\u0275template(1, __div_17_ul_4_li_1_Template, 2, 0, "li", 132)(2, __div_17_ul_4_li_2_Template, 2, 4, "li", 133);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45518,17 +45527,17 @@ function __div_17_ul_4_Template(rf, ctx) {
 function __div_17_Template(rf, ctx) {
   if (rf & 1) {
     const _r59 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 123);
+    \u0275\u0275elementStart(0, "div", 124);
     \u0275\u0275listener("mousedown", function __div_17_Template_div_mousedown_0_listener($event) {
       \u0275\u0275restoreView(_r59);
       return \u0275\u0275resetView($event.preventDefault());
     });
-    \u0275\u0275elementStart(1, "div", 124);
+    \u0275\u0275elementStart(1, "div", 125);
     \u0275\u0275listener("mousedown", function __div_17_Template_div_mousedown_1_listener($event) {
       \u0275\u0275restoreView(_r59);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(2, "input", 125);
+    \u0275\u0275elementStart(2, "input", 126);
     \u0275\u0275listener("input", function __div_17_Template_input_input_2_listener($event) {
       \u0275\u0275restoreView(_r59);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45543,7 +45552,7 @@ function __div_17_Template(rf, ctx) {
       return \u0275\u0275resetView(ctx_r3.onAcFilterBlur());
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(3, __div_17_div_3_Template, 3, 0, "div", 126)(4, __div_17_ul_4_Template, 3, 2, "ul", 127);
+    \u0275\u0275template(3, __div_17_div_3_Template, 3, 0, "div", 127)(4, __div_17_ul_4_Template, 3, 2, "ul", 128);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45561,7 +45570,7 @@ function __div_17_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r65 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 135);
+    \u0275\u0275elementStart(0, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_10_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r65);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45571,7 +45580,7 @@ function __ng_template_18_ng_container_1_button_10_Template(rf, ctx) {
       ctx_r3.workbook.insertRow(ctx_ir67.y);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2912");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45586,7 +45595,7 @@ function __ng_template_18_ng_container_1_button_10_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_11_Template(rf, ctx) {
   if (rf & 1) {
     const _r68 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 135);
+    \u0275\u0275elementStart(0, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_11_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r68);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45596,7 +45605,7 @@ function __ng_template_18_ng_container_1_button_11_Template(rf, ctx) {
       ctx_r3.workbook.insertRow(ctx_ir67.y + 1);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2913");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45611,7 +45620,7 @@ function __ng_template_18_ng_container_1_button_11_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_12_Template(rf, ctx) {
   if (rf & 1) {
     const _r69 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 140);
+    \u0275\u0275elementStart(0, "button", 141);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_12_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r69);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45621,7 +45630,7 @@ function __ng_template_18_ng_container_1_button_12_Template(rf, ctx) {
       ctx_r3.workbook.deleteRow(ctx_ir67.y);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2715");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45636,7 +45645,7 @@ function __ng_template_18_ng_container_1_button_12_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_14_Template(rf, ctx) {
   if (rf & 1) {
     const _r70 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 135);
+    \u0275\u0275elementStart(0, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_14_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r70);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45646,7 +45655,7 @@ function __ng_template_18_ng_container_1_button_14_Template(rf, ctx) {
       ctx_r3.workbook.insertColumn(ctx_ir67.x);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2910");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45661,7 +45670,7 @@ function __ng_template_18_ng_container_1_button_14_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_15_Template(rf, ctx) {
   if (rf & 1) {
     const _r71 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 135);
+    \u0275\u0275elementStart(0, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_15_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r71);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45671,7 +45680,7 @@ function __ng_template_18_ng_container_1_button_15_Template(rf, ctx) {
       ctx_r3.workbook.insertColumn(ctx_ir67.x + 1);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2911");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45686,7 +45695,7 @@ function __ng_template_18_ng_container_1_button_15_Template(rf, ctx) {
 function __ng_template_18_ng_container_1_button_16_Template(rf, ctx) {
   if (rf & 1) {
     const _r72 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 140);
+    \u0275\u0275elementStart(0, "button", 141);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_button_16_Template_button_click_0_listener() {
       \u0275\u0275restoreView(_r72);
       const ctx_r65 = \u0275\u0275nextContext(2);
@@ -45696,7 +45705,7 @@ function __ng_template_18_ng_container_1_button_16_Template(rf, ctx) {
       ctx_r3.workbook.deleteColumn(ctx_ir67.x);
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(1, "span", 136);
+    \u0275\u0275elementStart(1, "span", 137);
     \u0275\u0275text(2, "\u2715");
     \u0275\u0275elementEnd();
     \u0275\u0275text(3);
@@ -45712,7 +45721,7 @@ function __ng_template_18_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r63 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "button", 135);
+    \u0275\u0275elementStart(1, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_Template_button_click_1_listener() {
       \u0275\u0275restoreView(_r63);
       const close_r64 = \u0275\u0275nextContext().close;
@@ -45720,12 +45729,12 @@ function __ng_template_18_ng_container_1_Template(rf, ctx) {
       ctx_r3.copyCells();
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(2, "span", 136);
+    \u0275\u0275elementStart(2, "span", 137);
     \u0275\u0275text(3, "\u2398");
     \u0275\u0275elementEnd();
     \u0275\u0275text(4);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "button", 135);
+    \u0275\u0275elementStart(5, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_Template_button_click_5_listener() {
       \u0275\u0275restoreView(_r63);
       const close_r64 = \u0275\u0275nextContext().close;
@@ -45733,17 +45742,17 @@ function __ng_template_18_ng_container_1_Template(rf, ctx) {
       ctx_r3.pasteCells();
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(6, "span", 136);
+    \u0275\u0275elementStart(6, "span", 137);
     \u0275\u0275text(7, "\u2399");
     \u0275\u0275elementEnd();
     \u0275\u0275text(8);
     \u0275\u0275elementEnd();
-    \u0275\u0275element(9, "div", 137);
-    \u0275\u0275template(10, __ng_template_18_ng_container_1_button_10_Template, 4, 1, "button", 138)(11, __ng_template_18_ng_container_1_button_11_Template, 4, 1, "button", 138)(12, __ng_template_18_ng_container_1_button_12_Template, 4, 1, "button", 139);
-    \u0275\u0275element(13, "div", 137);
-    \u0275\u0275template(14, __ng_template_18_ng_container_1_button_14_Template, 4, 1, "button", 138)(15, __ng_template_18_ng_container_1_button_15_Template, 4, 1, "button", 138)(16, __ng_template_18_ng_container_1_button_16_Template, 4, 1, "button", 139);
-    \u0275\u0275element(17, "div", 137);
-    \u0275\u0275elementStart(18, "button", 135);
+    \u0275\u0275element(9, "div", 138);
+    \u0275\u0275template(10, __ng_template_18_ng_container_1_button_10_Template, 4, 1, "button", 139)(11, __ng_template_18_ng_container_1_button_11_Template, 4, 1, "button", 139)(12, __ng_template_18_ng_container_1_button_12_Template, 4, 1, "button", 140);
+    \u0275\u0275element(13, "div", 138);
+    \u0275\u0275template(14, __ng_template_18_ng_container_1_button_14_Template, 4, 1, "button", 139)(15, __ng_template_18_ng_container_1_button_15_Template, 4, 1, "button", 139)(16, __ng_template_18_ng_container_1_button_16_Template, 4, 1, "button", 140);
+    \u0275\u0275element(17, "div", 138);
+    \u0275\u0275elementStart(18, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_Template_button_click_18_listener() {
       \u0275\u0275restoreView(_r63);
       const ctx_r65 = \u0275\u0275nextContext();
@@ -45753,12 +45762,12 @@ function __ng_template_18_ng_container_1_Template(rf, ctx) {
       ctx_r3.workbook.sort(ctx_ir67.x, "asc");
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(19, "span", 136);
+    \u0275\u0275elementStart(19, "span", 137);
     \u0275\u0275text(20, "\u25B2");
     \u0275\u0275elementEnd();
     \u0275\u0275text(21);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(22, "button", 135);
+    \u0275\u0275elementStart(22, "button", 136);
     \u0275\u0275listener("click", function __ng_template_18_ng_container_1_Template_button_click_22_listener() {
       \u0275\u0275restoreView(_r63);
       const ctx_r65 = \u0275\u0275nextContext();
@@ -45768,7 +45777,7 @@ function __ng_template_18_ng_container_1_Template(rf, ctx) {
       ctx_r3.workbook.sort(ctx_ir67.x, "desc");
       return \u0275\u0275resetView(close_r64());
     });
-    \u0275\u0275elementStart(23, "span", 136);
+    \u0275\u0275elementStart(23, "span", 137);
     \u0275\u0275text(24, "\u25BC");
     \u0275\u0275elementEnd();
     \u0275\u0275text(25);
@@ -45815,7 +45824,7 @@ function __div_20_ng_container_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r74 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "button", 147);
+    \u0275\u0275elementStart(1, "button", 148);
     \u0275\u0275listener("click", function __div_20_ng_container_5_Template_button_click_1_listener() {
       const p_r75 = \u0275\u0275restoreView(_r74).$implicit;
       const ctx_r3 = \u0275\u0275nextContext(2);
@@ -45837,7 +45846,7 @@ function __div_20_ng_container_5_Template(rf, ctx) {
 function __div_20_Template(rf, ctx) {
   if (rf & 1) {
     const _r73 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 141)(1, "button", 142);
+    \u0275\u0275elementStart(0, "div", 142)(1, "button", 143);
     \u0275\u0275listener("click", function __div_20_Template_button_click_1_listener() {
       \u0275\u0275restoreView(_r73);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45845,7 +45854,7 @@ function __div_20_Template(rf, ctx) {
     });
     \u0275\u0275text(2, "\u21E4");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "button", 143);
+    \u0275\u0275elementStart(3, "button", 144);
     \u0275\u0275listener("click", function __div_20_Template_button_click_3_listener() {
       \u0275\u0275restoreView(_r73);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45854,7 +45863,7 @@ function __div_20_Template(rf, ctx) {
     \u0275\u0275text(4, "\u2039");
     \u0275\u0275elementEnd();
     \u0275\u0275template(5, __div_20_ng_container_5_Template, 3, 3, "ng-container", 26);
-    \u0275\u0275elementStart(6, "button", 144);
+    \u0275\u0275elementStart(6, "button", 145);
     \u0275\u0275listener("click", function __div_20_Template_button_click_6_listener() {
       \u0275\u0275restoreView(_r73);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45862,7 +45871,7 @@ function __div_20_Template(rf, ctx) {
     });
     \u0275\u0275text(7, "\u203A");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "button", 145);
+    \u0275\u0275elementStart(8, "button", 146);
     \u0275\u0275listener("click", function __div_20_Template_button_click_8_listener() {
       \u0275\u0275restoreView(_r73);
       const ctx_r3 = \u0275\u0275nextContext();
@@ -45870,7 +45879,7 @@ function __div_20_Template(rf, ctx) {
     });
     \u0275\u0275text(9, "\u21E5");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(10, "span", 146);
+    \u0275\u0275elementStart(10, "span", 147);
     \u0275\u0275text(11);
     \u0275\u0275elementEnd()();
   }
@@ -48554,9 +48563,10 @@ var $ = class _$ {
     return this.options.columns?.[e];
   }
   getColumnWidth(e) {
-    if (this._renderedColWidths[e]) return this._renderedColWidths[e];
-    const t = this.column(e)?.width;
-    return "number" == typeof t ? t : "string" == typeof t && Number.parseInt(t, 10) || (this.options.defaultColWidth ?? 100);
+    const t = this.column(e)?.width, o = null != t, n = "number" == typeof t ? t : "string" == typeof t && Number.parseInt(t, 10) || (this.options.defaultColWidth ?? 100);
+    if (o) return n;
+    const r = this._renderedColWidths[e];
+    return r && r > n ? r : n;
   }
   setColumnWidth(e, t) {
     const o = Math.max(40, Math.round(t));
@@ -48837,6 +48847,9 @@ var $ = class _$ {
   get rowHeaderWidth() {
     return 50;
   }
+  get tablePixelWidth() {
+    return (false !== this.options.rowHeaders ? this._renderedRowHeaderWidth || this.rowHeaderWidth : 0) + this.headers.reduce((e, t, o) => this.isHiddenColumn(o) ? e : e + this.getColumnWidth(o), 0);
+  }
   get headerRowsCount() {
     return this.nestedHeaderRows.length + 1;
   }
@@ -49059,7 +49072,9 @@ var $ = class _$ {
     return false !== this.options.columnResize;
   }
   canResizeColumnHeader(e) {
-    return this.canResizeColumns();
+    if (!this.canResizeColumns()) return false;
+    const t = this.column(e);
+    return false !== t?.resizable;
   }
   onHeaderMouseDown(e, t) {
     if (0 !== t.button) return;
@@ -50478,7 +50493,7 @@ var $ = class _$ {
     };
   }
   acFetch(e, t, o) {
-    this.acSub?.(), this.acSub = null;
+    this.buildRenderedColWidthsFromDom(), this.acSub?.(), this.acSub = null;
     const n = this.column(e), r = n?.autocompleteSource ?? n?.source;
     if (!r) return this.acState = {
       x: e,
@@ -50506,13 +50521,13 @@ var $ = class _$ {
       this._acLabelCache.has(e) || this._acLabelCache.set(e, /* @__PURE__ */ new Map());
       const l2 = this._acLabelCache.get(e);
       for (const e2 of a2) null != e2.id && l2.set(e2.id, e2.label);
-      const c2 = i ? a2.filter((e2) => e2.label.toLowerCase().includes(i)) : a2;
+      const c2 = i ? a2.filter((e2) => e2.label.toLowerCase().includes(i)) : a2, h2 = this.rawValue(e, t), u2 = i || null == h2 || "" === h2 ? -1 : c2.findIndex((e2) => e2.id == h2);
       this.acState = {
         x: e,
         y: t,
         query: o,
         items: c2,
-        activeIndex: -1,
+        activeIndex: u2,
         loading: false
       }, this.cdr.markForCheck();
     };
@@ -50726,8 +50741,8 @@ var $ = class _$ {
     standalone: false,
     features: [\u0275\u0275ProvidersFeature([I]), \u0275\u0275NgOnChangesFeature],
     decls: 21,
-    vars: 35,
-    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], [3, "height", "hidden", "opacity", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngStyle", "click", 4, "ngIf"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-col-draggable", "jx-col-resizable", "jx-col-dragging", "jx-col-resizing", "jx-col-drag-left", "jx-col-drag-right", "jx-col-sortable", "jx-col-sort-asc", "jx-col-sort-desc", "selected", "mousedown", "mousemove", "mouseenter", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngStyle", 4, "ngIf"], [3, "hidden", "ngStyle", 4, "ngFor", "ngForOf"], [1, "jexcel_selectall", 3, "ngStyle"], [3, "hidden", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngStyle"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [1, "jx-sort-icon"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "value", "input", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngStyle"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-row", "highlight", "highlight-selected", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "innerHTML"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
+    vars: 37,
+    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], [3, "height", "hidden", "opacity", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngStyle", "click", 4, "ngIf"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-col-draggable", "jx-col-resizable", "jx-col-dragging", "jx-col-resizing", "jx-col-drag-left", "jx-col-drag-right", "jx-col-sortable", "jx-col-sort-asc", "jx-col-sort-desc", "selected", "mousedown", "mousemove", "mouseenter", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngStyle", 4, "ngIf"], [3, "hidden", "ngStyle", 4, "ngFor", "ngForOf"], [1, "jexcel_selectall", 3, "ngStyle"], [3, "hidden", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngStyle"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [1, "jx-sort-icon"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "value", "input", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngStyle"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-row", "highlight", "highlight-selected", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "innerHTML"], [1, "jx-ac-editing-label", 3, "title"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
     template: function __Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = \u0275\u0275getCurrentView();
@@ -50756,7 +50771,7 @@ var $ = class _$ {
       if (rf & 2) {
         let tmp_3_0;
         let tmp_10_0;
-        let tmp_14_0;
+        let tmp_15_0;
         \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_3_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_3_0 !== void 0 ? tmp_3_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-word-wrap", ctx.options.wordWrap)("jx-text-overflow-ellipsis", ctx.options.textOverflow === "ellipsis")("with-toolbar", ctx.allToolbarItems.length > 0);
         \u0275\u0275property("ngStyle", ctx.containerStyle);
         \u0275\u0275advance(2);
@@ -50765,7 +50780,8 @@ var $ = class _$ {
         \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_10_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_10_0 !== void 0 ? tmp_10_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-sticky-rows", ctx.options.stickyHeader || ctx.options.stickyFooter);
         \u0275\u0275property("ngStyle", ctx.contentStyle);
         \u0275\u0275advance();
-        \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_14_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_14_0 !== void 0 ? tmp_14_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true);
+        \u0275\u0275styleProp("width", ctx.tablePixelWidth, "px");
+        \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_15_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_15_0 !== void 0 ? tmp_15_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true);
         \u0275\u0275advance(2);
         \u0275\u0275property("ngIf", ctx.options.rowHeaders !== false);
         \u0275\u0275advance();
@@ -50789,7 +50805,7 @@ var $ = class _$ {
       }
     },
     dependencies: [NgClass, NgComponentOutlet, NgForOf, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, MaskDirective, ContextMenuDirective],
-    styles: ['[_nghost-%COMP%]{display:block;box-sizing:border-box}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   tr.jx-filter-row[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell[_ngcontent-%COMP%]{vertical-align:middle}.jx-filter-spacer[_ngcontent-%COMP%]{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input[_ngcontent-%COMP%]{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input[_ngcontent-%COMP%]::placeholder{opacity:.4}.jx-filter-empty[_ngcontent-%COMP%]{display:block;height:20px}.jexcel_container[_ngcontent-%COMP%]{position:relative}.jexcel_container.jx-sticky-active[_ngcontent-%COMP%]{overflow:clip}.jexcel_container.jx-freeze-active[_ngcontent-%COMP%]{overflow:hidden}.jexcel_content.jx-freeze-active[_ngcontent-%COMP%]{overflow:auto}table.jexcel.jx-freeze-active[_ngcontent-%COMP%]{border-collapse:separate;border-spacing:0}.jexcel[_ngcontent-%COMP%]   td.jexcel_selectall[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-clip:padding-box}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel_content.jx-sticky-rows[_ngcontent-%COMP%]{overflow-y:auto}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%]:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable.jx-col-dragging[_ngcontent-%COMP%]:after{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-left[_ngcontent-%COMP%]{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-right[_ngcontent-%COMP%]{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizing[_ngcontent-%COMP%]{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable.jx-row-dragging[_ngcontent-%COMP%]:before{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizing[_ngcontent-%COMP%]{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-top[_ngcontent-%COMP%]{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-cell-copying[_ngcontent-%COMP%]{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{position:relative;overflow:visible!important}.jx-fill-handle[_ngcontent-%COMP%]{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview[_ngcontent-%COMP%]{background-color:transparent}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-top[_ngcontent-%COMP%]{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-left[_ngcontent-%COMP%]{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-right[_ngcontent-%COMP%]{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay[_ngcontent-%COMP%]{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes _ngcontent-%COMP%_jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner[_ngcontent-%COMP%]{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn[_ngcontent-%COMP%]{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown[_ngcontent-%COMP%]{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar[_ngcontent-%COMP%]{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list[_ngcontent-%COMP%]{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item[_ngcontent-%COMP%]{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item[_ngcontent-%COMP%]:hover, .jx-ac-item.jx-ac-item--active[_ngcontent-%COMP%]{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes _ngcontent-%COMP%_jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner[_ngcontent-%COMP%]{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-ac-spin .6s linear infinite}.jx-ac-input--anchor[_ngcontent-%COMP%]{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box}.jx-comment-indicator[_ngcontent-%COMP%]{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup[_ngcontent-%COMP%]{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label[_ngcontent-%COMP%]{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close[_ngcontent-%COMP%]{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close[_ngcontent-%COMP%]:hover{opacity:1}.jx-comment-popup__body[_ngcontent-%COMP%]{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}body[_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], body   [_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], .jx-context-menu[_ngcontent-%COMP%]{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu[_ngcontent-%COMP%]{padding:4px 0}.jx-ctx-menu__header[_ngcontent-%COMP%]{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value[_ngcontent-%COMP%]{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item[_ngcontent-%COMP%]:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon[_ngcontent-%COMP%]{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator[_ngcontent-%COMP%]{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar[_ngcontent-%COMP%]{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item[_ngcontent-%COMP%]:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item[_ngcontent-%COMP%]{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor[_ngcontent-%COMP%]{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color[_ngcontent-%COMP%]{position:relative;overflow:hidden}.jx-toolbar-color[_ngcontent-%COMP%]   .jx-toolbar-color-input[_ngcontent-%COMP%]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination[_ngcontent-%COMP%]{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn[_ngcontent-%COMP%]:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn[_ngcontent-%COMP%]:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active[_ngcontent-%COMP%]{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info[_ngcontent-%COMP%]{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-label[_ngcontent-%COMP%]{display:inline}.jx-sort-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon[_ngcontent-%COMP%]:hover{opacity:1}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-asc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-desc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}'],
+    styles: ['[_nghost-%COMP%]{display:block;box-sizing:border-box}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   tr.jx-filter-row[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell[_ngcontent-%COMP%]{vertical-align:middle}.jx-filter-spacer[_ngcontent-%COMP%]{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input[_ngcontent-%COMP%]{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input[_ngcontent-%COMP%]::placeholder{opacity:.4}.jx-filter-empty[_ngcontent-%COMP%]{display:block;height:20px}.jexcel_container[_ngcontent-%COMP%]{position:relative}.jexcel_container.jx-sticky-active[_ngcontent-%COMP%]{overflow:clip}.jexcel_container.jx-freeze-active[_ngcontent-%COMP%]{overflow:hidden}.jexcel_content[_ngcontent-%COMP%]{overflow-x:auto}.jexcel_content.jx-freeze-active[_ngcontent-%COMP%]{overflow:auto}table.jexcel.jx-freeze-active[_ngcontent-%COMP%]{border-collapse:separate;border-spacing:0}.jexcel[_ngcontent-%COMP%]   td.jexcel_selectall[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-clip:padding-box}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel_content.jx-sticky-rows[_ngcontent-%COMP%]{overflow-y:auto}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%]:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable.jx-col-dragging[_ngcontent-%COMP%]:after{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-left[_ngcontent-%COMP%]{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-right[_ngcontent-%COMP%]{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizing[_ngcontent-%COMP%]{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable.jx-row-dragging[_ngcontent-%COMP%]:before{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizing[_ngcontent-%COMP%]{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-top[_ngcontent-%COMP%]{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-cell-copying[_ngcontent-%COMP%]{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{position:relative;overflow:visible!important}.jx-fill-handle[_ngcontent-%COMP%]{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview[_ngcontent-%COMP%]{background-color:transparent}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-top[_ngcontent-%COMP%]{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-left[_ngcontent-%COMP%]{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-right[_ngcontent-%COMP%]{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay[_ngcontent-%COMP%]{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes _ngcontent-%COMP%_jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner[_ngcontent-%COMP%]{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn[_ngcontent-%COMP%]{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown[_ngcontent-%COMP%]{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar[_ngcontent-%COMP%]{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list[_ngcontent-%COMP%]{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item[_ngcontent-%COMP%]{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item[_ngcontent-%COMP%]:hover, .jx-ac-item.jx-ac-item--active[_ngcontent-%COMP%]{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes _ngcontent-%COMP%_jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner[_ngcontent-%COMP%]{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-ac-spin .6s linear infinite}.jx-ac-input--anchor[_ngcontent-%COMP%]{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box}.jx-comment-indicator[_ngcontent-%COMP%]{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup[_ngcontent-%COMP%]{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label[_ngcontent-%COMP%]{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close[_ngcontent-%COMP%]{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close[_ngcontent-%COMP%]:hover{opacity:1}.jx-comment-popup__body[_ngcontent-%COMP%]{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}body[_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], body   [_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], .jx-context-menu[_ngcontent-%COMP%]{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu[_ngcontent-%COMP%]{padding:4px 0}.jx-ctx-menu__header[_ngcontent-%COMP%]{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value[_ngcontent-%COMP%]{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item[_ngcontent-%COMP%]:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon[_ngcontent-%COMP%]{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator[_ngcontent-%COMP%]{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar[_ngcontent-%COMP%]{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item[_ngcontent-%COMP%]:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item[_ngcontent-%COMP%]{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor[_ngcontent-%COMP%]{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color[_ngcontent-%COMP%]{position:relative;overflow:hidden}.jx-toolbar-color[_ngcontent-%COMP%]   .jx-toolbar-color-input[_ngcontent-%COMP%]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination[_ngcontent-%COMP%]{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn[_ngcontent-%COMP%]:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn[_ngcontent-%COMP%]:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active[_ngcontent-%COMP%]{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info[_ngcontent-%COMP%]{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-label[_ngcontent-%COMP%]{display:inline}.jx-sort-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon[_ngcontent-%COMP%]:hover{opacity:1}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-asc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-desc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}'],
     changeDetection: 0
   });
 };
@@ -50881,7 +50897,7 @@ var $ = class _$ {
   </ng-template>\r
 \r
   <div class="jexcel_content" [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" [class.jx-sticky-rows]="options.stickyHeader || options.stickyFooter" [ngStyle]="contentStyle">\r
-    <table class="jexcel" [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" tabindex="-1">\r
+    <table class="jexcel" [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" tabindex="-1" [style.width.px]="tablePixelWidth">\r
       <colgroup>\r
         <col *ngIf="options.rowHeaders !== false" [style.width]="'50px'" />\r
         <col *ngFor="let h of headers; let x = index; trackBy: trackByColumn" [style.width.px]="getColumnWidth(x)" [hidden]="isHiddenColumn(x)" />\r
@@ -51160,6 +51176,8 @@ var $ = class _$ {
             <ng-template #editTpl>\r
               <!-- Editor autocomplete: hidden focus anchor; visible filter is in the dropdown overlay -->\r
               <ng-container *ngIf="columnType(x) === 'autocomplete'; else standardEditTpl">\r
+                <!-- Show the current label so the cell does not blank out while editing -->\r
+                <span class="jx-ac-editing-label" [title]="rawValue(x,y)">{{ getAcLabel(x, y) }}</span>\r
                 <input\r
                   #editorInput\r
                   class="editor jx-ac-input jx-ac-input--anchor"\r
@@ -51395,7 +51413,7 @@ var $ = class _$ {
   </span>\r
 </div>\r
 `,
-      styles: [':host{display:block;box-sizing:border-box}.jexcel thead tr.jx-filter-row td{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell{vertical-align:middle}.jx-filter-spacer{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input::placeholder{opacity:.4}.jx-filter-empty{display:block;height:20px}.jexcel_container{position:relative}.jexcel_container.jx-sticky-active{overflow:clip}.jexcel_container.jx-freeze-active{overflow:hidden}.jexcel_content.jx-freeze-active{overflow:auto}table.jexcel.jx-freeze-active{border-collapse:separate;border-spacing:0}.jexcel td.jexcel_selectall,.jexcel thead td.jexcel_row,.jexcel tbody td.jexcel_row{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel tfoot td.jexcel_row{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel thead td{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel tfoot td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active thead td,.jexcel.jx-freeze-active tbody td.jexcel_row,.jexcel.jx-freeze-active tfoot td.jexcel_row{background-clip:padding-box}.jexcel.jx-freeze-active tbody td.jx-frozen-row{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-row{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-row.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active tbody td.jx-frozen-col{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-col{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel_content.jx-sticky-rows{overflow-y:auto}.jexcel tfoot.jx-sticky-footer{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel tfoot.jx-sticky-footer td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel thead td[data-x].jx-col-draggable,.jexcel thead td[data-x].jx-col-resizable{position:relative}.jexcel thead td[data-x].jx-col-resizable:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel thead td[data-x].jx-col-draggable:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel thead td[data-x].jx-col-draggable.jx-col-dragging:after{cursor:grabbing}.jexcel thead td[data-x].jx-col-drag-left{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-drag-right{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-resizing{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-resizable,.jexcel td.jexcel_row.jx-row-draggable{position:relative}.jexcel td.jexcel_row.jx-row-draggable:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel td.jexcel_row.jx-row-draggable.jx-row-dragging:before{cursor:grabbing}.jexcel td.jexcel_row.jx-row-resizable:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel td.jexcel_row.jx-row-resizing{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-top{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-bottom{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel tbody td.jx-cell-copying{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel tbody td{position:relative;overflow:visible!important}.jx-fill-handle{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel tbody td.jx-fill-preview{background-color:transparent}.jexcel tbody td.jx-fill-preview.jx-fill-preview-top{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-left{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-right{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap table.jexcel tbody td{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis table.jexcel tbody td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item:hover,.jx-ac-item.jx-ac-item--active{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-ac-spin .6s linear infinite}.jx-ac-input--anchor{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input{width:100%;box-sizing:border-box}.jx-comment-indicator{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close:hover{opacity:1}.jx-comment-popup__body{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}:host-context(body) .jx-context-menu,.jx-context-menu{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu{padding:4px 0}.jx-ctx-menu__header{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header strong{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color{position:relative;overflow:hidden}.jx-toolbar-color .jx-toolbar-color-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-label{display:inline}.jx-sort-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon:hover{opacity:1}.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon{opacity:1;color:var(--jx-primary, #2563eb)}\n']
+      styles: [':host{display:block;box-sizing:border-box}.jexcel thead tr.jx-filter-row td{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell{vertical-align:middle}.jx-filter-spacer{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input::placeholder{opacity:.4}.jx-filter-empty{display:block;height:20px}.jexcel_container{position:relative}.jexcel_container.jx-sticky-active{overflow:clip}.jexcel_container.jx-freeze-active{overflow:hidden}.jexcel_content{overflow-x:auto}.jexcel_content.jx-freeze-active{overflow:auto}table.jexcel.jx-freeze-active{border-collapse:separate;border-spacing:0}.jexcel td.jexcel_selectall,.jexcel thead td.jexcel_row,.jexcel tbody td.jexcel_row{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel tfoot td.jexcel_row{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel thead td{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel tfoot td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active thead td,.jexcel.jx-freeze-active tbody td.jexcel_row,.jexcel.jx-freeze-active tfoot td.jexcel_row{background-clip:padding-box}.jexcel.jx-freeze-active tbody td.jx-frozen-row{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-row{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-row.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active tbody td.jx-frozen-col{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-col{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel_content.jx-sticky-rows{overflow-y:auto}.jexcel tfoot.jx-sticky-footer{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel tfoot.jx-sticky-footer td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel thead td[data-x].jx-col-draggable,.jexcel thead td[data-x].jx-col-resizable{position:relative}.jexcel thead td[data-x].jx-col-resizable:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel thead td[data-x].jx-col-draggable:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel thead td[data-x].jx-col-draggable.jx-col-dragging:after{cursor:grabbing}.jexcel thead td[data-x].jx-col-drag-left{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-drag-right{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-resizing{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-resizable,.jexcel td.jexcel_row.jx-row-draggable{position:relative}.jexcel td.jexcel_row.jx-row-draggable:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel td.jexcel_row.jx-row-draggable.jx-row-dragging:before{cursor:grabbing}.jexcel td.jexcel_row.jx-row-resizable:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel td.jexcel_row.jx-row-resizing{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-top{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-bottom{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel tbody td.jx-cell-copying{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel tbody td{position:relative;overflow:visible!important}.jx-fill-handle{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel tbody td.jx-fill-preview{background-color:transparent}.jexcel tbody td.jx-fill-preview.jx-fill-preview-top{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-left{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-right{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap table.jexcel tbody td{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis table.jexcel tbody td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item:hover,.jx-ac-item.jx-ac-item--active{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-ac-spin .6s linear infinite}.jx-ac-input--anchor{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input{width:100%;box-sizing:border-box}.jx-comment-indicator{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close:hover{opacity:1}.jx-comment-popup__body{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}:host-context(body) .jx-context-menu,.jx-context-menu{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu{padding:4px 0}.jx-ctx-menu__header{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header strong{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color{position:relative;overflow:hidden}.jx-toolbar-color .jx-toolbar-color-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-label{display:inline}.jx-sort-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon:hover{opacity:1}.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon{opacity:1;color:var(--jx-primary, #2563eb)}\n']
     }]
   }], () => [{
     type: I
@@ -52037,17 +52055,17 @@ var P = class _P {
     }]
   });
 })();
-var T = class _T {
+var _ = class __ {
   context;
   valueChange = new EventEmitter();
   toggle(e) {
     this.context.editable && this.valueChange.emit(e);
   }
-  static \u0275fac = function T_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _T)();
+  static \u0275fac = function __Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _T,
+    type: __,
     selectors: [["jx-checkbox-cell"]],
     inputs: {
       context: "context"
@@ -52059,10 +52077,10 @@ var T = class _T {
     decls: 2,
     vars: 2,
     consts: [[1, "jx-cell", "jx-cell-checkbox"], ["type", "checkbox", 3, "change", "checked", "disabled"]],
-    template: function T_Template(rf, ctx) {
+    template: function __Template1(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "input", 1);
-        \u0275\u0275listener("change", function T_Template_input_change_1_listener($event) {
+        \u0275\u0275listener("change", function __Template1_input_change_1_listener($event) {
           return ctx.toggle($event.target.checked);
         });
         \u0275\u0275elementEnd()();
@@ -52076,7 +52094,7 @@ var T = class _T {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(T, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52092,7 +52110,7 @@ var T = class _T {
     }]
   });
 })();
-var _ = class __ {
+var T = class _T {
   context;
   get rawValue() {
     const e = this.context.column;
@@ -52107,11 +52125,11 @@ var _ = class __ {
     let t = this.rawValue;
     return null == t && (t = ""), "number" == typeof t && (t = t.toFixed(e.decimals ?? 2)), `${e.prefix ?? ""}${t}${e.suffix ?? ""}`;
   }
-  static \u0275fac = function __Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || __)();
+  static \u0275fac = function T_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _T)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: __,
+    type: _T,
     selectors: [["jx-formula-cell"]],
     inputs: {
       context: "context"
@@ -52120,7 +52138,7 @@ var _ = class __ {
     decls: 2,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-formula"]],
-    template: function __Template1(rf, ctx) {
+    template: function T_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0);
         \u0275\u0275text(1);
@@ -52135,7 +52153,7 @@ var _ = class __ {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(T, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52277,14 +52295,14 @@ var O = class _O {
 })();
 var B = class _B {
   constructor(e) {
-    e.register("text", E), e.register("number", P), e.register("checkbox", T), e.register("formula", _), e.register("button", V), e.register("attachment", O);
+    e.register("text", E), e.register("number", P), e.register("checkbox", _), e.register("formula", T), e.register("button", V), e.register("attachment", O);
   }
   static \u0275fac = function B_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _B)(\u0275\u0275inject(H));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
     type: _B,
-    declarations: [$, N, A, z, E, P, T, _, V, O],
+    declarations: [$, N, A, z, E, P, _, T, V, O],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
     exports: [$, N]
   });
@@ -52297,7 +52315,7 @@ var B = class _B {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: NgModule,
     args: [{
-      declarations: [$, N, A, z, E, P, T, _, V, O],
+      declarations: [$, N, A, z, E, P, _, T, V, O],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
       providers: [H],
       exports: [$, N]

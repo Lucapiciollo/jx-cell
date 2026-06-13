@@ -1,7 +1,7 @@
 {
   "version": 3,
-  "sources": ["angular:styles/component:css;6dcb889dfb8df6215afcc4f71dacad328946a10bb7275ee5ae00607342708f80;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/custom-number-cell.component.ts"],
-  "sourcesContent": ["\n    :host { display: flex; align-items: center; width: 100%; height: 100%; }\n    .jx-num-ghost {\n      flex: 1; width: 100%; height: 100%;\n      border: none; outline: none;\n      background: transparent; color: inherit;\n      font: inherit; text-align: inherit;\n      padding: 0; margin: 0;\n      box-sizing: border-box;\n      cursor: text;\n    }\n    .jx-num-ghost:disabled { cursor: default; }\n  "],
-  "mappings": ";AACI;AAAQ,WAAS;AAAM,eAAa;AAAQ,SAAO;AAAM,UAAQ;AAAM;AACvE,CAAC;AACC,QAAM;AAAG,SAAO;AAAM,UAAQ;AAC9B,UAAQ;AAAM,WAAS;AACvB,cAAY;AAAa,SAAO;AAChC,QAAM;AAAS,cAAY;AAC3B,WAAS;AAAG,UAAQ;AACpB,cAAY;AACZ,UAAQ;AACV;AACA,CATC,YASY;AAAY,UAAQ;AAAS;",
+  "sources": ["angular:styles/component:css;f71e48f023283e358a8041562bc3b8a56f6e98d6d4f310b295c55dd41bdd8dc3;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/custom-number-cell.component.ts"],
+  "sourcesContent": ["\n    :host { display: block; }\n    .jx-num-ghost {\n      display: block;\n      width: 100%;\n      border: none; outline: none;\n      background: transparent; color: inherit;\n      font: inherit; line-height: normal; text-align: inherit;\n      padding: 0; margin: 0;\n      box-sizing: border-box;\n      cursor: text;\n    }\n    .jx-num-ghost:disabled { cursor: default; }\n  "],
+  "mappings": ";AACI;AAAQ,WAAS;AAAO;AACxB,CAAC;AACC,WAAS;AACT,SAAO;AACP,UAAQ;AAAM,WAAS;AACvB,cAAY;AAAa,SAAO;AAChC,QAAM;AAAS,eAAa;AAAQ,cAAY;AAChD,WAAS;AAAG,UAAQ;AACpB,cAAY;AACZ,UAAQ;AACV;AACA,CAVC,YAUY;AAAY,UAAQ;AAAS;",
   "names": []
 }

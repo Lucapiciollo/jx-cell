@@ -48570,18 +48570,20 @@ var $ = class _$ {
     }));
   }
   buildRenderedColWidthsFromDom() {
+    if (null !== this.acState) return;
     if (!this.host?.nativeElement) return;
-    if (false !== this.options.rowHeaders) {
+    const e = this.freezeColumnsCount > 0 || this.freezeRowsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0;
+    if (e && false !== this.options.rowHeaders) {
       const e2 = this.host.nativeElement.querySelector("thead tr:last-child .jexcel_selectall");
       e2?.offsetWidth && (this._renderedRowHeaderWidth = e2.offsetWidth);
     }
-    const e = this.host.nativeElement.querySelectorAll("thead tr:last-child td[data-x]");
-    if (!e.length) return;
-    let t = false;
-    e.forEach((e2) => {
-      const o = Number(e2.dataset.x);
-      !Number.isNaN(o) && e2.offsetWidth && this._renderedColWidths[o] !== e2.offsetWidth && (this._renderedColWidths[o] = e2.offsetWidth, t = true);
-    }), t && this.cdr.markForCheck();
+    const t = this.host.nativeElement.querySelectorAll("thead tr:last-child td[data-x]");
+    if (!t.length) return;
+    let o = false;
+    t.forEach((e2) => {
+      const t2 = Number(e2.dataset.x);
+      !Number.isNaN(t2) && e2.offsetWidth && this._renderedColWidths[t2] !== e2.offsetWidth && (this._renderedColWidths[t2] = e2.offsetWidth, o = true);
+    }), o && e && this.cdr.markForCheck();
   }
   getRowHeight(e) {
     return this.rowHeights.get(e) ?? this.options.defaultRowHeight ?? 28;
@@ -52593,7 +52595,7 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
     if (!Number.isNaN(n) && !this.isValid(n)) {
       e.cancel();
       this.draft = this._fmt(this._holdValue);
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }
   }
   // ── Hook change (solo questa cella) ─────────────────────────────────────────
@@ -52602,7 +52604,7 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
       return;
     this._holdValue = p.value;
     this.draft = this._fmt(p.value);
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
   // ── Gestione input ───────────────────────────────────────────────────────────
   onFocus() {
@@ -52614,17 +52616,22 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
     this.draft = event.target.value;
   }
   onKey(event) {
-    event.stopPropagation();
-    if (event.key === "Enter") {
-      event.preventDefault();
-      this._commit();
-      this.focusCell();
+    if ((event.ctrlKey || event.metaKey) && ["z", "Z", "y", "Y"].includes(event.key)) {
+      event.stopPropagation();
+      return;
     }
     if (event.key === "Escape") {
       event.preventDefault();
+      event.stopPropagation();
       this.draft = this._fmt(this._holdValue);
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
       this.focusCell();
+      return;
+    }
+    if (event.key === "Enter" || event.key === "Tab") {
+      event.preventDefault();
+      this._commit();
+      return;
     }
   }
   onBlur() {
@@ -52676,7 +52683,7 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
       \u0275\u0275property("value", ctx.draft);
       \u0275\u0275attribute("disabled", ctx.editable ? null : "");
     }
-  }, styles: ["\n\n[_nghost-%COMP%] {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.jx-num-ghost[_ngcontent-%COMP%] {\n  flex: 1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost[_ngcontent-%COMP%]:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */"] });
+  }, styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n}\n.jx-num-ghost[_ngcontent-%COMP%] {\n  display: block;\n  width: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  line-height: normal;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost[_ngcontent-%COMP%]:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CustomNumberCellComponent, [{
@@ -52696,7 +52703,7 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
       (input)="onInput($event)"
       (blur)="onBlur()"
     />
-  `, styles: ["/* angular:styles/component:css;6dcb889dfb8df6215afcc4f71dacad328946a10bb7275ee5ae00607342708f80;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/custom-number-cell.component.ts */\n:host {\n  display: flex;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.jx-num-ghost {\n  flex: 1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */\n"] }]
+  `, styles: ["/* angular:styles/component:css;f71e48f023283e358a8041562bc3b8a56f6e98d6d4f310b295c55dd41bdd8dc3;C:/Users/LucaPiciollo/OneDrive - AGIC/Desktop/jx-cell-workspace/src/app/custom-cells/custom-number-cell.component.ts */\n:host {\n  display: block;\n}\n.jx-num-ghost {\n  display: block;\n  width: 100%;\n  border: none;\n  outline: none;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  line-height: normal;\n  text-align: inherit;\n  padding: 0;\n  margin: 0;\n  box-sizing: border-box;\n  cursor: text;\n}\n.jx-num-ghost:disabled {\n  cursor: default;\n}\n/*# sourceMappingURL=custom-number-cell.component.css.map */\n"] }]
   }], () => [{ type: ChangeDetectorRef }], { context: [{
     type: Input
   }], onHostMouseDown: [{
@@ -52705,7 +52712,7 @@ var CustomNumberCellComponent = class _CustomNumberCellComponent extends W {
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CustomNumberCellComponent, { className: "CustomNumberCellComponent", filePath: "src/app/custom-cells/custom-number-cell.component.ts", lineNumber: 44 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CustomNumberCellComponent, { className: "CustomNumberCellComponent", filePath: "src/app/custom-cells/custom-number-cell.component.ts", lineNumber: 45 });
 })();
 
 // src/app/custom-cells/column-stats-header.component.ts

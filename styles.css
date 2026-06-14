@@ -174,7 +174,7 @@ jx-table .jexcel thead td:hover {
 }
 jx-table .jexcel tbody td {
   height: var(--jx-row-height);
-  padding: 3px 9px;
+  padding: 0px 0px;
   border: 1px solid var(--jx-border);
   background: var(--jx-cell-bg);
   color: var(--jx-text);

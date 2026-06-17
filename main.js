@@ -46632,7 +46632,7 @@ var I = class _I {
       for (; this.footerRawData.length <= e; ) this.footerRawData.push(Array(this.getColumnCount()).fill(""));
       for (; this.footerRawData[e].length < this.getColumnCount(); ) this.footerRawData[e].push("");
       const n = this.footerRawData[e][t];
-      this.footerRawData[e][t] = o, this.options.footers = this.footerRawData, this.recalculateAll(), this.fireAfter(this.events.footerChange$, "onfooterchange", {
+      this.footerRawData[e][t] = o, this.options.footers = this.footerRawData, this.recalculateAll(), n !== o && this.fireAfter(this.events.footerChange$, "onfooterchange", {
         row: e,
         col: t,
         value: o,

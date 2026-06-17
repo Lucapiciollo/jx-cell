@@ -45914,7 +45914,7 @@ function __div_20_Template(rf, ctx) {
   }
 }
 var _c5 = ["container"];
-function A_ng_template_0_Template(rf, ctx) {
+function H_ng_template_0_Template(rf, ctx) {
 }
 var _c6 = ["scrollContainer"];
 var _c7 = (a0, a1, a2, a3, a4, a5, a6) => ({
@@ -45926,7 +45926,7 @@ var _c7 = (a0, a1, a2, a3, a4, a5, a6) => ({
   editable: a5,
   config: a6
 });
-function N_th_5_Template(rf, ctx) {
+function E_th_5_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "th", 10);
     \u0275\u0275text(1);
@@ -45941,7 +45941,7 @@ function N_th_5_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", column_r2.label, " ");
   }
 }
-function N_tr_7_Template(rf, ctx) {
+function E_tr_7_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275element(0, "tr", 11);
   }
@@ -45950,11 +45950,11 @@ function N_tr_7_Template(rf, ctx) {
     \u0275\u0275styleProp("height", ctx_r2.paddingTop, "px");
   }
 }
-function N_tr_8_td_1_Template(rf, ctx) {
+function E_tr_8_td_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "td", 14)(1, "jx-cell-host", 15);
-    \u0275\u0275listener("valueChange", function N_tr_8_td_1_Template_jx_cell_host_valueChange_1_listener($event) {
+    \u0275\u0275listener("valueChange", function E_tr_8_td_1_Template_jx_cell_host_valueChange_1_listener($event) {
       const ctx_r8 = \u0275\u0275restoreView(_r8);
       const column_r10 = ctx_r8.$implicit;
       const columnIndex_r11 = ctx_r8.index;
@@ -45963,7 +45963,7 @@ function N_tr_8_td_1_Template(rf, ctx) {
       const rowIndex_r7 = ctx_r11.index;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.onCellValueChange(row_r6, rowIndex_r7, column_r10, columnIndex_r11, $event));
-    })("action", function N_tr_8_td_1_Template_jx_cell_host_action_1_listener($event) {
+    })("action", function E_tr_8_td_1_Template_jx_cell_host_action_1_listener($event) {
       const ctx_r12 = \u0275\u0275restoreView(_r8);
       const column_r10 = ctx_r12.$implicit;
       const columnIndex_r11 = ctx_r12.index;
@@ -45988,18 +45988,18 @@ function N_tr_8_td_1_Template(rf, ctx) {
     \u0275\u0275property("context", \u0275\u0275pureFunction7(5, _c7, row_r6, ctx_r2.getActualRowIndex(rowIndex_r7), column_r10, columnIndex_r11, ctx_r2.getValue(row_r6, column_r10), ctx_r2.isEditable(column_r10), column_r10.config));
   }
 }
-function N_tr_8_Template(rf, ctx) {
+function E_tr_8_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "tr", 12);
-    \u0275\u0275listener("click", function N_tr_8_Template_tr_click_0_listener() {
+    \u0275\u0275listener("click", function E_tr_8_Template_tr_click_0_listener() {
       const ctx_r4 = \u0275\u0275restoreView(_r4);
       const row_r6 = ctx_r4.$implicit;
       const rowIndex_r7 = ctx_r4.index;
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.selectRow(row_r6, rowIndex_r7));
     });
-    \u0275\u0275template(1, N_tr_8_td_1_Template, 2, 13, "td", 13);
+    \u0275\u0275template(1, E_tr_8_td_1_Template, 2, 13, "td", 13);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -46011,7 +46011,7 @@ function N_tr_8_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r2.visibleColumns)("ngForTrackBy", ctx_r2.trackByColumn);
   }
 }
-function N_tr_9_Template(rf, ctx) {
+function E_tr_9_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275element(0, "tr", 11);
   }
@@ -46020,7 +46020,7 @@ function N_tr_9_Template(rf, ctx) {
     \u0275\u0275styleProp("height", ctx_r2.paddingBottom, "px");
   }
 }
-function N_tr_10_Template(rf, ctx) {
+function E_tr_10_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tr", 16)(1, "td", 17);
     \u0275\u0275text(2);
@@ -46034,7 +46034,7 @@ function N_tr_10_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r2.options.emptyMessage || "Nessun dato disponibile", " ");
   }
 }
-function E_ng_container_1_Template(rf, ctx) {
+function N_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
     \u0275\u0275text(1);
@@ -46046,25 +46046,25 @@ function E_ng_container_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r0.context.value, " ");
   }
 }
-function E_input_2_Template(rf, ctx) {
+function N_input_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "input", 3);
-    \u0275\u0275twoWayListener("ngModelChange", function E_input_2_Template_input_ngModelChange_0_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function N_input_2_Template_input_ngModelChange_0_listener($event) {
       \u0275\u0275restoreView(_r2);
       const ctx_r0 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r0.editValue, $event) || (ctx_r0.editValue = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("blur", function E_input_2_Template_input_blur_0_listener() {
+    \u0275\u0275listener("blur", function N_input_2_Template_input_blur_0_listener() {
       \u0275\u0275restoreView(_r2);
       const ctx_r0 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r0.commit());
-    })("keydown.enter", function E_input_2_Template_input_keydown_enter_0_listener() {
+    })("keydown.enter", function N_input_2_Template_input_keydown_enter_0_listener() {
       \u0275\u0275restoreView(_r2);
       const ctx_r0 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r0.commit());
-    })("keydown.escape", function E_input_2_Template_input_keydown_escape_0_listener() {
+    })("keydown.escape", function N_input_2_Template_input_keydown_escape_0_listener() {
       \u0275\u0275restoreView(_r2);
       const ctx_r0 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r0.cancel());
@@ -46265,6 +46265,7 @@ var I = class _I {
   cellMeta = /* @__PURE__ */ new Map();
   cellComments = /* @__PURE__ */ new Map();
   comments$ = new BehaviorSubject(void 0);
+  commentPopup$ = new Subject();
   cellClasses = /* @__PURE__ */ new Map();
   cellClasses$ = new BehaviorSubject(void 0);
   rowRenderEpochs = [];
@@ -48187,6 +48188,27 @@ var I = class _I {
   clearComments(e) {
     e ? this.cellComments.delete(e.toUpperCase()) : this.cellComments.clear(), this.comments$.next();
   }
+  setCommentsTemporized(e, t, o = 3e3) {
+    if (this.setComments(e, t), !t) return void this.commentPopup$.next(null);
+    const n = this.address.parse(e);
+    n && this.commentPopup$.next({
+      x: n.x,
+      y: n.y,
+      duration: o
+    });
+  }
+  showCommentPopup(e, t = 3e3) {
+    if (!this.cellComments.has(e.toUpperCase())) return;
+    const o = this.address.parse(e);
+    o && this.commentPopup$.next({
+      x: o.x,
+      y: o.y,
+      duration: t
+    });
+  }
+  hideCommentPopup() {
+    this.commentPopup$.next(null);
+  }
   addClass(e, t) {
     const o = e.toUpperCase(), n = this.cellClasses.get(o) ?? /* @__PURE__ */ new Set();
     n.add(t), this.cellClasses.set(o, n), this.cellClasses$.next();
@@ -48529,6 +48551,7 @@ var $ = class _$ {
   hiddenBySearch = /* @__PURE__ */ new Set();
   filteredByColumn = /* @__PURE__ */ new Set();
   activeComment = null;
+  commentAutoCloseTimer = null;
   acState = null;
   acSub = null;
   acScrollSub = null;
@@ -48630,6 +48653,8 @@ var $ = class _$ {
       this.cdr.markForCheck();
     })), this.sub.add(this.workbook.comments$.subscribe(() => {
       this.cdr.markForCheck();
+    })), this.sub.add(this.workbook.commentPopup$.subscribe((e) => {
+      e ? setTimeout(() => this.openCommentPopup(e.x, e.y, e.duration), 0) : this.closeComment();
     })), this.sub.add(this.workbook.page$.subscribe(() => {
       const e = this.host?.nativeElement?.querySelector?.(".jexcel_content");
       if (e) {
@@ -49067,10 +49092,46 @@ var $ = class _$ {
         left: e2.left - s.left
       };
     }
-    this.cdr.markForCheck();
+    this.cdr.markForCheck(), this.scheduleCommentReposition();
+  }
+  openCommentPopup(e, t, o = 0) {
+    const n = this.getCellComment(e, t);
+    if (!n) return void this.closeComment();
+    const r = this.host.nativeElement, i = r?.querySelector(`td[data-x="${e}"][data-y="${t}"]`);
+    if (!i || !r) return;
+    const s = i.getBoundingClientRect(), l = r.getBoundingClientRect();
+    this.activeComment = {
+      x: e,
+      y: t,
+      text: n,
+      top: s.top - l.top + i.offsetHeight,
+      left: s.left - l.left
+    }, this.cdr.markForCheck(), this.scheduleCommentReposition(), this.armCommentAutoClose(o);
+  }
+  repositionActiveComment() {
+    const e = this.activeComment;
+    if (!e) return;
+    const t = this.host.nativeElement, o = t?.querySelector(`td[data-x="${e.x}"][data-y="${e.y}"]`), n = t?.querySelector(".jx-comment-popup");
+    if (!o || !t) return;
+    const r = o.getBoundingClientRect(), i = t.getBoundingClientRect(), s = n?.offsetHeight ?? 80, l = n?.offsetWidth ?? 200, a = window.innerHeight - r.bottom, c = a >= s + 8 || a >= r.top ? r.bottom - i.top : r.top - i.top - s;
+    let d = r.left;
+    d + l + 8 > window.innerWidth && (d = window.innerWidth - l - 8), d < 8 && (d = 8);
+    const h = d - i.left;
+    this.activeComment = __spreadProps(__spreadValues({}, e), {
+      top: c,
+      left: h
+    }), this.cdr.markForCheck();
+  }
+  scheduleCommentReposition() {
+    setTimeout(() => this.repositionActiveComment(), 0);
+  }
+  armCommentAutoClose(e) {
+    this.commentAutoCloseTimer && (clearTimeout(this.commentAutoCloseTimer), this.commentAutoCloseTimer = null), e && e > 0 && (this.commentAutoCloseTimer = setTimeout(() => {
+      this.commentAutoCloseTimer = null, this.closeComment();
+    }, e));
   }
   closeComment() {
-    this.activeComment = null, this.cdr.markForCheck();
+    this.commentAutoCloseTimer && (clearTimeout(this.commentAutoCloseTimer), this.commentAutoCloseTimer = null), this.activeComment = null, this.cdr.markForCheck();
   }
   getCellComputedStyle(e, t) {
     const o = __spreadValues({}, this.getCellInlineStyle(e, t) ?? {});
@@ -50444,6 +50505,15 @@ var $ = class _$ {
   clearComments(e) {
     this.workbook.clearComments(e);
   }
+  setCommentsTemporized(e, t, o = 3e3) {
+    this.workbook.setCommentsTemporized(e, t, o);
+  }
+  showCommentPopup(e, t = 3e3) {
+    this.workbook.showCommentPopup(e, t);
+  }
+  hideCommentPopup() {
+    this.workbook.hideCommentPopup();
+  }
   addClass(e, t) {
     this.workbook.addClass(e, t);
   }
@@ -51637,7 +51707,7 @@ var $ = class _$ {
     }]
   });
 })();
-var H = class _H {
+var A = class _A {
   registry = /* @__PURE__ */ new Map();
   register(e, t) {
     this.registry.set(e, t);
@@ -51651,20 +51721,20 @@ var H = class _H {
   clear() {
     this.registry.clear();
   }
-  static \u0275fac = function H_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _H)();
+  static \u0275fac = function A_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _A)();
   };
   static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({
-    token: _H,
-    factory: _H.\u0275fac
+    token: _A,
+    factory: _A.\u0275fac
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(H, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(A, [{
     type: Injectable
   }], null, null);
 })();
-var A = class _A {
+var H = class _H {
   registry;
   context;
   valueChange = new EventEmitter();
@@ -51693,13 +51763,13 @@ var A = class _A {
   resolveComponent() {
     return this.context.column.component ? this.context.column.component : this.registry.get(this.context.column.type ?? "text");
   }
-  static \u0275fac = function A_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _A)(\u0275\u0275directiveInject(H));
+  static \u0275fac = function H_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _H)(\u0275\u0275directiveInject(A));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _A,
+    type: _H,
     selectors: [["jx-cell-host"]],
-    viewQuery: function A_Query(rf, ctx) {
+    viewQuery: function H_Query(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275viewQuery(_c5, 7, ViewContainerRef);
       }
@@ -51720,16 +51790,16 @@ var A = class _A {
     decls: 2,
     vars: 0,
     consts: [["container", ""]],
-    template: function A_Template(rf, ctx) {
+    template: function H_Template(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275template(0, A_ng_template_0_Template, 0, 0, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+        \u0275\u0275template(0, H_ng_template_0_Template, 0, 0, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
       }
     },
     styles: ["[_nghost-%COMP%]{display:block;width:100%;height:100%;overflow:hidden}"]
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(A, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(H, [{
     type: Component,
     args: [{
       standalone: false,
@@ -51738,7 +51808,7 @@ var A = class _A {
       styles: [":host{display:block;width:100%;height:100%;overflow:hidden}\n"]
     }]
   }], () => [{
-    type: H
+    type: A
   }], {
     context: [{
       type: Input
@@ -51799,7 +51869,7 @@ var z = class _z {
     }]
   });
 })();
-var N = class _N {
+var E = class _E {
   data = [];
   columns = [];
   options = {};
@@ -51883,13 +51953,13 @@ var N = class _N {
     return o ? t[o] : t;
   };
   trackByColumn = (e, t) => t.key ?? e;
-  static \u0275fac = function N_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _N)();
+  static \u0275fac = function E_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _E)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _N,
+    type: _E,
     selectors: [["jx-grid"]],
-    viewQuery: function N_Query(rf, ctx) {
+    viewQuery: function E_Query(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275viewQuery(_c6, 5);
       }
@@ -51913,19 +51983,19 @@ var N = class _N {
     decls: 11,
     vars: 13,
     consts: [["scrollContainer", ""], [1, "jx-grid", 3, "scroll"], [1, "jx-grid-table"], [1, "jx-grid-header"], [1, "jx-grid-header-row"], ["class", "jx-grid-header-cell", 3, "ngClass", "width", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-grid-body"], ["class", "jx-grid-spacer", "aria-hidden", "true", 3, "height", 4, "ngIf"], ["class", "jx-grid-row", 3, "jx-grid-row-selected", "height", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-grid-empty-row", 4, "ngIf"], [1, "jx-grid-header-cell", 3, "ngClass"], ["aria-hidden", "true", 1, "jx-grid-spacer"], [1, "jx-grid-row", 3, "click"], ["class", "jx-grid-cell", 3, "ngClass", "width", "jxCellEditable", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-grid-cell", 3, "ngClass", "jxCellEditable"], [3, "valueChange", "action", "context"], [1, "jx-grid-empty-row"], [1, "jx-grid-empty"]],
-    template: function N_Template(rf, ctx) {
+    template: function E_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = \u0275\u0275getCurrentView();
         \u0275\u0275elementStart(0, "div", 1, 0);
-        \u0275\u0275listener("scroll", function N_Template_div_scroll_0_listener($event) {
+        \u0275\u0275listener("scroll", function E_Template_div_scroll_0_listener($event) {
           \u0275\u0275restoreView(_r1);
           return \u0275\u0275resetView(ctx.isVirtualScroll && ctx.onScroll($event));
         });
         \u0275\u0275elementStart(2, "table", 2)(3, "thead", 3)(4, "tr", 4);
-        \u0275\u0275template(5, N_th_5_Template, 2, 4, "th", 5);
+        \u0275\u0275template(5, E_th_5_Template, 2, 4, "th", 5);
         \u0275\u0275elementEnd()();
         \u0275\u0275elementStart(6, "tbody", 6);
-        \u0275\u0275template(7, N_tr_7_Template, 1, 2, "tr", 7)(8, N_tr_8_Template, 2, 6, "tr", 8)(9, N_tr_9_Template, 1, 2, "tr", 7)(10, N_tr_10_Template, 3, 2, "tr", 9);
+        \u0275\u0275template(7, E_tr_7_Template, 1, 2, "tr", 7)(8, E_tr_8_Template, 2, 6, "tr", 8)(9, E_tr_9_Template, 1, 2, "tr", 7)(10, E_tr_10_Template, 3, 2, "tr", 9);
         \u0275\u0275elementEnd()()();
       }
       if (rf & 2) {
@@ -51944,12 +52014,12 @@ var N = class _N {
         \u0275\u0275property("ngIf", !ctx.data || ctx.data.length === 0);
       }
     },
-    dependencies: [NgClass, NgForOf, NgIf, A, z],
+    dependencies: [NgClass, NgForOf, NgIf, H, z],
     styles: ["[_nghost-%COMP%]{display:block}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-editor{display:block;width:100%;height:100%;border:none;outline:none;background:transparent;font:inherit;color:inherit;padding:0;margin:0;box-sizing:border-box}.jx-grid[_ngcontent-%COMP%]{width:100%;overflow:auto;border:var(--jx-grid-border-width) solid var(--jx-grid-border-color);border-radius:var(--jx-grid-radius);background:var(--jx-grid-bg)}.jx-grid-table[_ngcontent-%COMP%]{width:100%;border-collapse:collapse;table-layout:fixed}.jx-grid-header-cell[_ngcontent-%COMP%]{padding:var(--jx-grid-header-padding-y) var(--jx-grid-header-padding-x);border-bottom:1px solid var(--jx-grid-header-border-color);vertical-align:middle;font-weight:var(--jx-grid-header-font-weight);text-align:left;background:var(--jx-grid-header-bg);color:var(--jx-grid-header-color);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-grid-cell[_ngcontent-%COMP%]{padding:0;border-bottom:1px solid var(--jx-grid-cell-border-color);vertical-align:middle;overflow:hidden;max-width:0;position:relative}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell{display:flex;align-items:center;width:100%;height:100%;min-height:var(--jx-grid-cell-min-height);padding:0 var(--jx-grid-cell-padding-x);box-sizing:border-box;overflow:hidden;background:transparent;border:none;outline:none}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-editor{display:block;width:100%;height:100%;border:none;outline:none;background:transparent;font:var(--jx-grid-cell-font);color:var(--jx-grid-cell-color);padding:0;margin:0;box-sizing:border-box}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-checkbox{justify-content:center}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-number, .jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-money{justify-content:flex-end;font-variant-numeric:var(--jx-grid-number-font-variant)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-formula{font-weight:var(--jx-grid-formula-font-weight)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-total{font-weight:var(--jx-grid-total-font-weight)}.jx-grid-cell[_ngcontent-%COMP%]     .jx-cell-attachment-btn{background:none;border:none;cursor:pointer;padding:0;font:inherit;color:var(--jx-grid-attachment-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.jx-grid-row[_ngcontent-%COMP%]:hover   .jx-grid-cell[_ngcontent-%COMP%]{background:var(--jx-grid-row-hover-bg)}.jx-grid-row-selected[_ngcontent-%COMP%]   .jx-grid-cell[_ngcontent-%COMP%]{background:var(--jx-grid-row-selected-bg)}.jx-grid-empty[_ngcontent-%COMP%]{padding:var(--jx-grid-empty-padding);text-align:center;color:var(--jx-grid-empty-color)}.jx-grid-virtual[_ngcontent-%COMP%]{overflow-y:auto}.jx-grid-virtual[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]{position:sticky;top:0;z-index:1}.jx-grid-spacer[_ngcontent-%COMP%]{pointer-events:none}.jx-grid-spacer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:0;border:none;height:inherit}.jx-col-align-right[_ngcontent-%COMP%]{text-align:right}.jx-col-align-center[_ngcontent-%COMP%]{text-align:center}"]
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(N, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(E, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52065,7 +52135,7 @@ var N = class _N {
     }]
   });
 })();
-var E = class _E {
+var N = class _N {
   context;
   valueChange = new EventEmitter();
   editing = false;
@@ -52079,11 +52149,11 @@ var E = class _E {
   cancel() {
     this.editing = false, this.editValue = this.context.value;
   }
-  static \u0275fac = function E_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _E)();
+  static \u0275fac = function N_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _N)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _E,
+    type: _N,
     selectors: [["jx-text-cell"]],
     inputs: {
       context: "context"
@@ -52095,13 +52165,13 @@ var E = class _E {
     decls: 3,
     vars: 2,
     consts: [[1, "jx-cell", "jx-cell-text", 3, "dblclick"], [4, "ngIf"], ["class", "jx-cell-editor", "autofocus", "", 3, "ngModel", "ngModelChange", "blur", "keydown.enter", "keydown.escape", 4, "ngIf"], ["autofocus", "", 1, "jx-cell-editor", 3, "ngModelChange", "blur", "keydown.enter", "keydown.escape", "ngModel"]],
-    template: function E_Template(rf, ctx) {
+    template: function N_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0);
-        \u0275\u0275listener("dblclick", function E_Template_div_dblclick_0_listener() {
+        \u0275\u0275listener("dblclick", function N_Template_div_dblclick_0_listener() {
           return ctx.startEdit();
         });
-        \u0275\u0275template(1, E_ng_container_1_Template, 2, 1, "ng-container", 1)(2, E_input_2_Template, 1, 1, "input", 2);
+        \u0275\u0275template(1, N_ng_container_1_Template, 2, 1, "ng-container", 1)(2, N_input_2_Template, 1, 1, "input", 2);
         \u0275\u0275elementEnd();
       }
       if (rf & 2) {
@@ -52116,7 +52186,7 @@ var E = class _E {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(E, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(N, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52199,17 +52269,17 @@ var P = class _P {
     }]
   });
 })();
-var _ = class __ {
+var T = class _T {
   context;
   valueChange = new EventEmitter();
   toggle(e) {
     this.context.editable && this.valueChange.emit(e);
   }
-  static \u0275fac = function __Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || __)();
+  static \u0275fac = function T_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _T)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: __,
+    type: _T,
     selectors: [["jx-checkbox-cell"]],
     inputs: {
       context: "context"
@@ -52221,10 +52291,10 @@ var _ = class __ {
     decls: 2,
     vars: 2,
     consts: [[1, "jx-cell", "jx-cell-checkbox"], ["type", "checkbox", 3, "change", "checked", "disabled"]],
-    template: function __Template1(rf, ctx) {
+    template: function T_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "input", 1);
-        \u0275\u0275listener("change", function __Template1_input_change_1_listener($event) {
+        \u0275\u0275listener("change", function T_Template_input_change_1_listener($event) {
           return ctx.toggle($event.target.checked);
         });
         \u0275\u0275elementEnd()();
@@ -52238,7 +52308,7 @@ var _ = class __ {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(T, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52254,7 +52324,7 @@ var _ = class __ {
     }]
   });
 })();
-var T = class _T {
+var _ = class __ {
   context;
   get rawValue() {
     const e = this.context.column;
@@ -52269,11 +52339,11 @@ var T = class _T {
     let t = this.rawValue;
     return null == t && (t = ""), "number" == typeof t && (t = t.toFixed(e.decimals ?? 2)), `${e.prefix ?? ""}${t}${e.suffix ?? ""}`;
   }
-  static \u0275fac = function T_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _T)();
+  static \u0275fac = function __Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _T,
+    type: __,
     selectors: [["jx-formula-cell"]],
     inputs: {
       context: "context"
@@ -52282,7 +52352,7 @@ var T = class _T {
     decls: 2,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-formula"]],
-    template: function T_Template(rf, ctx) {
+    template: function __Template1(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0);
         \u0275\u0275text(1);
@@ -52297,7 +52367,7 @@ var T = class _T {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(T, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52372,7 +52442,7 @@ var V = class _V {
     }]
   });
 })();
-var O = class _O {
+var B = class _B {
   context;
   action = new EventEmitter();
   get count() {
@@ -52387,11 +52457,11 @@ var O = class _O {
       }
     });
   }
-  static \u0275fac = function O_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _O)();
+  static \u0275fac = function B_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _B)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _O,
+    type: _B,
     selectors: [["jx-attachment-cell"]],
     inputs: {
       context: "context"
@@ -52403,10 +52473,10 @@ var O = class _O {
     decls: 3,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-attachment"], ["type", "button", 1, "jx-cell-attachment-btn", 3, "click"]],
-    template: function O_Template(rf, ctx) {
+    template: function B_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "button", 1);
-        \u0275\u0275listener("click", function O_Template_button_click_1_listener($event) {
+        \u0275\u0275listener("click", function B_Template_button_click_1_listener($event) {
           return ctx.openAttachments($event);
         });
         \u0275\u0275text(2);
@@ -52421,7 +52491,7 @@ var O = class _O {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52437,35 +52507,35 @@ var O = class _O {
     }]
   });
 })();
-var B = class _B {
+var O = class _O {
   constructor(e) {
-    e.register("text", E), e.register("number", P), e.register("checkbox", _), e.register("formula", T), e.register("button", V), e.register("attachment", O);
+    e.register("text", N), e.register("number", P), e.register("checkbox", T), e.register("formula", _), e.register("button", V), e.register("attachment", B);
   }
-  static \u0275fac = function B_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _B)(\u0275\u0275inject(H));
+  static \u0275fac = function O_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _O)(\u0275\u0275inject(A));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
-    type: _B,
-    declarations: [$, N, A, z, E, P, _, T, V, O],
+    type: _O,
+    declarations: [$, E, H, z, N, P, T, _, V, B],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
-    exports: [$, N]
+    exports: [$, E]
   });
   static \u0275inj = /* @__PURE__ */ \u0275\u0275defineInjector({
-    providers: [H],
+    providers: [A],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule]
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
     type: NgModule,
     args: [{
-      declarations: [$, N, A, z, E, P, _, T, V, O],
+      declarations: [$, E, H, z, N, P, T, _, V, B],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
-      providers: [H],
-      exports: [$, N]
+      providers: [A],
+      exports: [$, E]
     }]
   }], () => [{
-    type: H
+    type: A
   }], null);
 })();
 var L = class _L {
@@ -67993,7 +68063,19 @@ function AppComponent_div_796_div_65_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearComments"]);
   }
 }
-function AppComponent_div_796_div_93_Template(rf, ctx) {
+function AppComponent_div_796_div_92_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "div", 160)(1, "code");
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r2 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate(ctx_r2.results["setCommentsTemporized"]);
+  }
+}
+function AppComponent_div_796_div_120_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 160)(1, "code");
     \u0275\u0275text(2);
@@ -68005,7 +68087,7 @@ function AppComponent_div_796_div_93_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["addClass"]);
   }
 }
-function AppComponent_div_796_div_94_Template(rf, ctx) {
+function AppComponent_div_796_div_121_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 160)(1, "code");
     \u0275\u0275text(2);
@@ -68017,7 +68099,7 @@ function AppComponent_div_796_div_94_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["removeClass"]);
   }
 }
-function AppComponent_div_796_div_111_Template(rf, ctx) {
+function AppComponent_div_796_div_138_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 160)(1, "code");
     \u0275\u0275text(2);
@@ -68029,7 +68111,7 @@ function AppComponent_div_796_div_111_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getClasses"]);
   }
 }
-function AppComponent_div_796_div_130_Template(rf, ctx) {
+function AppComponent_div_796_div_157_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 160)(1, "code");
     \u0275\u0275text(2);
@@ -68159,123 +68241,177 @@ function AppComponent_div_796_Template(rf, ctx) {
     \u0275\u0275text(64, "Clear");
     \u0275\u0275elementEnd()();
     \u0275\u0275template(65, AppComponent_div_796_div_65_Template, 3, 1, "div", 137);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(66, "div", 127)(67, "div", 128)(68, "code");
+    \u0275\u0275text(69, "setCommentsTemporized");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(70, "span", 129);
+    \u0275\u0275text(71, "(cell, comment, duration)");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(72, "span", 130);
+    \u0275\u0275text(73, `Imposta un commento e apre il popup automaticamente, chiudendolo dopo "duration" ms (0 = resta aperto). Il popup si posiziona da solo per restare sempre visibile (sotto la cella se c'\xE8 spazio, altrimenti sopra).`);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(74, "div", 131)(75, "div", 132)(76, "label");
+    \u0275\u0275text(77, "cell");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(78, "input", 249);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_78_listener($event) {
+      \u0275\u0275restoreView(_r33);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.cell, $event) || (ctx_r2.ops.setCommentsTemporized.cell = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(79, "div", 132)(80, "label");
+    \u0275\u0275text(81, "commento");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(82, "input", 254);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_82_listener($event) {
+      \u0275\u0275restoreView(_r33);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.comment, $event) || (ctx_r2.ops.setCommentsTemporized.comment = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(83, "div", 132)(84, "label");
+    \u0275\u0275text(85, "duration ");
+    \u0275\u0275elementStart(86, "small");
+    \u0275\u0275text(87, "ms");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(88, "input", 255);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_88_listener($event) {
+      \u0275\u0275restoreView(_r33);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.duration, $event) || (ctx_r2.ops.setCommentsTemporized.duration = $event);
+      return \u0275\u0275resetView($event);
+    });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(66, "section", 241)(67, "div", 124)(68, "span", 125);
-    \u0275\u0275text(69, "Classi CSS dinamiche");
+    \u0275\u0275elementStart(89, "div", 135)(90, "button", 136);
+    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_90_listener() {
+      \u0275\u0275restoreView(_r33);
+      const ctx_r2 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r2.opSetCommentsTemporized());
+    });
+    \u0275\u0275text(91, "Set + Show");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(70, "div", 126)(71, "div", 127)(72, "div", 128)(73, "code");
-    \u0275\u0275text(74, "addClass / removeClass");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(75, "span", 129);
-    \u0275\u0275text(76, "(cell, className)");
-    \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(77, "span", 130);
-    \u0275\u0275text(78, "Aggiunge o rimuove una classe CSS personalizzata da una cella a runtime.");
+    \u0275\u0275template(92, AppComponent_div_796_div_92_Template, 3, 1, "div", 137);
+    \u0275\u0275elementEnd()()();
+    \u0275\u0275elementStart(93, "section", 241)(94, "div", 124)(95, "span", 125);
+    \u0275\u0275text(96, "Classi CSS dinamiche");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(79, "div", 131)(80, "div", 132)(81, "label");
-    \u0275\u0275text(82, "cell");
+    \u0275\u0275elementStart(97, "div", 126)(98, "div", 127)(99, "div", 128)(100, "code");
+    \u0275\u0275text(101, "addClass / removeClass");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(83, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_83_listener($event) {
+    \u0275\u0275elementStart(102, "span", 129);
+    \u0275\u0275text(103, "(cell, className)");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(104, "span", 130);
+    \u0275\u0275text(105, "Aggiunge o rimuove una classe CSS personalizzata da una cella a runtime.");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(106, "div", 131)(107, "div", 132)(108, "label");
+    \u0275\u0275text(109, "cell");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(110, "input", 249);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_110_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.addClass.cell, $event) || (ctx_r2.ops.addClass.cell = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(84, "div", 132)(85, "label");
-    \u0275\u0275text(86, "class");
+    \u0275\u0275elementStart(111, "div", 132)(112, "label");
+    \u0275\u0275text(113, "class");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(87, "input", 254);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_87_listener($event) {
+    \u0275\u0275elementStart(114, "input", 256);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_114_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.addClass.className, $event) || (ctx_r2.ops.addClass.className = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(88, "div", 135)(89, "button", 136);
-    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_89_listener() {
+    \u0275\u0275elementStart(115, "div", 135)(116, "button", 136);
+    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_116_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opAddClass());
     });
-    \u0275\u0275text(90, "Add");
+    \u0275\u0275text(117, "Add");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(91, "button", 139);
-    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_91_listener() {
+    \u0275\u0275elementStart(118, "button", 139);
+    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_118_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.removeClass.cell = ctx_r2.ops.addClass.cell;
       ctx_r2.ops.removeClass.className = ctx_r2.ops.addClass.className;
       return \u0275\u0275resetView(ctx_r2.opRemoveClass());
     });
-    \u0275\u0275text(92, "Remove");
+    \u0275\u0275text(119, "Remove");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(93, AppComponent_div_796_div_93_Template, 3, 1, "div", 137)(94, AppComponent_div_796_div_94_Template, 3, 1, "div", 137);
+    \u0275\u0275template(120, AppComponent_div_796_div_120_Template, 3, 1, "div", 137)(121, AppComponent_div_796_div_121_Template, 3, 1, "div", 137);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(95, "div", 127)(96, "div", 128)(97, "code");
-    \u0275\u0275text(98, "getClasses");
+    \u0275\u0275elementStart(122, "div", 127)(123, "div", 128)(124, "code");
+    \u0275\u0275text(125, "getClasses");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(99, "span", 129);
-    \u0275\u0275text(100, "(cell)");
+    \u0275\u0275elementStart(126, "span", 129);
+    \u0275\u0275text(127, "(cell)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(101, "span", 130);
-    \u0275\u0275text(102, "Restituisce l'array delle classi CSS dinamiche assegnate a una cella.");
+    \u0275\u0275elementStart(128, "span", 130);
+    \u0275\u0275text(129, "Restituisce l'array delle classi CSS dinamiche assegnate a una cella.");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(103, "div", 131)(104, "div", 132)(105, "label");
-    \u0275\u0275text(106, "cell");
+    \u0275\u0275elementStart(130, "div", 131)(131, "div", 132)(132, "label");
+    \u0275\u0275text(133, "cell");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(107, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_107_listener($event) {
+    \u0275\u0275elementStart(134, "input", 249);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_134_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getClasses.cell, $event) || (ctx_r2.ops.getClasses.cell = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(108, "div", 135)(109, "button", 136);
-    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_109_listener() {
+    \u0275\u0275elementStart(135, "div", 135)(136, "button", 136);
+    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_136_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.getClasses.cell = ctx_r2.ops.addClass.cell;
       return \u0275\u0275resetView(ctx_r2.opGetClasses());
     });
-    \u0275\u0275text(110, "Get");
+    \u0275\u0275text(137, "Get");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(111, AppComponent_div_796_div_111_Template, 3, 1, "div", 137);
+    \u0275\u0275template(138, AppComponent_div_796_div_138_Template, 3, 1, "div", 137);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(112, "div", 127)(113, "div", 128)(114, "code");
-    \u0275\u0275text(115, "resetStyle");
+    \u0275\u0275elementStart(139, "div", 127)(140, "div", 128)(141, "code");
+    \u0275\u0275text(142, "resetStyle");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(116, "span", 129);
-    \u0275\u0275text(117, "(cell?)");
+    \u0275\u0275elementStart(143, "span", 129);
+    \u0275\u0275text(144, "(cell?)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(118, "span", 130);
-    \u0275\u0275text(119, "Rimuove lo stile da una cella. Senza cell azzera tutti gli stili (celle, righe, colonne).");
+    \u0275\u0275elementStart(145, "span", 130);
+    \u0275\u0275text(146, "Rimuove lo stile da una cella. Senza cell azzera tutti gli stili (celle, righe, colonne).");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(120, "div", 131)(121, "div", 132)(122, "label");
-    \u0275\u0275text(123, "cell ");
-    \u0275\u0275elementStart(124, "small");
-    \u0275\u0275text(125, "?");
+    \u0275\u0275elementStart(147, "div", 131)(148, "div", 132)(149, "label");
+    \u0275\u0275text(150, "cell ");
+    \u0275\u0275elementStart(151, "small");
+    \u0275\u0275text(152, "?");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(126, "input", 255);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_126_listener($event) {
+    \u0275\u0275elementStart(153, "input", 257);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_796_Template_input_ngModelChange_153_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.resetStyle.cell, $event) || (ctx_r2.ops.resetStyle.cell = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(127, "div", 135)(128, "button", 139);
-    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_128_listener() {
+    \u0275\u0275elementStart(154, "div", 135)(155, "button", 139);
+    \u0275\u0275listener("click", function AppComponent_div_796_Template_button_click_155_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opResetStyle());
     });
-    \u0275\u0275text(129, "Reset");
+    \u0275\u0275text(156, "Reset");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(130, AppComponent_div_796_div_130_Template, 3, 1, "div", 137);
+    \u0275\u0275template(157, AppComponent_div_796_div_157_Template, 3, 1, "div", 137);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -68302,6 +68438,16 @@ function AppComponent_div_796_Template(rf, ctx) {
     \u0275\u0275property("disabled", !ctx_r2.instance);
     \u0275\u0275advance(2);
     \u0275\u0275property("ngIf", ctx_r2.results["clearComments"] !== void 0);
+    \u0275\u0275advance(13);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setCommentsTemporized.cell);
+    \u0275\u0275advance(4);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setCommentsTemporized.comment);
+    \u0275\u0275advance(6);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setCommentsTemporized.duration);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("disabled", !ctx_r2.instance);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngIf", ctx_r2.results["setCommentsTemporized"] !== void 0);
     \u0275\u0275advance(18);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.addClass.cell);
     \u0275\u0275advance(4);
@@ -68780,7 +68926,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(37, "div", 131)(38, "div", 132)(39, "label");
     \u0275\u0275text(40, "row");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(41, "input", 256);
+    \u0275\u0275elementStart(41, "input", 258);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_41_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69003,7 +69149,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(158, "div", 132)(159, "label");
     \u0275\u0275text(160, "key");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(161, "input", 257);
+    \u0275\u0275elementStart(161, "input", 259);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_161_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69014,7 +69160,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(162, "div", 132)(163, "label");
     \u0275\u0275text(164, "value");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(165, "input", 258);
+    \u0275\u0275elementStart(165, "input", 260);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_165_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69047,7 +69193,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(183, "div", 131)(184, "div", 132)(185, "label");
     \u0275\u0275text(186, "value");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(187, "input", 259);
+    \u0275\u0275elementStart(187, "input", 261);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_187_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69077,7 +69223,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(200, "div", 131)(201, "div", 132)(202, "label");
     \u0275\u0275text(203, "value");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(204, "input", 257);
+    \u0275\u0275elementStart(204, "input", 259);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_204_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69166,7 +69312,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(253, "div", 131)(254, "div", 132)(255, "label");
     \u0275\u0275text(256, "x");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(257, "input", 260);
+    \u0275\u0275elementStart(257, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_257_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69177,7 +69323,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(258, "div", 132)(259, "label");
     \u0275\u0275text(260, "y");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(261, "input", 260);
+    \u0275\u0275elementStart(261, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_261_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69188,7 +69334,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(262, "div", 132)(263, "label");
     \u0275\u0275text(264, "rows");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(265, "input", 261);
+    \u0275\u0275elementStart(265, "input", 263);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_265_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69316,7 +69462,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(335, "div", 132)(336, "label");
     \u0275\u0275text(337, "value");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(338, "input", 259);
+    \u0275\u0275elementStart(338, "input", 261);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_338_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69511,7 +69657,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(450, "div", 131)(451, "div", 132)(452, "label");
     \u0275\u0275text(453, "x1");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(454, "input", 260);
+    \u0275\u0275elementStart(454, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_454_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69522,7 +69668,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(455, "div", 132)(456, "label");
     \u0275\u0275text(457, "y1");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(458, "input", 260);
+    \u0275\u0275elementStart(458, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_458_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69533,7 +69679,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(459, "div", 132)(460, "label");
     \u0275\u0275text(461, "x2");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(462, "input", 260);
+    \u0275\u0275elementStart(462, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_462_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69544,7 +69690,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(463, "div", 132)(464, "label");
     \u0275\u0275text(465, "y2");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(466, "input", 260);
+    \u0275\u0275elementStart(466, "input", 262);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_466_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69715,7 +69861,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(570, "div", 131)(571, "div", 132)(572, "label");
     \u0275\u0275text(573, "key");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(574, "input", 262);
+    \u0275\u0275elementStart(574, "input", 264);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_574_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69726,7 +69872,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(575, "div", 132)(576, "label");
     \u0275\u0275text(577, "value");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(578, "input", 259);
+    \u0275\u0275elementStart(578, "input", 261);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_578_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69799,7 +69945,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(622, "div", 131)(623, "div", 132)(624, "label");
     \u0275\u0275text(625, "expr");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(626, "input", 263);
+    \u0275\u0275elementStart(626, "input", 265);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_626_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69829,7 +69975,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(639, "div", 131)(640, "div", 132)(641, "label");
     \u0275\u0275text(642, "n");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(643, "input", 264);
+    \u0275\u0275elementStart(643, "input", 266);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_643_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -69863,7 +70009,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementStart(659, "div", 131)(660, "div", 132)(661, "label");
     \u0275\u0275text(662, "c");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(663, "input", 265);
+    \u0275\u0275elementStart(663, "input", 267);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_663_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
@@ -70096,10 +70242,10 @@ function AppComponent_div_797_Template(rf, ctx) {
 }
 function AppComponent_div_807_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 266)(1, "span", 267);
+    \u0275\u0275elementStart(0, "div", 268)(1, "span", 269);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "span", 268);
+    \u0275\u0275elementStart(3, "span", 270);
     \u0275\u0275text(4);
     \u0275\u0275elementEnd()();
   }
@@ -70114,7 +70260,7 @@ function AppComponent_div_807_Template(rf, ctx) {
 }
 function AppComponent_div_808_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 269);
+    \u0275\u0275elementStart(0, "div", 271);
     \u0275\u0275text(1, " Nessun evento registrato. ");
     \u0275\u0275elementEnd();
   }
@@ -70417,6 +70563,7 @@ var AppComponent = class _AppComponent {
     setComments: { cell: "A1", comment: "Nota importante" },
     getComments: { cell: "A1", allCells: false },
     clearComments: { cell: "A1" },
+    setCommentsTemporized: { cell: "A1", comment: "Salvato!", duration: 3e3 },
     addClass: { cell: "A1", className: "highlight" },
     removeClass: { cell: "A1", className: "highlight" },
     getClasses: { cell: "A1" },
@@ -72044,6 +72191,11 @@ var AppComponent = class _AppComponent {
     this.instance?.clearComments(o.cell || void 0);
     this.showResult("clearComments", null);
   }
+  opSetCommentsTemporized() {
+    const o = this.ops.setCommentsTemporized;
+    this.instance?.setCommentsTemporized(o.cell, o.comment, Number(o.duration) || 0);
+    this.showResult("setCommentsTemporized", `popup su ${o.cell} per ${o.duration}ms`);
+  }
   opAddClass() {
     this.instance?.addClass(this.ops.addClass.cell, this.ops.addClass.className);
     this.showResult("addClass", null);
@@ -72225,7 +72377,7 @@ var AppComponent = class _AppComponent {
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.grid = _t.first);
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.customContextMenuTpl = _t.first);
     }
-  }, standalone: false, decls: 815, vars: 136, consts: [["customContextMenuTpl", ""], [1, "toolbar"], [1, "toolbar__group"], [1, "toolbar__label"], [1, "btn", "btn--primary", 3, "click"], [1, "btn", "btn--secondary", 3, "click"], [1, "btn", "btn--secondary", 3, "click", "disabled"], [1, "btn", "btn--secondary", 3, "click", "disabled", "title"], [1, "btn", "btn--ghost", 3, "click"], [1, "toolbar__spacer"], [1, "toolbar__status"], [1, "page"], [1, "demo-header"], [1, "demo-header__brand"], [1, "demo-header__logo"], [1, "demo-header__title"], [1, "demo-header__sub"], [1, "demo-header__badges"], [1, "demo-header__badge", "demo-header__badge--blue"], [1, "demo-header__badge", "demo-header__badge--purple"], [1, "demo-header__badge", "demo-header__badge--green"], [1, "status-bar"], [1, "status-bar__item"], [1, "status-bar__sep"], [1, "main-tabs"], [1, "main-tab-bar"], [1, "main-tab-btn", 3, "click"], [1, "main-tab-btn__icon"], [1, "main-tab-panel", "main-tab-panel--config", 3, "hidden"], [1, "config-panel"], [1, "config-panel__body"], [1, "config-section"], [1, "config-section__title"], [1, "config-toggle"], [1, "config-toggle__switch"], ["type", "checkbox", 3, "ngModelChange", "ngModel"], [1, "config-toggle__switch-track"], [1, "config-toggle__switch-thumb"], [1, "config-toggle__info"], [1, "config-toggle__name"], [1, "config-toggle__desc"], [1, "config-field"], [1, "config-field__label"], [1, "config-field__desc"], [2, "width", "140px", 3, "ngModelChange", "ngModel"], ["value", ""], ["value", "rows"], ["value", "columns"], ["value", "both"], [3, "ngModelChange", "ngModel"], ["value", "clip"], ["value", "ellipsis"], ["class", "config-field", 4, "ngIf"], ["class", "config-toggle", 4, "ngIf"], ["type", "number", "min", "0", "step", "1", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "10", 3, "ngModelChange", "ngModel"], ["value", "left"], ["value", "center"], ["value", "right"], ["type", "number", "min", "0", "step", "4", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "10", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "200", "step", "20", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "5", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "width", "120px", 3, "ngModelChange", "ngModel"], ["value", "inline"], ["type", "text", "placeholder", "0,1,2", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://example.com/data.csv", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "export", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", ",", "maxlength", "2", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://api.example.com/data", 3, "ngModelChange", "ngModel"], [2, "height", "28px", "border", "1px solid #d1d5db", "border-radius", "4px", "padding", "0 6px", 3, "ngModelChange", "ngModel"], ["value", "GET"], ["value", "POST"], ["type", "text", "placeholder", '{"page":1,"limit":50}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "6px", "cursor", "pointer"], [2, "display", "flex", "flex-wrap", "wrap", "gap", "6px", "margin-top", "6px"], ["style", "display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 6px;border:1px solid #333;border-radius:4px;cursor:pointer;white-space:nowrap", 3, "background", "color", 4, "ngFor", "ngForOf"], ["type", "text", "placeholder", '{"0":"highlight"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"13px","color":"#333"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"12px","fontWeight":"bold"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"backgroundColor":"#e8eaf6"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontStyle":"italic","color":"#666"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"addRow":"Nuova riga"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "jxcell-demo", 3, "ngModelChange", "ngModel", "disabled"], ["type", "range", "min", "0", "max", "1", "step", "0.05", 2, "width", "100%", "margin-top", "4px", 3, "ngModelChange", "ngModel", "disabled"], [1, "main-tab-panel", "main-tab-panel--grid", 3, "hidden"], ["source", "http", "name", "http", 3, "contained"], [3, "ready", "options"], [1, "api-explorer"], [1, "api-explorer__head"], [1, "api-explorer__title"], [1, "api-explorer__desc"], [1, "api-explorer__body"], [1, "api-tab-bar"], [1, "api-tab-btn", 3, "click"], [1, "api-tab-btn__count"], [1, "api-tab-panels"], ["class", "api-tab-panel", 4, "ngIf"], [1, "log-section"], [1, "log-header"], [1, "log-header__title"], [1, "log-header__count"], [1, "btn", "btn--ghost", "btn--sm", 3, "click"], [1, "demo-log"], ["class", "demo-log__entry", 3, "demo-log__entry--change", "demo-log__entry--nav", "demo-log__entry--error", 4, "ngFor", "ngForOf"], ["class", "demo-log__empty", 4, "ngIf"], [2, "margin-top", "40px", "padding", "0 24px 40px"], [2, "font-size", "1.1rem", "font-weight", "700", "margin-bottom", "8px", "color", "#344054"], [2, "font-size", ".85rem", "color", "#667085", "margin-bottom", "16px"], [3, "data", "columns", "options"], ["type", "text", "placeholder", "es. 0,2,5", "title", "Indici colonna separati da virgola per cui disabilitare il menu", 1, "config-field__input", 3, "ngModelChange", "ngModel"], [1, "config-field__hint"], [2, "display", "flex", "align-items", "center", "gap", "4px", "font-size", "11px", "padding", "2px 6px", "border", "1px solid #333", "border-radius", "4px", "cursor", "pointer", "white-space", "nowrap"], ["type", "checkbox", 2, "margin", "0", 3, "ngModelChange", "ngModel"], [1, "jx-ctx-menu", "jx-ctx-menu--demo"], [1, "jx-ctx-menu__header"], [1, "jx-ctx-menu__value", 3, "title"], [1, "jx-ctx-separator"], [1, "jx-ctx-item", 3, "click"], [1, "jx-ctx-item", "jx-ctx-item--danger", 3, "click"], [1, "api-tab-panel"], [1, "api-section", "api-section--rows"], [1, "api-section__head"], [1, "api-section__label"], [1, "api-table"], [1, "api-row"], [1, "api-row__name"], [1, "api-row__sig"], [1, "api-row__desc"], [1, "api-row__params"], [1, "api-p"], ["type", "number", "placeholder", "fine", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 3, "ngModelChange", "ngModel"], [1, "api-row__btns"], [1, "api-btn", 3, "click", "disabled"], ["class", "api-row__out", 4, "ngIf"], ["type", "number", "min", "0", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--danger", 3, "click", "disabled"], ["id", "sec-cols", 1, "api-section", "api-section--cols"], ["type", "text", "placeholder", "vuoto", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "19", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "140px", 3, "ngModelChange", "ngModel"], [2, "width", "110px", 3, "ngModelChange", "ngModel"], ["value", "text"], ["value", "numeric"], ["value", "checkbox"], ["value", "dropdown"], ["value", "autocomplete"], ["value", "calendar"], ["value", "color"], ["value", "html"], ["value", "hidden"], ["type", "number", "min", "0", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "\\d", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "4px"], [1, "api-row__out"], ["id", "sec-cells", 1, "api-section", "api-section--cells"], ["type", "text", "placeholder", "A1", 3, "ngModelChange", "ngModel"], [1, "api-p", "api-p--wide"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "nuovo valore", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--alt", 3, "click", "disabled"], ["type", "text", "placeholder", "N1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "=B1*C1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1,B1,C1", 3, "ngModelChange", "ngModel"], ["id", "sec-merge", 1, "api-section", "api-section--merge"], ["type", "text", "placeholder", "vuoto = tutti", 3, "ngModelChange", "ngModel"], [1, "api-row__note"], ["id", "sec-footer", 1, "api-section", "api-section--footer"], [1, "api-toggle"], ["id", "sec-fill", 1, "api-section", "api-section--fill"], [4, "ngIf"], ["id", "sec-nav", 1, "api-section", "api-section--nav"], [1, "api-section", "api-section--nav"], ["id", "sec-edit", 1, "api-section", "api-section--edit"], ["id", "sec-history", 1, "api-section", "api-section--history"], ["id", "sec-export", 1, "api-section", "api-section--export"], ["type", "number", "min", "0", "placeholder", "tutti", 3, "ngModelChange", "ngModel"], ["id", "sec-styles", 1, "api-section", "api-section--styles"], [1, "api-select", 2, "height", "26px", "font-size", "11px", 3, "ngModelChange", "ngModel"], ["value", "cell"], ["value", "row"], ["value", "col"], ["class", "api-p", 4, "ngIf"], ["value", "all"], ["value", "top"], ["value", "bottom"], ["value", "solid"], ["value", "dashed"], ["value", "dotted"], ["value", "double"], ["value", "none"], ["type", "number", "min", "1", "max", "8", 2, "width", "46px", 3, "ngModelChange", "ngModel"], ["type", "color", 2, "padding", "1px", "height", "26px", "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 2, "width", "54px", 3, "ngModelChange", "ngModel"], ["id", "sec-sort", 1, "api-section", "api-section--sort"], ["type", "number", "min", "0", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-select", 3, "ngModelChange", "ngModel"], ["value", "asc"], ["value", "desc"], [3, "ngValue"], ["id", "sec-hf", 1, "api-section", "api-section--hf"], ["type", "color", 1, "api-color", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["id", "sec-readonly", 1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "A1", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-checkbox"], ["id", "sec-setdata", 1, "api-section", "api-section--setdata"], [1, "api-row__params", 2, "flex-direction", "column", "align-items", "flex-start", "gap", "6px"], [2, "font-size", "12px", "color", "#666"], ["rows", "5", "placeholder", '[["Alice","Roma",30],["Bob","Milano",25]]', 2, "width", "100%", "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "6px", 3, "ngModelChange", "ngModel"], [1, "api-row__btns", 2, "display", "flex", "flex-direction", "column", "gap", "6px"], ["id", "sec-remote", 1, "api-section", "api-section--remote"], ["id", "sec-csv", 1, "api-section", "api-section--csv"], [1, "api-row__params", 2, "flex-direction", "column", "gap", "6px"], ["rows", "3", 2, "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "4px", "width", "100%", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "2", 2, "width", "50px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--search"], ["type", "text", "placeholder", "testo da cercare", 1, "api-input", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--secondary", 3, "click", "disabled"], [1, "api-section", "api-section--export"], [2, "font-size", "11px", "height", "27px", "border", "1px solid #444", "border-radius", "4px", "padding", "0 6px", "background", "#1e2736", "color", "#e8edf5", 3, "ngModelChange", "ngModel"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "es. status", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--persistence"], [3, "value"], [1, "api-section__desc"], [1, "api-row__params", 2, "flex", "1", "align-self", "center"], [2, "font-size", "12px", "color", "#a78bfa"], [1, "api-btn", 3, "click"], [1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "valore", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["type", "checkbox", 3, "ngModelChange", "change", "ngModel"], ["type", "text", 2, "width", "90px", "font-size", "12px", "padding", "2px 4px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--cells"], [1, "api-section"], ["type", "number", "min", "0", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "v1,v2,v3", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b,c,d", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "40", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "22", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "note", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "testo", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "120px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "highlight", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", 2, "width", "50px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b|c,d", 2, "width", "110px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "undo", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "150px", 3, "ngModelChange", "ngModel"], ["type", "number", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "1", 2, "width", "45px", 3, "ngModelChange", "ngModel"], [1, "demo-log__entry"], [1, "demo-log__time"], [1, "demo-log__msg"], [1, "demo-log__empty"]], template: function AppComponent_Template(rf, ctx) {
+  }, standalone: false, decls: 815, vars: 136, consts: [["customContextMenuTpl", ""], [1, "toolbar"], [1, "toolbar__group"], [1, "toolbar__label"], [1, "btn", "btn--primary", 3, "click"], [1, "btn", "btn--secondary", 3, "click"], [1, "btn", "btn--secondary", 3, "click", "disabled"], [1, "btn", "btn--secondary", 3, "click", "disabled", "title"], [1, "btn", "btn--ghost", 3, "click"], [1, "toolbar__spacer"], [1, "toolbar__status"], [1, "page"], [1, "demo-header"], [1, "demo-header__brand"], [1, "demo-header__logo"], [1, "demo-header__title"], [1, "demo-header__sub"], [1, "demo-header__badges"], [1, "demo-header__badge", "demo-header__badge--blue"], [1, "demo-header__badge", "demo-header__badge--purple"], [1, "demo-header__badge", "demo-header__badge--green"], [1, "status-bar"], [1, "status-bar__item"], [1, "status-bar__sep"], [1, "main-tabs"], [1, "main-tab-bar"], [1, "main-tab-btn", 3, "click"], [1, "main-tab-btn__icon"], [1, "main-tab-panel", "main-tab-panel--config", 3, "hidden"], [1, "config-panel"], [1, "config-panel__body"], [1, "config-section"], [1, "config-section__title"], [1, "config-toggle"], [1, "config-toggle__switch"], ["type", "checkbox", 3, "ngModelChange", "ngModel"], [1, "config-toggle__switch-track"], [1, "config-toggle__switch-thumb"], [1, "config-toggle__info"], [1, "config-toggle__name"], [1, "config-toggle__desc"], [1, "config-field"], [1, "config-field__label"], [1, "config-field__desc"], [2, "width", "140px", 3, "ngModelChange", "ngModel"], ["value", ""], ["value", "rows"], ["value", "columns"], ["value", "both"], [3, "ngModelChange", "ngModel"], ["value", "clip"], ["value", "ellipsis"], ["class", "config-field", 4, "ngIf"], ["class", "config-toggle", 4, "ngIf"], ["type", "number", "min", "0", "step", "1", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "10", 3, "ngModelChange", "ngModel"], ["value", "left"], ["value", "center"], ["value", "right"], ["type", "number", "min", "0", "step", "4", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "10", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "200", "step", "20", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "5", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "width", "120px", 3, "ngModelChange", "ngModel"], ["value", "inline"], ["type", "text", "placeholder", "0,1,2", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://example.com/data.csv", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "export", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", ",", "maxlength", "2", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://api.example.com/data", 3, "ngModelChange", "ngModel"], [2, "height", "28px", "border", "1px solid #d1d5db", "border-radius", "4px", "padding", "0 6px", 3, "ngModelChange", "ngModel"], ["value", "GET"], ["value", "POST"], ["type", "text", "placeholder", '{"page":1,"limit":50}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "6px", "cursor", "pointer"], [2, "display", "flex", "flex-wrap", "wrap", "gap", "6px", "margin-top", "6px"], ["style", "display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 6px;border:1px solid #333;border-radius:4px;cursor:pointer;white-space:nowrap", 3, "background", "color", 4, "ngFor", "ngForOf"], ["type", "text", "placeholder", '{"0":"highlight"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"13px","color":"#333"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"12px","fontWeight":"bold"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"backgroundColor":"#e8eaf6"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontStyle":"italic","color":"#666"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"addRow":"Nuova riga"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "jxcell-demo", 3, "ngModelChange", "ngModel", "disabled"], ["type", "range", "min", "0", "max", "1", "step", "0.05", 2, "width", "100%", "margin-top", "4px", 3, "ngModelChange", "ngModel", "disabled"], [1, "main-tab-panel", "main-tab-panel--grid", 3, "hidden"], ["source", "http", "name", "http", 3, "contained"], [3, "ready", "options"], [1, "api-explorer"], [1, "api-explorer__head"], [1, "api-explorer__title"], [1, "api-explorer__desc"], [1, "api-explorer__body"], [1, "api-tab-bar"], [1, "api-tab-btn", 3, "click"], [1, "api-tab-btn__count"], [1, "api-tab-panels"], ["class", "api-tab-panel", 4, "ngIf"], [1, "log-section"], [1, "log-header"], [1, "log-header__title"], [1, "log-header__count"], [1, "btn", "btn--ghost", "btn--sm", 3, "click"], [1, "demo-log"], ["class", "demo-log__entry", 3, "demo-log__entry--change", "demo-log__entry--nav", "demo-log__entry--error", 4, "ngFor", "ngForOf"], ["class", "demo-log__empty", 4, "ngIf"], [2, "margin-top", "40px", "padding", "0 24px 40px"], [2, "font-size", "1.1rem", "font-weight", "700", "margin-bottom", "8px", "color", "#344054"], [2, "font-size", ".85rem", "color", "#667085", "margin-bottom", "16px"], [3, "data", "columns", "options"], ["type", "text", "placeholder", "es. 0,2,5", "title", "Indici colonna separati da virgola per cui disabilitare il menu", 1, "config-field__input", 3, "ngModelChange", "ngModel"], [1, "config-field__hint"], [2, "display", "flex", "align-items", "center", "gap", "4px", "font-size", "11px", "padding", "2px 6px", "border", "1px solid #333", "border-radius", "4px", "cursor", "pointer", "white-space", "nowrap"], ["type", "checkbox", 2, "margin", "0", 3, "ngModelChange", "ngModel"], [1, "jx-ctx-menu", "jx-ctx-menu--demo"], [1, "jx-ctx-menu__header"], [1, "jx-ctx-menu__value", 3, "title"], [1, "jx-ctx-separator"], [1, "jx-ctx-item", 3, "click"], [1, "jx-ctx-item", "jx-ctx-item--danger", 3, "click"], [1, "api-tab-panel"], [1, "api-section", "api-section--rows"], [1, "api-section__head"], [1, "api-section__label"], [1, "api-table"], [1, "api-row"], [1, "api-row__name"], [1, "api-row__sig"], [1, "api-row__desc"], [1, "api-row__params"], [1, "api-p"], ["type", "number", "placeholder", "fine", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 3, "ngModelChange", "ngModel"], [1, "api-row__btns"], [1, "api-btn", 3, "click", "disabled"], ["class", "api-row__out", 4, "ngIf"], ["type", "number", "min", "0", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--danger", 3, "click", "disabled"], ["id", "sec-cols", 1, "api-section", "api-section--cols"], ["type", "text", "placeholder", "vuoto", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "19", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "140px", 3, "ngModelChange", "ngModel"], [2, "width", "110px", 3, "ngModelChange", "ngModel"], ["value", "text"], ["value", "numeric"], ["value", "checkbox"], ["value", "dropdown"], ["value", "autocomplete"], ["value", "calendar"], ["value", "color"], ["value", "html"], ["value", "hidden"], ["type", "number", "min", "0", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "\\d", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "4px"], [1, "api-row__out"], ["id", "sec-cells", 1, "api-section", "api-section--cells"], ["type", "text", "placeholder", "A1", 3, "ngModelChange", "ngModel"], [1, "api-p", "api-p--wide"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "nuovo valore", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--alt", 3, "click", "disabled"], ["type", "text", "placeholder", "N1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "=B1*C1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1,B1,C1", 3, "ngModelChange", "ngModel"], ["id", "sec-merge", 1, "api-section", "api-section--merge"], ["type", "text", "placeholder", "vuoto = tutti", 3, "ngModelChange", "ngModel"], [1, "api-row__note"], ["id", "sec-footer", 1, "api-section", "api-section--footer"], [1, "api-toggle"], ["id", "sec-fill", 1, "api-section", "api-section--fill"], [4, "ngIf"], ["id", "sec-nav", 1, "api-section", "api-section--nav"], [1, "api-section", "api-section--nav"], ["id", "sec-edit", 1, "api-section", "api-section--edit"], ["id", "sec-history", 1, "api-section", "api-section--history"], ["id", "sec-export", 1, "api-section", "api-section--export"], ["type", "number", "min", "0", "placeholder", "tutti", 3, "ngModelChange", "ngModel"], ["id", "sec-styles", 1, "api-section", "api-section--styles"], [1, "api-select", 2, "height", "26px", "font-size", "11px", 3, "ngModelChange", "ngModel"], ["value", "cell"], ["value", "row"], ["value", "col"], ["class", "api-p", 4, "ngIf"], ["value", "all"], ["value", "top"], ["value", "bottom"], ["value", "solid"], ["value", "dashed"], ["value", "dotted"], ["value", "double"], ["value", "none"], ["type", "number", "min", "1", "max", "8", 2, "width", "46px", 3, "ngModelChange", "ngModel"], ["type", "color", 2, "padding", "1px", "height", "26px", "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 2, "width", "54px", 3, "ngModelChange", "ngModel"], ["id", "sec-sort", 1, "api-section", "api-section--sort"], ["type", "number", "min", "0", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-select", 3, "ngModelChange", "ngModel"], ["value", "asc"], ["value", "desc"], [3, "ngValue"], ["id", "sec-hf", 1, "api-section", "api-section--hf"], ["type", "color", 1, "api-color", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["id", "sec-readonly", 1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "A1", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-checkbox"], ["id", "sec-setdata", 1, "api-section", "api-section--setdata"], [1, "api-row__params", 2, "flex-direction", "column", "align-items", "flex-start", "gap", "6px"], [2, "font-size", "12px", "color", "#666"], ["rows", "5", "placeholder", '[["Alice","Roma",30],["Bob","Milano",25]]', 2, "width", "100%", "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "6px", 3, "ngModelChange", "ngModel"], [1, "api-row__btns", 2, "display", "flex", "flex-direction", "column", "gap", "6px"], ["id", "sec-remote", 1, "api-section", "api-section--remote"], ["id", "sec-csv", 1, "api-section", "api-section--csv"], [1, "api-row__params", 2, "flex-direction", "column", "gap", "6px"], ["rows", "3", 2, "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "4px", "width", "100%", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "2", 2, "width", "50px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--search"], ["type", "text", "placeholder", "testo da cercare", 1, "api-input", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--secondary", 3, "click", "disabled"], [1, "api-section", "api-section--export"], [2, "font-size", "11px", "height", "27px", "border", "1px solid #444", "border-radius", "4px", "padding", "0 6px", "background", "#1e2736", "color", "#e8edf5", 3, "ngModelChange", "ngModel"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "es. status", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--persistence"], [3, "value"], [1, "api-section__desc"], [1, "api-row__params", 2, "flex", "1", "align-self", "center"], [2, "font-size", "12px", "color", "#a78bfa"], [1, "api-btn", 3, "click"], [1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "valore", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["type", "checkbox", 3, "ngModelChange", "change", "ngModel"], ["type", "text", 2, "width", "90px", "font-size", "12px", "padding", "2px 4px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--cells"], [1, "api-section"], ["type", "number", "min", "0", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "v1,v2,v3", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b,c,d", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "40", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "22", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "note", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "testo", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "120px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "3000", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "highlight", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", 2, "width", "50px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b|c,d", 2, "width", "110px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "undo", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "150px", 3, "ngModelChange", "ngModel"], ["type", "number", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "1", 2, "width", "45px", 3, "ngModelChange", "ngModel"], [1, "demo-log__entry"], [1, "demo-log__time"], [1, "demo-log__msg"], [1, "demo-log__empty"]], template: function AppComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275elementStart(0, "div", 1)(1, "div", 2)(2, "span", 3);
@@ -73528,7 +73680,7 @@ var AppComponent = class _AppComponent {
       \u0275\u0275text(786, "15");
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(787, "div", 98);
-      \u0275\u0275template(788, AppComponent_div_788_Template, 319, 46, "div", 99)(789, AppComponent_div_789_Template, 302, 52, "div", 99)(790, AppComponent_div_790_Template, 255, 37, "div", 99)(791, AppComponent_div_791_Template, 716, 129, "div", 99)(792, AppComponent_div_792_Template, 375, 59, "div", 99)(793, AppComponent_div_793_Template, 345, 35, "div", 99)(794, AppComponent_div_794_Template, 294, 57, "div", 99)(795, AppComponent_div_795_Template, 141, 24, "div", 99)(796, AppComponent_div_796_Template, 131, 23, "div", 99)(797, AppComponent_div_797_Template, 668, 104, "div", 99);
+      \u0275\u0275template(788, AppComponent_div_788_Template, 319, 46, "div", 99)(789, AppComponent_div_789_Template, 302, 52, "div", 99)(790, AppComponent_div_790_Template, 255, 37, "div", 99)(791, AppComponent_div_791_Template, 716, 129, "div", 99)(792, AppComponent_div_792_Template, 375, 59, "div", 99)(793, AppComponent_div_793_Template, 345, 35, "div", 99)(794, AppComponent_div_794_Template, 294, 57, "div", 99)(795, AppComponent_div_795_Template, 141, 24, "div", 99)(796, AppComponent_div_796_Template, 158, 28, "div", 99)(797, AppComponent_div_797_Template, 668, 104, "div", 99);
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(798, "div", 100)(799, "div", 101)(800, "h3", 102);
       \u0275\u0275text(801, "Event Log");
@@ -73784,7 +73936,7 @@ var AppComponent = class _AppComponent {
       \u0275\u0275advance(6);
       \u0275\u0275property("data", ctx.mockRows)("columns", ctx.mockColumns)("options", ctx.mockGridOptions);
     }
-  }, dependencies: [NgForOf, NgIf, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, RangeValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, NgControlStatus, MaxLengthValidator, MinValidator, MaxValidator, NgModel, $, N, PlLoadingOverlayComponent, JsonPipe], encapsulation: 2 });
+  }, dependencies: [NgForOf, NgIf, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, RangeValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, NgControlStatus, MaxLengthValidator, MinValidator, MaxValidator, NgModel, $, E, PlLoadingOverlayComponent, JsonPipe], encapsulation: 2 });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AppComponent, [{
@@ -76308,6 +76460,17 @@ var AppComponent = class _AppComponent {
               <div class="api-row__out" *ngIf="results['clearComments'] !== undefined"><code>{{ results['clearComments'] }}</code></div>\r
             </div>\r
 \r
+            <div class="api-row">\r
+              <div class="api-row__name"><code>setCommentsTemporized</code><span class="api-row__sig">(cell, comment, duration)</span><span class="api-row__desc">Imposta un commento e apre il popup automaticamente, chiudendolo dopo "duration" ms (0 = resta aperto). Il popup si posiziona da solo per restare sempre visibile (sotto la cella se c'\xE8 spazio, altrimenti sopra).</span></div>\r
+              <div class="api-row__params">\r
+                <div class="api-p"><label>cell</label><input type="text" [(ngModel)]="ops.setCommentsTemporized.cell" placeholder="A1" style="width:65px" /></div>\r
+                <div class="api-p"><label>commento</label><input type="text" [(ngModel)]="ops.setCommentsTemporized.comment" placeholder="Nota..." style="width:140px" /></div>\r
+                <div class="api-p"><label>duration <small>ms</small></label><input type="number" [(ngModel)]="ops.setCommentsTemporized.duration" placeholder="3000" style="width:80px" /></div>\r
+              </div>\r
+              <div class="api-row__btns"><button class="api-btn" [disabled]="!instance" (click)="opSetCommentsTemporized()">Set + Show</button></div>\r
+              <div class="api-row__out" *ngIf="results['setCommentsTemporized'] !== undefined"><code>{{ results['setCommentsTemporized'] }}</code></div>\r
+            </div>\r
+\r
           </div>\r
         </section>\r
 \r
@@ -76742,7 +76905,7 @@ var AppModule = class _AppModule {
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    B,
+    O,
     PlLoadingTraceModule.forRoot({
       shared: { debounceMs: 200 },
       http: { animationType: "bar", modal: false },
@@ -76767,7 +76930,7 @@ var AppModule = class _AppModule {
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        B,
+        O,
         PlLoadingTraceModule.forRoot({
           shared: { debounceMs: 200 },
           http: { animationType: "bar", modal: false },

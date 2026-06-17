@@ -47855,7 +47855,7 @@ var I = class _I {
   sort(e, t) {
     const o = this.sort$.value;
     let n;
-    if (n = void 0 !== t ? t : o?.columnIndex === e ? "asc" === o.direction ? "desc" : null : "asc", null === n) return this.rawData = this.normalizeData(this.options.data ?? [], this.options.columns ?? []), this.rebuildFormulaIndex(), this.recalculateAll(), this.checkAutoAddRow(), void this.sort$.next(null);
+    if (n = void 0 !== t ? t : o?.columnIndex === e ? "asc" === o.direction ? "desc" : null : "asc", null === n) return this.rawData = this.normalizeData(this.options.data ?? [], this.options.columns ?? []), this.bumpRowRenderEpochsFrom(0), this.rebuildFormulaIndex(), this.recalculateAll(), this.checkAutoAddRow(), void this.sort$.next(null);
     const r = this.options.columns?.[e], i = r?.sortFn, s = "asc" === n ? 1 : -1, l = this.data$.value, a = (() => {
       for (let e2 = this.rawData.length - 1; e2 >= 0; e2--) if (!this.rawData[e2].every((e3) => null == e3 || "" === e3)) return e2 + 1;
       return 0;
@@ -47868,7 +47868,7 @@ var I = class _I {
       if (n2 !== r2) for (let e3 = 0; e3 < o2.length; e3++) this.formula.isFormula(o2[e3]) && (o2[e3] = this.adjustSelfRefFormulaRow(o2[e3], n2, r2));
       return o2;
     }), u2 = d.slice(a);
-    this.rawData = [...h, ...u2], this.rebuildFormulaIndex(), this.recalculateAll(), this.sort$.next({
+    this.rawData = [...h, ...u2], this.bumpRowRenderEpochsFrom(0), this.rebuildFormulaIndex(), this.recalculateAll(), this.sort$.next({
       columnIndex: e,
       direction: n
     });
@@ -64158,7 +64158,7 @@ function AppComponent_div_791_Template(rf, ctx) {
     \u0275\u0275elementStart(447, "code");
     \u0275\u0275text(448, "col");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(449, ". direction='asc'|'desc'. Null per ripristinare.");
+    \u0275\u0275text(449, ". direction='asc'|'desc'. Null per ripristinare. Le celle custom (Custom Angular / Number / Priorit\xE0) vengono distrutte e ricreate nella nuova posizione.");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(450, "div", 131)(451, "label");
     \u0275\u0275text(452, "Col ");
@@ -75514,7 +75514,7 @@ var AppComponent = class _AppComponent {
           <div class="api-table">\r
 \r
             <div class="api-row">\r
-              <div class="api-row__name"><code>sort</code><span class="api-row__sig">(col, direction?)</span><span class="api-row__desc">Ordina i dati per la colonna <code>col</code>. direction='asc'|'desc'. Null per ripristinare.</span></div>\r
+              <div class="api-row__name"><code>sort</code><span class="api-row__sig">(col, direction?)</span><span class="api-row__desc">Ordina i dati per la colonna <code>col</code>. direction='asc'|'desc'. Null per ripristinare. Le celle custom (Custom Angular / Number / Priorit\xE0) vengono distrutte e ricreate nella nuova posizione.</span></div>\r
               <div class="api-row__params">\r
                 <label>Col <input type="number" min="0" [(ngModel)]="ops.sort.col" class="api-input api-input--sm"></label>\r
                 <label>Dir\r

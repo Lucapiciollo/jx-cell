@@ -3092,6 +3092,17 @@ pre {
   padding: 0 !important;
   background: transparent !important;
 }
+.demo-col-header-accent {
+  font-weight: 700;
+  color: #1a237e;
+  background: #e8eaf6 !important;
+}
+.demo-cell-price {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #1b5e20;
+  font-weight: 600;
+}
 .u-flex {
   display: flex;
 }

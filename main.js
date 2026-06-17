@@ -70980,7 +70980,10 @@ var AppComponent = class _AppComponent {
           decimal: ".",
           mask: "###,###.##",
           options: { prefix: "\u20AC", budget: 300 },
-          headerComponent: BudgetHeaderComponent
+          headerComponent: BudgetHeaderComponent,
+          // Classi CSS personalizzate: header in grassetto e celle allineate a destra
+          headerClassList: "demo-col-header-accent",
+          cellClassList: ["demo-cell-price"]
         },
         {
           title: "Subtotal",

@@ -43,6 +43,7 @@
   --jx-selection-border: #2563eb;
   --jx-selection-border-width: 2px;
   --jx-selection-range-bg: rgba(37, 99, 235, 0.3);
+  --jx-frozen-selection-bg: #bed0f9;
   --jx-row-hover: rgba(37, 99, 235, 0.04);
   --jx-ctx-bg: #ffffff;
   --jx-ctx-border: #e2e8f0;

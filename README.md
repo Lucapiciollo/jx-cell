@@ -589,6 +589,15 @@ const options: JxCellOptions = {
 
   // Mostra una riga di input filtro per colonna sotto l'header.
   columnFilter: true,
+
+  // Per-colonna: scegli SU QUALI colonne mostrare l'input filtro.
+  // Imposta `filterable: false` sulla definizione di colonna per escluderla
+  // (richiede `columnFilter: true`). Le colonne senza il flag restano filtrabili.
+  columns: [
+    { title: 'Nome',  name: 'name'  /* filtrabile (default) */ },
+    { title: 'Avatar', name: 'img', filterable: false },  // niente input filtro
+    { title: 'Ruolo', name: 'role', filterable: true  },
+  ],
 };
 
 // ── Ricerca globale ────────────────────────────────────────────────────────

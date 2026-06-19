@@ -598,6 +598,12 @@ const options: JxCellOptions = {
     { title: 'Avatar', name: 'img', filterable: false },  // niente input filtro
     { title: 'Ruolo', name: 'role', filterable: true  },
   ],
+
+  // Blocca le righe filtrate: le righe escluse dai filtri attivi (nascoste in
+  // modalità 'hide' o attenuate in 'dim', sia da ricerca che da filtri colonna)
+  // diventano NON editabili per l'intera riga finché i filtri restano attivi.
+  // Quando i filtri vengono rimossi le righe tornano editabili. Default: false.
+  lockFilteredRows: true,
 };
 
 // ── Ricerca globale ────────────────────────────────────────────────────────

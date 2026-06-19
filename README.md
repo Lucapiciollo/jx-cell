@@ -569,6 +569,11 @@ const s = workbook.getSortState();
 
 ### Ricerca e filtri
 
+> La ricerca globale e i filtri di colonna operano sul **testo visualizzato**
+> della cella (case-insensitive): le etichette di `dropdown`/`select`/
+> `autocomplete` e i valori formattati dalle maschere vengono risolti, così il
+> termine cercato corrisponde a ciò che l'utente vede effettivamente in griglia.
+
 ```typescript
 const options: JxCellOptions = {
   // Mostra una casella di ricerca globale.
@@ -757,6 +762,32 @@ const options: JxCellOptions = {
   ],
 };
 ```
+
+**Footer sulle sole righe visibili (`footerOnVisibleRows`)**
+
+Per impostazione predefinita i footer aggregano l'**intero dataset**: ricerca,
+filtri di colonna e `hideRow()` nascondono le righe a video ma non influenzano i
+totali. Attivando `footerOnVisibleRows: true` i footer vengono invece
+ricalcolati considerando **solo le righe visibili** — un comportamento analogo a
+`SUBTOTAL` di Excel.
+
+```typescript
+const options: JxCellOptions = {
+  footerOnVisibleRows: true,   // i totali riflettono solo le righe visibili
+  footers: [
+    ['Totale', '=SUM(B:B)', '=AVERAGE(C:C)'],  // usa riferimenti a colonna intera
+  ],
+};
+
+// Il footer si aggiorna automaticamente quando cambiano:
+workbook.search('alice');          // ricerca full-text
+workbook.setColumnFilter(3, 'HR'); // filtro di colonna
+workbook.hideRow(2);               // nascondere righe via API
+```
+
+> **Nota:** usa riferimenti a colonna intera (`=SUM(C:C)`) o funzioni aggregate
+> nei footer. I riferimenti a range con indice assoluto (`=SUM(C1:C10)`) si
+> riferirebbero alle prime righe *visibili* della matrice filtrata.
 
 **Gestione programmatica:**
 

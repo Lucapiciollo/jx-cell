@@ -46620,6 +46620,29 @@ var I = class _I {
     } else if (String(e2) === String(t)) return String(e2);
     return String(t ?? "");
   }
+  getCellDisplayText(e, t) {
+    if (null == t) return "";
+    const o = this.options.columns?.[e], n = o?.type;
+    if ("dropdown" === n || "select" === n) return this.getDropDownValue(e, t);
+    if ("autocomplete" === n) {
+      const e2 = Array.isArray(o?.autocompleteSource) ? o.autocompleteSource : Array.isArray(o?.source) ? o.source : void 0;
+      if (e2) {
+        const o2 = e2.find((e3) => "string" == typeof e3 ? e3 === t : String(e3.id ?? e3.value ?? e3.key) === String(t));
+        if (o2) return "string" == typeof o2 ? o2 : String(o2.description ?? o2.name ?? o2.label ?? o2.id ?? t);
+      }
+      return String(t);
+    }
+    const r = this.getColumnMask(e);
+    return r?.pattern ? this._applyMaskFormat(r, t) : String(t);
+  }
+  _applyMaskFormat(e, t) {
+    const o = String(t);
+    if ("" === o) return o;
+    const n = e.token ?? "#", r = o.replace(/\D/g, "");
+    let i = "", s = 0;
+    for (let t2 = 0; t2 < e.pattern.length && s < r.length; t2++) i += e.pattern[t2] === n ? r[s++] : e.pattern[t2];
+    return i || o;
+  }
   getFooters(e = true) {
     return (e ? this.footerData : this.footerRawData).map((e2) => [...e2]);
   }
@@ -47331,15 +47354,7 @@ var I = class _I {
       const i = this.rawData[n3][r];
       o(i) && (t[n3][r] = this.formula.evaluate(i, t, e, n3));
     }
-    this.data$.next(t), this.columnFilters.size > 0 && this.applyColumnFilters(), this.footerData = this.footerRawData.map((n2, r) => n2.map((n3) => {
-      if (n3 && "object" == typeof n3 && !Array.isArray(n3) && "value" in n3) {
-        const i = n3.value, s = o(i) ? this.formula.evaluate(i, t, e, r) : i;
-        return s === i ? n3 : __spreadProps(__spreadValues({}, n3), {
-          value: s
-        });
-      }
-      return o(n3) ? this.formula.evaluate(n3, t, e, r) : n3;
-    })), this.footers$.next(this.getFooters(true)), this.rows$.next(this.rawData.length), this.evaluatedHeaderTitles = Array.from({
+    this.data$.next(t), this.columnFilters.size > 0 && this.applyColumnFilters(), this.evaluateFooters(this.getFooterSourceMatrix(t)), this.rows$.next(this.rawData.length), this.evaluatedHeaderTitles = Array.from({
       length: this.getColumnCount()
     }, (n2, r) => {
       const i = String(this.options.columns?.[r]?.title ?? this.address.columnName(r));
@@ -47350,6 +47365,32 @@ var I = class _I {
       const r = String(n3?.title ?? "");
       return o(r) ? String(this.formula.evaluate(r, t, e, 0) ?? "") : r;
     })) : [], this.schedulePersist();
+  }
+  getCombinedHiddenRows() {
+    const e = new Set(this.hiddenRows);
+    return this.search$.value.forEach((t) => e.add(t)), this.columnFilter$.value.forEach((t) => e.add(t)), e;
+  }
+  getFooterSourceMatrix(e = this.data$.value) {
+    if (!this.options.footerOnVisibleRows) return e;
+    const t = this.getCombinedHiddenRows();
+    return 0 === t.size ? e : e.filter((e2, o) => !t.has(o));
+  }
+  evaluateFooters(e) {
+    const t = (e2) => "string" == typeof e2 && e2.startsWith("=");
+    if (false === this.options.parseFormulas) return this.footerData = this.footerRawData.map((e2) => [...e2]), void this.footers$.next(this.getFooters(true));
+    const o = (this.options.columns ?? []).map((e2, t2) => String(e2.field ?? e2.name ?? t2));
+    this.footerData = this.footerRawData.map((n, r) => n.map((n2) => {
+      if (n2 && "object" == typeof n2 && !Array.isArray(n2) && "value" in n2) {
+        const i = n2.value, s = t(i) ? this.formula.evaluate(i, e, o, r) : i;
+        return s === i ? n2 : __spreadProps(__spreadValues({}, n2), {
+          value: s
+        });
+      }
+      return t(n2) ? this.formula.evaluate(n2, e, o, r) : n2;
+    })), this.footers$.next(this.getFooters(true));
+  }
+  refreshVisibleFooters() {
+    this.options.footerOnVisibleRows && this.evaluateFooters(this.getFooterSourceMatrix());
   }
   schedulePersist() {
     this.isInitializing || this.options.persistence && (this.persistTimer && clearTimeout(this.persistTimer), this.persistTimer = setTimeout(() => this.saveState(), 100));
@@ -47383,25 +47424,25 @@ var I = class _I {
     return e ? this.loadPersistedData(e) : null;
   }
   search(e) {
-    if (this.searchQuery = e ?? "", !this.searchQuery.trim()) return void this.search$.next(/* @__PURE__ */ new Set());
+    if (this.searchQuery = e ?? "", !this.searchQuery.trim()) return this.search$.next(/* @__PURE__ */ new Set()), void this.refreshVisibleFooters();
     const t = this.searchQuery.toLowerCase(), o = /* @__PURE__ */ new Set(), n = this.data$.value;
-    for (let e2 = 0; e2 < n.length; e2++) n[e2].some((e3) => null != e3 && String(e3).toLowerCase().includes(t)) || o.add(e2);
+    for (let e2 = 0; e2 < n.length; e2++) n[e2].some((e3, o2) => null != e3 && this.getCellDisplayText(o2, e3).toLowerCase().includes(t)) || o.add(e2);
     this.search$.next(o);
   }
   resetSearch() {
-    this.searchQuery = "", this.search$.next(/* @__PURE__ */ new Set());
+    this.searchQuery = "", this.search$.next(/* @__PURE__ */ new Set()), this.refreshVisibleFooters();
   }
   getSearchQuery() {
     return this.searchQuery;
   }
   setColumnFilter(e, t) {
-    "" === t || null == t ? this.columnFilters.delete(e) : this.columnFilters.set(e, t), this.applyColumnFilters();
+    "" === t || null == t ? this.columnFilters.delete(e) : this.columnFilters.set(e, t), this.applyColumnFilters(), this.refreshVisibleFooters();
   }
   getColumnFilter(e) {
     return this.columnFilters.get(e) ?? "";
   }
   clearColumnFilters() {
-    this.columnFilters.clear(), this.columnFilter$.next(/* @__PURE__ */ new Set());
+    this.columnFilters.clear(), this.columnFilter$.next(/* @__PURE__ */ new Set()), this.refreshVisibleFooters();
   }
   getColumnFilters() {
     return new Map(this.columnFilters);
@@ -47413,7 +47454,7 @@ var I = class _I {
       const n = t[o];
       for (const [t2, r] of this.columnFilters) {
         const i = r.toLowerCase();
-        if (!String(n[t2] ?? "").toLowerCase().includes(i)) {
+        if (!this.getCellDisplayText(t2, n[t2]).toLowerCase().includes(i)) {
           e.add(o);
           break;
         }
@@ -48058,10 +48099,10 @@ var I = class _I {
   }
   _rowHeightOverrides;
   hideRow(e) {
-    this.hiddenRows.add(e), this.visibility$.next();
+    this.hiddenRows.add(e), this.visibility$.next(), this.refreshVisibleFooters();
   }
   showRow(e) {
-    this.hiddenRows.delete(e), this.visibility$.next();
+    this.hiddenRows.delete(e), this.visibility$.next(), this.refreshVisibleFooters();
   }
   isRowHidden(e) {
     return this.hiddenRows.has(e);
@@ -52324,7 +52365,7 @@ var T = class _T {
     }]
   });
 })();
-var _ = class __ {
+var V = class _V {
   context;
   get rawValue() {
     const e = this.context.column;
@@ -52339,11 +52380,11 @@ var _ = class __ {
     let t = this.rawValue;
     return null == t && (t = ""), "number" == typeof t && (t = t.toFixed(e.decimals ?? 2)), `${e.prefix ?? ""}${t}${e.suffix ?? ""}`;
   }
-  static \u0275fac = function __Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || __)();
+  static \u0275fac = function V_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _V)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: __,
+    type: _V,
     selectors: [["jx-formula-cell"]],
     inputs: {
       context: "context"
@@ -52352,7 +52393,7 @@ var _ = class __ {
     decls: 2,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-formula"]],
-    template: function __Template1(rf, ctx) {
+    template: function V_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0);
         \u0275\u0275text(1);
@@ -52367,7 +52408,7 @@ var _ = class __ {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(V, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52380,7 +52421,7 @@ var _ = class __ {
     }]
   });
 })();
-var V = class _V {
+var _ = class __ {
   context;
   action = new EventEmitter();
   get label() {
@@ -52392,11 +52433,11 @@ var V = class _V {
       payload: this.context.config?.payload
     });
   }
-  static \u0275fac = function V_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _V)();
+  static \u0275fac = function __Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _V,
+    type: __,
     selectors: [["jx-button-cell"]],
     inputs: {
       context: "context"
@@ -52408,10 +52449,10 @@ var V = class _V {
     decls: 3,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-button"], ["type", "button", 1, "jx-cell-btn", 3, "click"]],
-    template: function V_Template(rf, ctx) {
+    template: function __Template1(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "button", 1);
-        \u0275\u0275listener("click", function V_Template_button_click_1_listener($event) {
+        \u0275\u0275listener("click", function __Template1_button_click_1_listener($event) {
           return ctx.click($event);
         });
         \u0275\u0275text(2);
@@ -52426,7 +52467,7 @@ var V = class _V {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(V, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52442,7 +52483,7 @@ var V = class _V {
     }]
   });
 })();
-var B = class _B {
+var O = class _O {
   context;
   action = new EventEmitter();
   get count() {
@@ -52457,11 +52498,11 @@ var B = class _B {
       }
     });
   }
-  static \u0275fac = function B_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _B)();
+  static \u0275fac = function O_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _O)();
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
-    type: _B,
+    type: _O,
     selectors: [["jx-attachment-cell"]],
     inputs: {
       context: "context"
@@ -52473,10 +52514,10 @@ var B = class _B {
     decls: 3,
     vars: 1,
     consts: [[1, "jx-cell", "jx-cell-attachment"], ["type", "button", 1, "jx-cell-attachment-btn", 3, "click"]],
-    template: function B_Template(rf, ctx) {
+    template: function O_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "button", 1);
-        \u0275\u0275listener("click", function B_Template_button_click_1_listener($event) {
+        \u0275\u0275listener("click", function O_Template_button_click_1_listener($event) {
           return ctx.openAttachments($event);
         });
         \u0275\u0275text(2);
@@ -52491,7 +52532,7 @@ var B = class _B {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
     type: Component,
     args: [{
       standalone: false,
@@ -52507,16 +52548,16 @@ var B = class _B {
     }]
   });
 })();
-var O = class _O {
+var B = class _B {
   constructor(e) {
-    e.register("text", N), e.register("number", P), e.register("checkbox", T), e.register("formula", _), e.register("button", V), e.register("attachment", B);
+    e.register("text", N), e.register("number", P), e.register("checkbox", T), e.register("formula", V), e.register("button", _), e.register("attachment", O);
   }
-  static \u0275fac = function O_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _O)(\u0275\u0275inject(A));
+  static \u0275fac = function B_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _B)(\u0275\u0275inject(A));
   };
   static \u0275mod = /* @__PURE__ */ \u0275\u0275defineNgModule({
-    type: _O,
-    declarations: [$, E, H, z, N, P, T, _, V, B],
+    type: _B,
+    declarations: [$, E, H, z, N, P, T, V, _, O],
     imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
     exports: [$, E]
   });
@@ -52526,10 +52567,10 @@ var O = class _O {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(O, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(B, [{
     type: NgModule,
     args: [{
-      declarations: [$, E, H, z, N, P, T, _, V, B],
+      declarations: [$, E, H, z, N, P, T, V, _, O],
       imports: [CommonModule, FormsModule, HttpClientModule, UxDirectivesModule],
       providers: [A],
       exports: [$, E]
@@ -62041,11 +62082,11 @@ function AppComponent_label_331_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.cfg.contextMenuCustomTemplate);
   }
 }
-function AppComponent_label_644_Template(rf, ctx) {
+function AppComponent_label_654_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "label", 119)(1, "input", 120);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_label_644_Template_input_ngModelChange_1_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_label_654_Template_input_ngModelChange_1_listener($event) {
       const i_r6 = \u0275\u0275restoreView(_r5).index;
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.hiddenCols[i_r6], $event) || (ctx_r2.cfg.hiddenCols[i_r6] = $event);
@@ -62066,14 +62107,14 @@ function AppComponent_label_644_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", t_r7, " ");
   }
 }
-function AppComponent_div_743_Template(rf, ctx) {
+function AppComponent_div_753_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 121);
     \u0275\u0275text(1, "Caricamento README\u2026");
     \u0275\u0275elementEnd();
   }
 }
-function AppComponent_div_744_Template(rf, ctx) {
+function AppComponent_div_754_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 122);
     \u0275\u0275text(1);
@@ -62085,7 +62126,7 @@ function AppComponent_div_744_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.readmeError);
   }
 }
-function AppComponent_ng_template_746_Template(rf, ctx) {
+function AppComponent_ng_template_756_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 123)(1, "div", 124)(2, "strong");
@@ -62096,7 +62137,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(6, "div", 126);
     \u0275\u0275elementStart(7, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_7_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_7_listener() {
       const ctx_r8 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r8.$implicit;
       const close_r11 = ctx_r8.close;
@@ -62106,7 +62147,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(8, " \u2398 Copia cella ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(9, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_9_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_9_listener() {
       const ctx_r11 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r11.$implicit;
       const close_r11 = ctx_r11.close;
@@ -62117,7 +62158,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275elementEnd();
     \u0275\u0275element(11, "div", 126);
     \u0275\u0275elementStart(12, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_12_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_12_listener() {
       const ctx_r12 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r12.$implicit;
       const close_r11 = ctx_r12.close;
@@ -62127,7 +62168,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(13, " \u2912 Inserisci riga sopra ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(14, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_14_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_14_listener() {
       const ctx_r13 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r13.$implicit;
       const close_r11 = ctx_r13.close;
@@ -62137,7 +62178,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(15, " \u2913 Inserisci riga sotto ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(16, "button", 128);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_16_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_16_listener() {
       const ctx_r14 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r14.$implicit;
       const close_r11 = ctx_r14.close;
@@ -62148,7 +62189,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275elementEnd();
     \u0275\u0275element(18, "div", 126);
     \u0275\u0275elementStart(19, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_19_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_19_listener() {
       const ctx_r15 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r15.$implicit;
       const close_r11 = ctx_r15.close;
@@ -62158,7 +62199,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(20, " \u2910 Inserisci colonna prima ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(21, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_21_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_21_listener() {
       const ctx_r16 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r16.$implicit;
       const close_r11 = ctx_r16.close;
@@ -62168,7 +62209,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(22, " \u2911 Inserisci colonna dopo ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(23, "button", 128);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_23_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_23_listener() {
       const ctx_r17 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r17.$implicit;
       const close_r11 = ctx_r17.close;
@@ -62179,7 +62220,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275elementEnd();
     \u0275\u0275element(25, "div", 126);
     \u0275\u0275elementStart(26, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_26_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_26_listener() {
       const ctx_r18 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r18.$implicit;
       const close_r11 = ctx_r18.close;
@@ -62189,7 +62230,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275text(27, " \u25B2 Ordina ascendente ");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(28, "button", 127);
-    \u0275\u0275listener("click", function AppComponent_ng_template_746_Template_button_click_28_listener() {
+    \u0275\u0275listener("click", function AppComponent_ng_template_756_Template_button_click_28_listener() {
       const ctx_r19 = \u0275\u0275restoreView(_r8);
       const ctx_ir10 = ctx_r19.$implicit;
       const close_r11 = ctx_r19.close;
@@ -62212,7 +62253,7 @@ function AppComponent_ng_template_746_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" \u2715 Elimina riga ", ctx_ir10.y + 1, " ");
   }
 }
-function AppComponent_div_797_div_34_Template(rf, ctx) {
+function AppComponent_div_807_div_34_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62224,7 +62265,7 @@ function AppComponent_div_797_div_34_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["insertRow"]);
   }
 }
-function AppComponent_div_797_div_61_Template(rf, ctx) {
+function AppComponent_div_807_div_61_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62236,7 +62277,7 @@ function AppComponent_div_797_div_61_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["deleteRow"]);
   }
 }
-function AppComponent_div_797_div_74_Template(rf, ctx) {
+function AppComponent_div_807_div_74_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62248,7 +62289,7 @@ function AppComponent_div_797_div_74_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["deleteAll"]);
   }
 }
-function AppComponent_div_797_div_101_Template(rf, ctx) {
+function AppComponent_div_807_div_101_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62260,7 +62301,7 @@ function AppComponent_div_797_div_101_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["moveRow"]);
   }
 }
-function AppComponent_div_797_div_141_Template(rf, ctx) {
+function AppComponent_div_807_div_141_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62272,7 +62313,7 @@ function AppComponent_div_797_div_141_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["insertColumn"]);
   }
 }
-function AppComponent_div_797_div_168_Template(rf, ctx) {
+function AppComponent_div_807_div_168_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62284,7 +62325,7 @@ function AppComponent_div_797_div_168_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["deleteColumn"]);
   }
 }
-function AppComponent_div_797_div_195_Template(rf, ctx) {
+function AppComponent_div_807_div_195_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62296,7 +62337,7 @@ function AppComponent_div_797_div_195_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["moveColumn"]);
   }
 }
-function AppComponent_div_797_div_241_Template(rf, ctx) {
+function AppComponent_div_807_div_241_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62308,7 +62349,7 @@ function AppComponent_div_797_div_241_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setConfigCol"]);
   }
 }
-function AppComponent_div_797_div_268_Template(rf, ctx) {
+function AppComponent_div_807_div_268_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62320,7 +62361,7 @@ function AppComponent_div_797_div_268_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setColumnAlign"]);
   }
 }
-function AppComponent_div_797_div_301_Template(rf, ctx) {
+function AppComponent_div_807_div_301_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62332,7 +62373,7 @@ function AppComponent_div_797_div_301_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setColumnMask"]);
   }
 }
-function AppComponent_div_797_div_318_Template(rf, ctx) {
+function AppComponent_div_807_div_318_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -62345,7 +62386,7 @@ function AppComponent_div_797_div_318_Template(rf, ctx) {
     \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(3, 1, ctx_r2.results["getColumnMask"]));
   }
 }
-function AppComponent_div_797_Template(rf, ctx) {
+function AppComponent_div_807_Template(rf, ctx) {
   if (rf & 1) {
     const _r21 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 130)(2, "div", 131)(3, "span", 132);
@@ -62374,7 +62415,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(25, "?");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(26, "input", 140);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_26_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_26_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.insertRow.index, $event) || (ctx_r2.ops.insertRow.index = $event);
@@ -62385,7 +62426,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(29, "amount");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(30, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_30_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_30_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.insertRow.amount, $event) || (ctx_r2.ops.insertRow.amount = $event);
@@ -62393,14 +62434,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(31, "div", 142)(32, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_32_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_32_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opInsertRow());
     });
     \u0275\u0275text(33, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(34, AppComponent_div_797_div_34_Template, 3, 1, "div", 144);
+    \u0275\u0275template(34, AppComponent_div_807_div_34_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(35, "div", 134)(36, "div", 135)(37, "code");
     \u0275\u0275text(38, "deleteRow");
@@ -62423,7 +62464,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(52, "index");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(53, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_53_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_53_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.deleteRow.index, $event) || (ctx_r2.ops.deleteRow.index = $event);
@@ -62434,7 +62475,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(56, "amount");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(57, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_57_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_57_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.deleteRow.amount, $event) || (ctx_r2.ops.deleteRow.amount = $event);
@@ -62442,14 +62483,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(58, "div", 142)(59, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_59_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_59_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDeleteRow());
     });
     \u0275\u0275text(60, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(61, AppComponent_div_797_div_61_Template, 3, 1, "div", 144);
+    \u0275\u0275template(61, AppComponent_div_807_div_61_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(62, "div", 134)(63, "div", 135)(64, "code");
     \u0275\u0275text(65, "deleteAll");
@@ -62462,14 +62503,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(70, "div", 138);
     \u0275\u0275elementStart(71, "div", 142)(72, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_72_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_72_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDeleteAll());
     });
     \u0275\u0275text(73, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(74, AppComponent_div_797_div_74_Template, 3, 1, "div", 144);
+    \u0275\u0275template(74, AppComponent_div_807_div_74_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(75, "div", 134)(76, "div", 135)(77, "code");
     \u0275\u0275text(78, "moveRow");
@@ -62492,7 +62533,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(92, "from");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(93, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_93_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_93_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.moveRow.from, $event) || (ctx_r2.ops.moveRow.from = $event);
@@ -62503,7 +62544,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(96, "to");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(97, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_97_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_97_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.moveRow.to, $event) || (ctx_r2.ops.moveRow.to = $event);
@@ -62511,14 +62552,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(98, "div", 142)(99, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_99_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_99_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opMoveRow());
     });
     \u0275\u0275text(100, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(101, AppComponent_div_797_div_101_Template, 3, 1, "div", 144);
+    \u0275\u0275template(101, AppComponent_div_807_div_101_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(102, "section", 147)(103, "div", 131)(104, "span", 132);
     \u0275\u0275text(105, "Column Operations");
@@ -62546,7 +62587,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(126, "?");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(127, "input", 140);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_127_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_127_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.insertCol.index, $event) || (ctx_r2.ops.insertCol.index = $event);
@@ -62557,7 +62598,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(130, "amount");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(131, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_131_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_131_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.insertCol.amount, $event) || (ctx_r2.ops.insertCol.amount = $event);
@@ -62570,7 +62611,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(136, "?");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(137, "input", 148);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_137_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_137_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.insertCol.value, $event) || (ctx_r2.ops.insertCol.value = $event);
@@ -62578,14 +62619,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(138, "div", 142)(139, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_139_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_139_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opInsertCol());
     });
     \u0275\u0275text(140, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(141, AppComponent_div_797_div_141_Template, 3, 1, "div", 144);
+    \u0275\u0275template(141, AppComponent_div_807_div_141_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(142, "div", 134)(143, "div", 135)(144, "code");
     \u0275\u0275text(145, "deleteColumn");
@@ -62608,7 +62649,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(159, "index");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(160, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_160_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_160_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.deleteCol.index, $event) || (ctx_r2.ops.deleteCol.index = $event);
@@ -62619,7 +62660,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(163, "amount");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(164, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_164_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_164_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.deleteCol.amount, $event) || (ctx_r2.ops.deleteCol.amount = $event);
@@ -62627,14 +62668,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(165, "div", 142)(166, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_166_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_166_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDeleteCol());
     });
     \u0275\u0275text(167, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(168, AppComponent_div_797_div_168_Template, 3, 1, "div", 144);
+    \u0275\u0275template(168, AppComponent_div_807_div_168_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(169, "div", 134)(170, "div", 135)(171, "code");
     \u0275\u0275text(172, "moveColumn");
@@ -62657,7 +62698,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(186, "from");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(187, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_187_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_187_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.moveCol.from, $event) || (ctx_r2.ops.moveCol.from = $event);
@@ -62668,7 +62709,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(190, "to");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(191, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_191_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_191_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.moveCol.to, $event) || (ctx_r2.ops.moveCol.to = $event);
@@ -62676,14 +62717,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(192, "div", 142)(193, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_193_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_193_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opMoveCol());
     });
     \u0275\u0275text(194, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(195, AppComponent_div_797_div_195_Template, 3, 1, "div", 144);
+    \u0275\u0275template(195, AppComponent_div_807_div_195_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(196, "div", 134)(197, "div", 135)(198, "code");
     \u0275\u0275text(199, "setConfig({ columns })");
@@ -62702,7 +62743,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(210, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(211, "input", 149);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_211_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_211_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setConfigCol.col, $event) || (ctx_r2.ops.setConfigCol.col = $event);
@@ -62713,7 +62754,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(214, "title");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(215, "input", 150);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_215_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_215_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setConfigCol.title, $event) || (ctx_r2.ops.setConfigCol.title = $event);
@@ -62724,7 +62765,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(218, "type");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(219, "select", 151);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_select_ngModelChange_219_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_select_ngModelChange_219_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setConfigCol.type, $event) || (ctx_r2.ops.setConfigCol.type = $event);
@@ -62758,14 +62799,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(237, "hidden");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(238, "div", 142)(239, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_239_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_239_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetConfigCol());
     });
     \u0275\u0275text(240, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(241, AppComponent_div_797_div_241_Template, 3, 1, "div", 144);
+    \u0275\u0275template(241, AppComponent_div_807_div_241_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(242, "div", 134)(243, "div", 135)(244, "code");
     \u0275\u0275text(245, "setColumnAlign");
@@ -62780,7 +62821,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(253, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(254, "input", 161);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_254_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_254_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnAlign.col, $event) || (ctx_r2.ops.setColumnAlign.col = $event);
@@ -62791,7 +62832,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(257, "align");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(258, "select", 162);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_select_ngModelChange_258_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_select_ngModelChange_258_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnAlign.align, $event) || (ctx_r2.ops.setColumnAlign.align = $event);
@@ -62807,14 +62848,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(264, "right");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(265, "div", 142)(266, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_266_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_266_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetColumnAlign());
     });
     \u0275\u0275text(267, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(268, AppComponent_div_797_div_268_Template, 3, 1, "div", 144);
+    \u0275\u0275template(268, AppComponent_div_807_div_268_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(269, "div", 134)(270, "div", 135)(271, "code");
     \u0275\u0275text(272, "setColumnMask");
@@ -62829,7 +62870,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(280, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(281, "input", 161);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_281_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_281_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnMask.col, $event) || (ctx_r2.ops.setColumnMask.col = $event);
@@ -62840,7 +62881,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(284, "pattern");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(285, "input", 163);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_285_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_285_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnMask.pattern, $event) || (ctx_r2.ops.setColumnMask.pattern = $event);
@@ -62851,7 +62892,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(288, "token");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(289, "input", 164);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_289_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_289_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnMask.token, $event) || (ctx_r2.ops.setColumnMask.token = $event);
@@ -62862,7 +62903,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(292, "allowedRegex");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(293, "input", 165);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_293_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_293_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnMask.allowedRegex, $event) || (ctx_r2.ops.setColumnMask.allowedRegex = $event);
@@ -62870,7 +62911,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(294, "div", 139)(295, "label", 166)(296, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_296_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_296_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnMask.allowEmpty, $event) || (ctx_r2.ops.setColumnMask.allowEmpty = $event);
@@ -62880,14 +62921,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(297, "allowEmpty");
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(298, "div", 142)(299, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_299_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_299_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetColumnMask());
     });
     \u0275\u0275text(300, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(301, AppComponent_div_797_div_301_Template, 3, 1, "div", 144);
+    \u0275\u0275template(301, AppComponent_div_807_div_301_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(302, "div", 134)(303, "div", 135)(304, "code");
     \u0275\u0275text(305, "getColumnMask");
@@ -62902,7 +62943,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275text(313, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(314, "input", 161);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_797_Template_input_ngModelChange_314_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_807_Template_input_ngModelChange_314_listener($event) {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnMask.col, $event) || (ctx_r2.ops.getColumnMask.col = $event);
@@ -62910,14 +62951,14 @@ function AppComponent_div_797_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(315, "div", 142)(316, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_797_Template_button_click_316_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_807_Template_button_click_316_listener() {
       \u0275\u0275restoreView(_r21);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnMask());
     });
     \u0275\u0275text(317, "Leggi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(318, AppComponent_div_797_div_318_Template, 4, 3, "div", 144);
+    \u0275\u0275template(318, AppComponent_div_807_div_318_Template, 4, 3, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -63016,7 +63057,7 @@ function AppComponent_div_797_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["getColumnMask"] !== void 0);
   }
 }
-function AppComponent_div_798_div_26_Template(rf, ctx) {
+function AppComponent_div_808_div_26_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63028,7 +63069,7 @@ function AppComponent_div_798_div_26_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setValue"]);
   }
 }
-function AppComponent_div_798_div_54_code_1_Template(rf, ctx) {
+function AppComponent_div_808_div_54_code_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63040,7 +63081,7 @@ function AppComponent_div_798_div_54_code_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("getValue \u2192 ", ctx_r2.results["getValue"], "");
   }
 }
-function AppComponent_div_798_div_54_code_2_Template(rf, ctx) {
+function AppComponent_div_808_div_54_code_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63052,17 +63093,17 @@ function AppComponent_div_798_div_54_code_2_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("getRawValue \u2192 ", ctx_r2.results["getRawValue"], "");
   }
 }
-function AppComponent_div_798_div_54_code_3_Template(rf, ctx) {
+function AppComponent_div_808_div_54_code_3_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1, "setValue ok");
     \u0275\u0275elementEnd();
   }
 }
-function AppComponent_div_798_div_54_Template(rf, ctx) {
+function AppComponent_div_808_div_54_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167);
-    \u0275\u0275template(1, AppComponent_div_798_div_54_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_798_div_54_code_2_Template, 2, 1, "code", 183)(3, AppComponent_div_798_div_54_code_3_Template, 2, 0, "code", 183);
+    \u0275\u0275template(1, AppComponent_div_808_div_54_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_808_div_54_code_2_Template, 2, 1, "code", 183)(3, AppComponent_div_808_div_54_code_3_Template, 2, 0, "code", 183);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -63075,7 +63116,7 @@ function AppComponent_div_798_div_54_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["setValueFromGet"] !== void 0);
   }
 }
-function AppComponent_div_798_div_75_Template(rf, ctx) {
+function AppComponent_div_808_div_75_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63087,7 +63128,7 @@ function AppComponent_div_798_div_75_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setFormula"]);
   }
 }
-function AppComponent_div_798_div_96_Template(rf, ctx) {
+function AppComponent_div_808_div_96_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63099,7 +63140,7 @@ function AppComponent_div_798_div_96_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setMultipleCells"]);
   }
 }
-function AppComponent_div_798_div_135_Template(rf, ctx) {
+function AppComponent_div_808_div_135_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63111,7 +63152,7 @@ function AppComponent_div_798_div_135_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setMerge"]);
   }
 }
-function AppComponent_div_798_div_152_Template(rf, ctx) {
+function AppComponent_div_808_div_152_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63123,7 +63164,7 @@ function AppComponent_div_798_div_152_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["removeMerge"]);
   }
 }
-function AppComponent_div_798_div_171_Template(rf, ctx) {
+function AppComponent_div_808_div_171_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63135,7 +63176,7 @@ function AppComponent_div_798_div_171_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getMerge"]);
   }
 }
-function AppComponent_div_798_div_186_Template(rf, ctx) {
+function AppComponent_div_808_div_186_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63147,7 +63188,7 @@ function AppComponent_div_798_div_186_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["destroyMerged"]);
   }
 }
-function AppComponent_div_798_div_216_Template(rf, ctx) {
+function AppComponent_div_808_div_216_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63159,7 +63200,7 @@ function AppComponent_div_798_div_216_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setFooter"]);
   }
 }
-function AppComponent_div_798_div_246_code_1_Template(rf, ctx) {
+function AppComponent_div_808_div_246_code_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63171,7 +63212,7 @@ function AppComponent_div_798_div_246_code_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("getFooter \u2192 ", ctx_r2.results["getFooter"], "");
   }
 }
-function AppComponent_div_798_div_246_code_2_Template(rf, ctx) {
+function AppComponent_div_808_div_246_code_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63183,10 +63224,10 @@ function AppComponent_div_798_div_246_code_2_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("getFooters \u2192 ", ctx_r2.results["getFooters"], "");
   }
 }
-function AppComponent_div_798_div_246_Template(rf, ctx) {
+function AppComponent_div_808_div_246_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167);
-    \u0275\u0275template(1, AppComponent_div_798_div_246_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_798_div_246_code_2_Template, 2, 1, "code", 183);
+    \u0275\u0275template(1, AppComponent_div_808_div_246_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_808_div_246_code_2_Template, 2, 1, "code", 183);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -63197,7 +63238,7 @@ function AppComponent_div_798_div_246_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["getFooters"] !== void 0);
   }
 }
-function AppComponent_div_798_div_276_Template(rf, ctx) {
+function AppComponent_div_808_div_276_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63209,7 +63250,7 @@ function AppComponent_div_798_div_276_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["fillDown"]);
   }
 }
-function AppComponent_div_798_div_301_Template(rf, ctx) {
+function AppComponent_div_808_div_301_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63221,7 +63262,7 @@ function AppComponent_div_798_div_301_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["fillRight"]);
   }
 }
-function AppComponent_div_798_Template(rf, ctx) {
+function AppComponent_div_808_Template(rf, ctx) {
   if (rf & 1) {
     const _r22 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 168)(2, "div", 131)(3, "span", 132);
@@ -63240,7 +63281,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(17, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(18, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_18_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCell.cell, $event) || (ctx_r2.ops.setCell.cell = $event);
@@ -63251,7 +63292,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(21, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(22, "input", 171);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_22_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_22_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCell.value, $event) || (ctx_r2.ops.setCell.value = $event);
@@ -63259,14 +63300,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(23, "div", 142)(24, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_24_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_24_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetValue());
     });
     \u0275\u0275text(25, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(26, AppComponent_div_798_div_26_Template, 3, 1, "div", 144);
+    \u0275\u0275template(26, AppComponent_div_808_div_26_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(27, "div", 134)(28, "div", 135)(29, "code");
     \u0275\u0275text(30, "getValue / getRawValue");
@@ -63285,7 +63326,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(41, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(42, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_42_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_42_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCell.cell, $event) || (ctx_r2.ops.getCell.cell = $event);
@@ -63296,7 +63337,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(45, "set to");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(46, "input", 172);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_46_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_46_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCell.setTo, $event) || (ctx_r2.ops.getCell.setTo = $event);
@@ -63304,7 +63345,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(47, "div", 142)(48, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_48_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_48_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetValue());
@@ -63312,7 +63353,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(49, "getValue");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(50, "button", 173);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_50_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_50_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetRawValue());
@@ -63320,14 +63361,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(51, "getRaw");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(52, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_52_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_52_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetValueFromGet());
     });
     \u0275\u0275text(53, "setValue");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(54, AppComponent_div_798_div_54_Template, 4, 3, "div", 144);
+    \u0275\u0275template(54, AppComponent_div_808_div_54_Template, 4, 3, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(55, "div", 134)(56, "div", 135)(57, "code");
     \u0275\u0275text(58, "setFormula");
@@ -63342,7 +63383,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(66, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(67, "input", 174);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_67_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_67_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFormula.cell, $event) || (ctx_r2.ops.setFormula.cell = $event);
@@ -63353,7 +63394,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(70, "expression");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(71, "input", 175);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_71_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_71_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFormula.expr, $event) || (ctx_r2.ops.setFormula.expr = $event);
@@ -63361,14 +63402,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(72, "div", 142)(73, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_73_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_73_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetFormula());
     });
     \u0275\u0275text(74, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(75, AppComponent_div_798_div_75_Template, 3, 1, "div", 144);
+    \u0275\u0275template(75, AppComponent_div_808_div_75_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(76, "div", 134)(77, "div", 135)(78, "code");
     \u0275\u0275text(79, "setMultipleCells");
@@ -63383,7 +63424,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(87, "cells (virgola)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(88, "input", 176);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_88_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_88_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.multiCells.cells, $event) || (ctx_r2.ops.multiCells.cells = $event);
@@ -63394,7 +63435,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(91, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(92, "input", 171);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_92_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_92_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.multiCells.value, $event) || (ctx_r2.ops.multiCells.value = $event);
@@ -63402,14 +63443,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(93, "div", 142)(94, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_94_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_94_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opMultiCells());
     });
     \u0275\u0275text(95, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(96, AppComponent_div_798_div_96_Template, 3, 1, "div", 144);
+    \u0275\u0275template(96, AppComponent_div_808_div_96_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(97, "section", 177)(98, "div", 131)(99, "span", 132);
     \u0275\u0275text(100, "Merge Operations");
@@ -63439,7 +63480,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(122, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(123, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_123_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_123_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setMerge.cell, $event) || (ctx_r2.ops.setMerge.cell = $event);
@@ -63450,7 +63491,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(126, "colspan");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(127, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_127_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_127_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setMerge.colspan, $event) || (ctx_r2.ops.setMerge.colspan = $event);
@@ -63461,7 +63502,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(130, "rowspan");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(131, "input", 141);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_131_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_131_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setMerge.rowspan, $event) || (ctx_r2.ops.setMerge.rowspan = $event);
@@ -63469,14 +63510,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(132, "div", 142)(133, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_133_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_133_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetMerge());
     });
     \u0275\u0275text(134, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(135, AppComponent_div_798_div_135_Template, 3, 1, "div", 144);
+    \u0275\u0275template(135, AppComponent_div_808_div_135_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(136, "div", 134)(137, "div", 135)(138, "code");
     \u0275\u0275text(139, "removeMerge");
@@ -63491,7 +63532,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(147, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(148, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_148_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_148_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.removeMerge.cell, $event) || (ctx_r2.ops.removeMerge.cell = $event);
@@ -63499,14 +63540,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(149, "div", 142)(150, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_150_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_150_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRemoveMerge());
     });
     \u0275\u0275text(151, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(152, AppComponent_div_798_div_152_Template, 3, 1, "div", 144);
+    \u0275\u0275template(152, AppComponent_div_808_div_152_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(153, "div", 134)(154, "div", 135)(155, "code");
     \u0275\u0275text(156, "getMerge");
@@ -63523,7 +63564,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(166, "? vuoto = tutti");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(167, "input", 178);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_167_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_167_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getMerge.cell, $event) || (ctx_r2.ops.getMerge.cell = $event);
@@ -63531,14 +63572,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(168, "div", 142)(169, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_169_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_169_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetMerge());
     });
     \u0275\u0275text(170, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(171, AppComponent_div_798_div_171_Template, 3, 1, "div", 144);
+    \u0275\u0275template(171, AppComponent_div_808_div_171_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(172, "div", 134)(173, "div", 135)(174, "code");
     \u0275\u0275text(175, "destroyMerged");
@@ -63553,14 +63594,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(182, "Rimuove tutti i merge dalla griglia");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(183, "div", 142)(184, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_184_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_184_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDestroyMerged());
     });
     \u0275\u0275text(185, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(186, AppComponent_div_798_div_186_Template, 3, 1, "div", 144);
+    \u0275\u0275template(186, AppComponent_div_808_div_186_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(187, "section", 180)(188, "div", 131)(189, "span", 132);
     \u0275\u0275text(190, "Footer Operations");
@@ -63578,7 +63619,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(203, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(204, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_204_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_204_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooter.row, $event) || (ctx_r2.ops.setFooter.row = $event);
@@ -63589,7 +63630,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(207, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(208, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_208_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_208_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooter.col, $event) || (ctx_r2.ops.setFooter.col = $event);
@@ -63600,7 +63641,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(211, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(212, "input", 171);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_212_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_212_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooter.value, $event) || (ctx_r2.ops.setFooter.value = $event);
@@ -63608,14 +63649,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(213, "div", 142)(214, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_214_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_214_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetFooter());
     });
     \u0275\u0275text(215, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(216, AppComponent_div_798_div_216_Template, 3, 1, "div", 144);
+    \u0275\u0275template(216, AppComponent_div_808_div_216_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(217, "div", 134)(218, "div", 135)(219, "code");
     \u0275\u0275text(220, "getFooter / getFooters");
@@ -63630,7 +63671,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(228, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(229, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_229_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_229_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getFooter.row, $event) || (ctx_r2.ops.getFooter.row = $event);
@@ -63641,7 +63682,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(232, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(233, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_233_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_233_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getFooter.col, $event) || (ctx_r2.ops.getFooter.col = $event);
@@ -63652,7 +63693,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(236, "processed");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(237, "label", 181)(238, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_238_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_238_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getFooter.processed, $event) || (ctx_r2.ops.getFooter.processed = $event);
@@ -63663,7 +63704,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(240, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(241, "div", 142)(242, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_242_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_242_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetFooter());
@@ -63671,14 +63712,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(243, "getFooter");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(244, "button", 173);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_244_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_244_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetFooters());
     });
     \u0275\u0275text(245, "getFooters");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(246, AppComponent_div_798_div_246_Template, 3, 2, "div", 144);
+    \u0275\u0275template(246, AppComponent_div_808_div_246_Template, 3, 2, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(247, "section", 182)(248, "div", 131)(249, "span", 132);
     \u0275\u0275text(250, "Fill Operations");
@@ -63696,7 +63737,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(263, "x (col)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(264, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_264_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_264_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillDown.x, $event) || (ctx_r2.ops.fillDown.x = $event);
@@ -63707,7 +63748,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(267, "fromY");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(268, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_268_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_268_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillDown.fromY, $event) || (ctx_r2.ops.fillDown.fromY = $event);
@@ -63718,7 +63759,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(271, "toY");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(272, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_272_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_272_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillDown.toY, $event) || (ctx_r2.ops.fillDown.toY = $event);
@@ -63726,14 +63767,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(273, "div", 142)(274, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_274_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_274_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opFillDown());
     });
     \u0275\u0275text(275, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(276, AppComponent_div_798_div_276_Template, 3, 1, "div", 144);
+    \u0275\u0275template(276, AppComponent_div_808_div_276_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(277, "div", 134)(278, "div", 135)(279, "code");
     \u0275\u0275text(280, "fillRight");
@@ -63748,7 +63789,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(288, "fromX");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(289, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_289_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_289_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillRight.fromX, $event) || (ctx_r2.ops.fillRight.fromX = $event);
@@ -63759,7 +63800,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(292, "y (riga)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(293, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_293_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_293_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillRight.y, $event) || (ctx_r2.ops.fillRight.y = $event);
@@ -63770,7 +63811,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275text(296, "toX");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(297, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_798_Template_input_ngModelChange_297_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_808_Template_input_ngModelChange_297_listener($event) {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.fillRight.toX, $event) || (ctx_r2.ops.fillRight.toX = $event);
@@ -63778,14 +63819,14 @@ function AppComponent_div_798_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(298, "div", 142)(299, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_798_Template_button_click_299_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_808_Template_button_click_299_listener() {
       \u0275\u0275restoreView(_r22);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opFillRight());
     });
     \u0275\u0275text(300, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(301, AppComponent_div_798_div_301_Template, 3, 1, "div", 144);
+    \u0275\u0275template(301, AppComponent_div_808_div_301_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -63896,7 +63937,7 @@ function AppComponent_div_798_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["fillRight"] !== void 0);
   }
 }
-function AppComponent_div_799_div_34_Template(rf, ctx) {
+function AppComponent_div_809_div_34_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63908,7 +63949,7 @@ function AppComponent_div_799_div_34_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setSelection"]);
   }
 }
-function AppComponent_div_799_div_49_Template(rf, ctx) {
+function AppComponent_div_809_div_49_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -63920,7 +63961,7 @@ function AppComponent_div_799_div_49_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getSelection"]);
   }
 }
-function AppComponent_div_799_div_93_code_1_Template(rf, ctx) {
+function AppComponent_div_809_div_93_code_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63933,7 +63974,7 @@ function AppComponent_div_799_div_93_code_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("up \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["up"]), "");
   }
 }
-function AppComponent_div_799_div_93_code_2_Template(rf, ctx) {
+function AppComponent_div_809_div_93_code_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63946,7 +63987,7 @@ function AppComponent_div_799_div_93_code_2_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("down \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["down"]), "");
   }
 }
-function AppComponent_div_799_div_93_code_3_Template(rf, ctx) {
+function AppComponent_div_809_div_93_code_3_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63959,7 +64000,7 @@ function AppComponent_div_799_div_93_code_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("left \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["left"]), "");
   }
 }
-function AppComponent_div_799_div_93_code_4_Template(rf, ctx) {
+function AppComponent_div_809_div_93_code_4_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -63972,10 +64013,10 @@ function AppComponent_div_799_div_93_code_4_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("right \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["right"]), "");
   }
 }
-function AppComponent_div_799_div_93_Template(rf, ctx) {
+function AppComponent_div_809_div_93_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167);
-    \u0275\u0275template(1, AppComponent_div_799_div_93_code_1_Template, 3, 3, "code", 183)(2, AppComponent_div_799_div_93_code_2_Template, 3, 3, "code", 183)(3, AppComponent_div_799_div_93_code_3_Template, 3, 3, "code", 183)(4, AppComponent_div_799_div_93_code_4_Template, 3, 3, "code", 183);
+    \u0275\u0275template(1, AppComponent_div_809_div_93_code_1_Template, 3, 3, "code", 183)(2, AppComponent_div_809_div_93_code_2_Template, 3, 3, "code", 183)(3, AppComponent_div_809_div_93_code_3_Template, 3, 3, "code", 183)(4, AppComponent_div_809_div_93_code_4_Template, 3, 3, "code", 183);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -63990,7 +64031,7 @@ function AppComponent_div_799_div_93_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["right"] !== void 0);
   }
 }
-function AppComponent_div_799_div_125_code_1_Template(rf, ctx) {
+function AppComponent_div_809_div_125_code_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -64003,7 +64044,7 @@ function AppComponent_div_799_div_125_code_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("first \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["first"]), "");
   }
 }
-function AppComponent_div_799_div_125_code_2_Template(rf, ctx) {
+function AppComponent_div_809_div_125_code_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -64016,7 +64057,7 @@ function AppComponent_div_799_div_125_code_2_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("last \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["last"]), "");
   }
 }
-function AppComponent_div_799_div_125_code_3_Template(rf, ctx) {
+function AppComponent_div_809_div_125_code_3_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -64029,10 +64070,10 @@ function AppComponent_div_799_div_125_code_3_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("selectAll \u2192 ", \u0275\u0275pipeBind1(2, 1, ctx_r2.results["selectAll"]), "");
   }
 }
-function AppComponent_div_799_div_125_Template(rf, ctx) {
+function AppComponent_div_809_div_125_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167);
-    \u0275\u0275template(1, AppComponent_div_799_div_125_code_1_Template, 3, 3, "code", 183)(2, AppComponent_div_799_div_125_code_2_Template, 3, 3, "code", 183)(3, AppComponent_div_799_div_125_code_3_Template, 3, 3, "code", 183);
+    \u0275\u0275template(1, AppComponent_div_809_div_125_code_1_Template, 3, 3, "code", 183)(2, AppComponent_div_809_div_125_code_2_Template, 3, 3, "code", 183)(3, AppComponent_div_809_div_125_code_3_Template, 3, 3, "code", 183);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -64045,7 +64086,7 @@ function AppComponent_div_799_div_125_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["selectAll"] !== void 0);
   }
 }
-function AppComponent_div_799_div_157_Template(rf, ctx) {
+function AppComponent_div_809_div_157_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64057,7 +64098,7 @@ function AppComponent_div_799_div_157_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["startEdit"]);
   }
 }
-function AppComponent_div_799_div_172_Template(rf, ctx) {
+function AppComponent_div_809_div_172_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64069,7 +64110,7 @@ function AppComponent_div_799_div_172_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["commitEdit"]);
   }
 }
-function AppComponent_div_799_div_187_Template(rf, ctx) {
+function AppComponent_div_809_div_187_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64081,7 +64122,7 @@ function AppComponent_div_799_div_187_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["cancelEdit"]);
   }
 }
-function AppComponent_div_799_div_207_Template(rf, ctx) {
+function AppComponent_div_809_div_207_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64093,7 +64134,7 @@ function AppComponent_div_799_div_207_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["undo"]);
   }
 }
-function AppComponent_div_799_div_222_Template(rf, ctx) {
+function AppComponent_div_809_div_222_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64105,7 +64146,7 @@ function AppComponent_div_799_div_222_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["redo"]);
   }
 }
-function AppComponent_div_799_div_239_code_1_Template(rf, ctx) {
+function AppComponent_div_809_div_239_code_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -64117,7 +64158,7 @@ function AppComponent_div_799_div_239_code_1_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("canUndo \u2192 ", ctx_r2.results["canUndo"], "");
   }
 }
-function AppComponent_div_799_div_239_code_2_Template(rf, ctx) {
+function AppComponent_div_809_div_239_code_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "code");
     \u0275\u0275text(1);
@@ -64129,10 +64170,10 @@ function AppComponent_div_799_div_239_code_2_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("canRedo \u2192 ", ctx_r2.results["canRedo"], "");
   }
 }
-function AppComponent_div_799_div_239_Template(rf, ctx) {
+function AppComponent_div_809_div_239_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167);
-    \u0275\u0275template(1, AppComponent_div_799_div_239_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_799_div_239_code_2_Template, 2, 1, "code", 183);
+    \u0275\u0275template(1, AppComponent_div_809_div_239_code_1_Template, 2, 1, "code", 183)(2, AppComponent_div_809_div_239_code_2_Template, 2, 1, "code", 183);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -64143,7 +64184,7 @@ function AppComponent_div_799_div_239_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["canRedo"] !== void 0);
   }
 }
-function AppComponent_div_799_div_254_Template(rf, ctx) {
+function AppComponent_div_809_div_254_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64155,7 +64196,7 @@ function AppComponent_div_799_div_254_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["recalculateAll"]);
   }
 }
-function AppComponent_div_799_Template(rf, ctx) {
+function AppComponent_div_809_Template(rf, ctx) {
   if (rf & 1) {
     const _r23 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 184)(2, "div", 131)(3, "span", 132);
@@ -64174,7 +64215,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(17, "x1");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(18, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_18_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setSel.x1, $event) || (ctx_r2.ops.setSel.x1 = $event);
@@ -64185,7 +64226,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(21, "y1");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(22, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_22_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_22_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setSel.y1, $event) || (ctx_r2.ops.setSel.y1 = $event);
@@ -64196,7 +64237,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(25, "x2");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(26, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_26_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_26_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setSel.x2, $event) || (ctx_r2.ops.setSel.x2 = $event);
@@ -64207,7 +64248,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(29, "y2");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(30, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_30_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_30_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setSel.y2, $event) || (ctx_r2.ops.setSel.y2 = $event);
@@ -64215,14 +64256,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(31, "div", 142)(32, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_32_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_32_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetSelection());
     });
     \u0275\u0275text(33, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(34, AppComponent_div_799_div_34_Template, 3, 1, "div", 144);
+    \u0275\u0275template(34, AppComponent_div_809_div_34_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(35, "div", 134)(36, "div", 135)(37, "code");
     \u0275\u0275text(38, "getSelection");
@@ -64237,14 +64278,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(45, "Restituisce la selezione corrente");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(46, "div", 142)(47, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_47_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_47_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetSelection());
     });
     \u0275\u0275text(48, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(49, AppComponent_div_799_div_49_Template, 3, 1, "div", 144);
+    \u0275\u0275template(49, AppComponent_div_809_div_49_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(50, "section", 185)(51, "div", 131)(52, "span", 132);
     \u0275\u0275text(53, "Keyboard Navigation");
@@ -64270,7 +64311,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(72, "shift");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(73, "label", 181)(74, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_74_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_74_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.nav.shift, $event) || (ctx_r2.ops.nav.shift = $event);
@@ -64284,7 +64325,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(79, "ctrl");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(80, "label", 181)(81, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_81_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_81_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.nav.ctrl, $event) || (ctx_r2.ops.nav.ctrl = $event);
@@ -64295,7 +64336,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(83, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(84, "div", 142)(85, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_85_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_85_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opUp());
@@ -64303,7 +64344,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(86, "\u2191 up");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(87, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_87_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_87_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDown());
@@ -64311,7 +64352,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(88, "\u2193 down");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(89, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_89_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_89_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opLeft());
@@ -64319,14 +64360,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(90, "\u2190 left");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(91, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_91_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_91_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRight());
     });
     \u0275\u0275text(92, "\u2192 right");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(93, AppComponent_div_799_div_93_Template, 5, 4, "div", 144);
+    \u0275\u0275template(93, AppComponent_div_809_div_93_Template, 5, 4, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(94, "div", 134)(95, "div", 135)(96, "code");
     \u0275\u0275text(97, "first / last / selectAll");
@@ -64351,7 +64392,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(113, "shift (first/last)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(114, "label", 181)(115, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_115_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_115_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.nav.shift, $event) || (ctx_r2.ops.nav.shift = $event);
@@ -64362,7 +64403,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(117, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(118, "div", 142)(119, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_119_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_119_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opFirst());
@@ -64370,7 +64411,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(120, "\u21E4 first");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(121, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_121_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_121_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opLast());
@@ -64378,14 +64419,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(122, "\u21E5 last");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(123, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_123_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_123_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSelectAll());
     });
     \u0275\u0275text(124, "\u229E selectAll");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(125, AppComponent_div_799_div_125_Template, 4, 3, "div", 144);
+    \u0275\u0275template(125, AppComponent_div_809_div_125_Template, 4, 3, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(126, "section", 186)(127, "div", 131)(128, "span", 132);
     \u0275\u0275text(129, "Cell Editor");
@@ -64411,7 +64452,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(148, "x (col)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(149, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_149_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_149_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.startEdit.x, $event) || (ctx_r2.ops.startEdit.x = $event);
@@ -64422,7 +64463,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(152, "y (riga)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(153, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_799_Template_input_ngModelChange_153_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_809_Template_input_ngModelChange_153_listener($event) {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.startEdit.y, $event) || (ctx_r2.ops.startEdit.y = $event);
@@ -64430,14 +64471,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(154, "div", 142)(155, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_155_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_155_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opStartEdit());
     });
     \u0275\u0275text(156, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(157, AppComponent_div_799_div_157_Template, 3, 1, "div", 144);
+    \u0275\u0275template(157, AppComponent_div_809_div_157_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(158, "div", 134)(159, "div", 135)(160, "code");
     \u0275\u0275text(161, "commitEdit");
@@ -64452,14 +64493,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(168, "Conferma la modifica in corso");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(169, "div", 142)(170, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_170_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_170_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCommitEdit());
     });
     \u0275\u0275text(171, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(172, AppComponent_div_799_div_172_Template, 3, 1, "div", 144);
+    \u0275\u0275template(172, AppComponent_div_809_div_172_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(173, "div", 134)(174, "div", 135)(175, "code");
     \u0275\u0275text(176, "cancelEdit");
@@ -64474,14 +64515,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(183, "Annulla la modifica in corso");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(184, "div", 142)(185, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_185_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_185_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCancelEdit());
     });
     \u0275\u0275text(186, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(187, AppComponent_div_799_div_187_Template, 3, 1, "div", 144);
+    \u0275\u0275template(187, AppComponent_div_809_div_187_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(188, "section", 187)(189, "div", 131)(190, "span", 132);
     \u0275\u0275text(191, "History & State");
@@ -64499,14 +64540,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(203, "Annulla l'ultima operazione");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(204, "div", 142)(205, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_205_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_205_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opUndo());
     });
     \u0275\u0275text(206, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(207, AppComponent_div_799_div_207_Template, 3, 1, "div", 144);
+    \u0275\u0275template(207, AppComponent_div_809_div_207_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(208, "div", 134)(209, "div", 135)(210, "code");
     \u0275\u0275text(211, "redo");
@@ -64521,14 +64562,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(218, "Ripristina l'ultima operazione");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(219, "div", 142)(220, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_220_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_220_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRedo());
     });
     \u0275\u0275text(221, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(222, AppComponent_div_799_div_222_Template, 3, 1, "div", 144);
+    \u0275\u0275template(222, AppComponent_div_809_div_222_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(223, "div", 134)(224, "div", 135)(225, "code");
     \u0275\u0275text(226, "canUndo / canRedo");
@@ -64543,7 +64584,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(233, "Verifica disponibilit\xE0 undo/redo");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(234, "div", 142)(235, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_235_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_235_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCanUndo());
@@ -64551,14 +64592,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(236, "canUndo");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(237, "button", 173);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_237_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_237_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCanRedo());
     });
     \u0275\u0275text(238, "canRedo");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(239, AppComponent_div_799_div_239_Template, 3, 2, "div", 144);
+    \u0275\u0275template(239, AppComponent_div_809_div_239_Template, 3, 2, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(240, "div", 134)(241, "div", 135)(242, "code");
     \u0275\u0275text(243, "recalculateAll");
@@ -64573,14 +64614,14 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275text(250, "Ricalcola tutte le formule");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(251, "div", 142)(252, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_799_Template_button_click_252_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_809_Template_button_click_252_listener() {
       \u0275\u0275restoreView(_r23);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRecalculate());
     });
     \u0275\u0275text(253, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(254, AppComponent_div_799_div_254_Template, 3, 1, "div", 144);
+    \u0275\u0275template(254, AppComponent_div_809_div_254_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -64661,7 +64702,7 @@ function AppComponent_div_799_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["recalculateAll"] !== void 0);
   }
 }
-function AppComponent_div_800_div_20_Template(rf, ctx) {
+function AppComponent_div_810_div_20_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64673,7 +64714,7 @@ function AppComponent_div_800_div_20_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getData"]);
   }
 }
-function AppComponent_div_800_div_35_Template(rf, ctx) {
+function AppComponent_div_810_div_35_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64685,7 +64726,7 @@ function AppComponent_div_800_div_35_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getRawData"]);
   }
 }
-function AppComponent_div_800_div_55_Template(rf, ctx) {
+function AppComponent_div_810_div_55_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64697,7 +64738,7 @@ function AppComponent_div_800_div_55_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getJson"]);
   }
 }
-function AppComponent_div_800_div_84_Template(rf, ctx) {
+function AppComponent_div_810_div_84_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64709,7 +64750,7 @@ function AppComponent_div_800_div_84_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getObject"]);
   }
 }
-function AppComponent_div_800_div_111_Template(rf, ctx) {
+function AppComponent_div_810_div_111_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64721,7 +64762,7 @@ function AppComponent_div_800_div_111_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getRowData"]);
   }
 }
-function AppComponent_div_800_div_138_Template(rf, ctx) {
+function AppComponent_div_810_div_138_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64733,7 +64774,7 @@ function AppComponent_div_800_div_138_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnData"]);
   }
 }
-function AppComponent_div_800_div_153_Template(rf, ctx) {
+function AppComponent_div_810_div_153_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64745,7 +64786,7 @@ function AppComponent_div_800_div_153_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getHeaders"]);
   }
 }
-function AppComponent_div_800_div_168_Template(rf, ctx) {
+function AppComponent_div_810_div_168_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64757,14 +64798,14 @@ function AppComponent_div_800_div_168_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getConfig"]);
   }
 }
-function AppComponent_div_800_div_193_Template(rf, ctx) {
+function AppComponent_div_810_div_193_Template(rf, ctx) {
   if (rf & 1) {
     const _r25 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 139)(1, "label");
     \u0275\u0275text(2, "cella");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(3, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_div_193_Template_input_ngModelChange_3_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_div_193_Template_input_ngModelChange_3_listener($event) {
       \u0275\u0275restoreView(_r25);
       const ctx_r2 = \u0275\u0275nextContext(2);
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.cell, $event) || (ctx_r2.ops.setBorder.cell = $event);
@@ -64778,14 +64819,14 @@ function AppComponent_div_800_div_193_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setBorder.cell);
   }
 }
-function AppComponent_div_800_div_194_Template(rf, ctx) {
+function AppComponent_div_810_div_194_Template(rf, ctx) {
   if (rf & 1) {
     const _r26 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 139)(1, "label");
     \u0275\u0275text(2, "riga");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(3, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_div_194_Template_input_ngModelChange_3_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_div_194_Template_input_ngModelChange_3_listener($event) {
       \u0275\u0275restoreView(_r26);
       const ctx_r2 = \u0275\u0275nextContext(2);
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.row, $event) || (ctx_r2.ops.setBorder.row = $event);
@@ -64799,14 +64840,14 @@ function AppComponent_div_800_div_194_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setBorder.row);
   }
 }
-function AppComponent_div_800_div_195_Template(rf, ctx) {
+function AppComponent_div_810_div_195_Template(rf, ctx) {
   if (rf & 1) {
     const _r27 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 139)(1, "label");
     \u0275\u0275text(2, "colonna");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(3, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_div_195_Template_input_ngModelChange_3_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_div_195_Template_input_ngModelChange_3_listener($event) {
       \u0275\u0275restoreView(_r27);
       const ctx_r2 = \u0275\u0275nextContext(2);
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.col, $event) || (ctx_r2.ops.setBorder.col = $event);
@@ -64820,7 +64861,7 @@ function AppComponent_div_800_div_195_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.ops.setBorder.col);
   }
 }
-function AppComponent_div_800_div_235_Template(rf, ctx) {
+function AppComponent_div_810_div_235_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64832,7 +64873,7 @@ function AppComponent_div_800_div_235_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setBorder"]);
   }
 }
-function AppComponent_div_800_div_279_Template(rf, ctx) {
+function AppComponent_div_810_div_279_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64844,7 +64885,7 @@ function AppComponent_div_800_div_279_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setCellStyle"]);
   }
 }
-function AppComponent_div_800_div_323_Template(rf, ctx) {
+function AppComponent_div_810_div_323_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64856,7 +64897,7 @@ function AppComponent_div_800_div_323_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setRowStyle"]);
   }
 }
-function AppComponent_div_800_div_367_Template(rf, ctx) {
+function AppComponent_div_810_div_367_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64868,7 +64909,7 @@ function AppComponent_div_800_div_367_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setColumnStyle"]);
   }
 }
-function AppComponent_div_800_div_384_Template(rf, ctx) {
+function AppComponent_div_810_div_384_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64880,7 +64921,7 @@ function AppComponent_div_800_div_384_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearCellStyle"]);
   }
 }
-function AppComponent_div_800_div_401_Template(rf, ctx) {
+function AppComponent_div_810_div_401_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64892,7 +64933,7 @@ function AppComponent_div_800_div_401_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearRowStyle"]);
   }
 }
-function AppComponent_div_800_div_418_Template(rf, ctx) {
+function AppComponent_div_810_div_418_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64904,7 +64945,7 @@ function AppComponent_div_800_div_418_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearColumnStyle"]);
   }
 }
-function AppComponent_div_800_div_433_Template(rf, ctx) {
+function AppComponent_div_810_div_433_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64916,7 +64957,7 @@ function AppComponent_div_800_div_433_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearAllStyles"]);
   }
 }
-function AppComponent_div_800_div_466_Template(rf, ctx) {
+function AppComponent_div_810_div_466_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64928,7 +64969,7 @@ function AppComponent_div_800_div_466_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["sort"]);
   }
 }
-function AppComponent_div_800_div_481_Template(rf, ctx) {
+function AppComponent_div_810_div_481_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64940,7 +64981,7 @@ function AppComponent_div_800_div_481_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearSort"]);
   }
 }
-function AppComponent_div_800_div_531_Template(rf, ctx) {
+function AppComponent_div_810_div_531_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64952,7 +64993,7 @@ function AppComponent_div_800_div_531_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setHeaderStyle"]);
   }
 }
-function AppComponent_div_800_div_547_Template(rf, ctx) {
+function AppComponent_div_810_div_547_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64964,7 +65005,7 @@ function AppComponent_div_800_div_547_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearHeaderStyle"]);
   }
 }
-function AppComponent_div_800_div_581_Template(rf, ctx) {
+function AppComponent_div_810_div_581_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64976,7 +65017,7 @@ function AppComponent_div_800_div_581_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setFooterStyle"]);
   }
 }
-function AppComponent_div_800_div_612_Template(rf, ctx) {
+function AppComponent_div_810_div_612_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -64988,7 +65029,7 @@ function AppComponent_div_800_div_612_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setFooterRowStyle"]);
   }
 }
-function AppComponent_div_800_div_631_Template(rf, ctx) {
+function AppComponent_div_810_div_631_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -65000,7 +65041,7 @@ function AppComponent_div_800_div_631_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearFooterStyle"]);
   }
 }
-function AppComponent_div_800_div_665_Template(rf, ctx) {
+function AppComponent_div_810_div_665_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -65012,7 +65053,7 @@ function AppComponent_div_800_div_665_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setNestedHeaderStyle"]);
   }
 }
-function AppComponent_div_800_div_696_Template(rf, ctx) {
+function AppComponent_div_810_div_696_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -65024,7 +65065,7 @@ function AppComponent_div_800_div_696_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setNestedHeaderRowStyle"]);
   }
 }
-function AppComponent_div_800_div_715_Template(rf, ctx) {
+function AppComponent_div_810_div_715_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -65036,7 +65077,7 @@ function AppComponent_div_800_div_715_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearNestedHeaderStyle"]);
   }
 }
-function AppComponent_div_800_Template(rf, ctx) {
+function AppComponent_div_810_Template(rf, ctx) {
   if (rf & 1) {
     const _r24 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 188)(2, "div", 131)(3, "span", 132);
@@ -65055,14 +65096,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(16, "Array 2D valori calcolati");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(17, "div", 142)(18, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_18_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_18_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetData());
     });
     \u0275\u0275text(19, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(20, AppComponent_div_800_div_20_Template, 3, 1, "div", 144);
+    \u0275\u0275template(20, AppComponent_div_810_div_20_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(21, "div", 134)(22, "div", 135)(23, "code");
     \u0275\u0275text(24, "getRawData");
@@ -65077,14 +65118,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(31, "Array 2D valori raw (formule incluse)");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(32, "div", 142)(33, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_33_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_33_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetRawData());
     });
     \u0275\u0275text(34, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(35, AppComponent_div_800_div_35_Template, 3, 1, "div", 144);
+    \u0275\u0275template(35, AppComponent_div_810_div_35_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(36, "div", 134)(37, "div", 135)(38, "code");
     \u0275\u0275text(39, "getJson");
@@ -65099,7 +65140,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(47, "processed");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(48, "label", 181)(49, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_49_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_49_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getJson.processed, $event) || (ctx_r2.ops.getJson.processed = $event);
@@ -65110,14 +65151,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(51, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(52, "div", 142)(53, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_53_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_53_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetJson());
     });
     \u0275\u0275text(54, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(55, AppComponent_div_800_div_55_Template, 3, 1, "div", 144);
+    \u0275\u0275template(55, AppComponent_div_810_div_55_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(56, "div", 134)(57, "div", 135)(58, "code");
     \u0275\u0275text(59, "getObject");
@@ -65138,7 +65179,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(72, "? vuoto = tutti");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(73, "input", 189);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_73_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_73_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getObject.rowNumber, $event) || (ctx_r2.ops.getObject.rowNumber = $event);
@@ -65149,7 +65190,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(76, "processed");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(77, "label", 181)(78, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_78_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_78_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getObject.processed, $event) || (ctx_r2.ops.getObject.processed = $event);
@@ -65160,14 +65201,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(80, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(81, "div", 142)(82, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_82_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_82_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetObject());
     });
     \u0275\u0275text(83, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(84, AppComponent_div_800_div_84_Template, 3, 1, "div", 144);
+    \u0275\u0275template(84, AppComponent_div_810_div_84_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(85, "div", 134)(86, "div", 135)(87, "code");
     \u0275\u0275text(88, "getRowData");
@@ -65186,7 +65227,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(99, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(100, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_100_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_100_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getRowData.row, $event) || (ctx_r2.ops.getRowData.row = $event);
@@ -65197,7 +65238,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(103, "processed");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(104, "label", 181)(105, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_105_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_105_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getRowData.processed, $event) || (ctx_r2.ops.getRowData.processed = $event);
@@ -65208,14 +65249,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(107, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(108, "div", 142)(109, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_109_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_109_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetRowData());
     });
     \u0275\u0275text(110, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(111, AppComponent_div_800_div_111_Template, 3, 1, "div", 144);
+    \u0275\u0275template(111, AppComponent_div_810_div_111_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(112, "div", 134)(113, "div", 135)(114, "code");
     \u0275\u0275text(115, "getColumnData");
@@ -65234,7 +65275,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(126, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(127, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_127_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_127_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColData.col, $event) || (ctx_r2.ops.getColData.col = $event);
@@ -65245,7 +65286,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(130, "processed");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(131, "label", 181)(132, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_132_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_132_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColData.processed, $event) || (ctx_r2.ops.getColData.processed = $event);
@@ -65256,14 +65297,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(134, "s\xEC");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(135, "div", 142)(136, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_136_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_136_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColData());
     });
     \u0275\u0275text(137, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(138, AppComponent_div_800_div_138_Template, 3, 1, "div", 144);
+    \u0275\u0275template(138, AppComponent_div_810_div_138_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(139, "div", 134)(140, "div", 135)(141, "code");
     \u0275\u0275text(142, "getHeaders");
@@ -65278,14 +65319,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(149, "Titoli delle colonne");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(150, "div", 142)(151, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_151_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_151_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetHeaders());
     });
     \u0275\u0275text(152, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(153, AppComponent_div_800_div_153_Template, 3, 1, "div", 144);
+    \u0275\u0275template(153, AppComponent_div_810_div_153_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(154, "div", 134)(155, "div", 135)(156, "code");
     \u0275\u0275text(157, "getConfig");
@@ -65300,14 +65341,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(164, "Configurazione corrente della griglia");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(165, "div", 142)(166, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_166_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_166_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetConfig());
     });
     \u0275\u0275text(167, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(168, AppComponent_div_800_div_168_Template, 3, 1, "div", 144);
+    \u0275\u0275template(168, AppComponent_div_810_div_168_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(169, "section", 190)(170, "div", 131)(171, "span", 132);
     \u0275\u0275text(172, "Cell / Row / Column Styles");
@@ -65325,7 +65366,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(185, "target");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(186, "select", 191);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_select_ngModelChange_186_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_select_ngModelChange_186_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.targetType, $event) || (ctx_r2.ops.setBorder.targetType = $event);
@@ -65340,12 +65381,12 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(191, "option", 194);
     \u0275\u0275text(192, "colonna");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275template(193, AppComponent_div_800_div_193_Template, 4, 1, "div", 195)(194, AppComponent_div_800_div_194_Template, 4, 1, "div", 195)(195, AppComponent_div_800_div_195_Template, 4, 1, "div", 195);
+    \u0275\u0275template(193, AppComponent_div_810_div_193_Template, 4, 1, "div", 195)(194, AppComponent_div_810_div_194_Template, 4, 1, "div", 195)(195, AppComponent_div_810_div_195_Template, 4, 1, "div", 195);
     \u0275\u0275elementStart(196, "div", 139)(197, "label");
     \u0275\u0275text(198, "lato");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(199, "select", 191);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_select_ngModelChange_199_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_select_ngModelChange_199_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.sides, $event) || (ctx_r2.ops.setBorder.sides = $event);
@@ -65370,7 +65411,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(212, "tipo");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(213, "select", 191);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_select_ngModelChange_213_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_select_ngModelChange_213_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.borderStyle, $event) || (ctx_r2.ops.setBorder.borderStyle = $event);
@@ -65395,7 +65436,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(226, "spessore (px)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(227, "input", 204);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_227_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_227_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.width, $event) || (ctx_r2.ops.setBorder.width = $event);
@@ -65406,7 +65447,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(230, "colore");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(231, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_231_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_231_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setBorder.color, $event) || (ctx_r2.ops.setBorder.color = $event);
@@ -65414,14 +65455,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(232, "div", 142)(233, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_233_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_233_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetBorder());
     });
     \u0275\u0275text(234, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(235, AppComponent_div_800_div_235_Template, 3, 1, "div", 144);
+    \u0275\u0275template(235, AppComponent_div_810_div_235_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(236, "div", 134)(237, "div", 135)(238, "code");
     \u0275\u0275text(239, "setCellStyle");
@@ -65436,7 +65477,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(247, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(248, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_248_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_248_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.cell, $event) || (ctx_r2.ops.setCellStyle.cell = $event);
@@ -65447,7 +65488,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(251, "color");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(252, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_252_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_252_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.color, $event) || (ctx_r2.ops.setCellStyle.color = $event);
@@ -65458,7 +65499,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(255, "bg");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(256, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_256_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_256_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.backgroundColor, $event) || (ctx_r2.ops.setCellStyle.backgroundColor = $event);
@@ -65469,7 +65510,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(259, "bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(260, "label", 181)(261, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_261_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_261_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.fontWeight, $event) || (ctx_r2.ops.setCellStyle.fontWeight = $event);
@@ -65483,7 +65524,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(266, "italic");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(267, "label", 181)(268, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_268_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_268_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.fontStyle, $event) || (ctx_r2.ops.setCellStyle.fontStyle = $event);
@@ -65497,7 +65538,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(274, "size");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(275, "input", 206);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_275_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_275_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellStyle.fontSize, $event) || (ctx_r2.ops.setCellStyle.fontSize = $event);
@@ -65505,14 +65546,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(276, "div", 142)(277, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_277_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_277_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetCellStyle());
     });
     \u0275\u0275text(278, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(279, AppComponent_div_800_div_279_Template, 3, 1, "div", 144);
+    \u0275\u0275template(279, AppComponent_div_810_div_279_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(280, "div", 134)(281, "div", 135)(282, "code");
     \u0275\u0275text(283, "setRowStyle");
@@ -65527,7 +65568,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(291, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(292, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_292_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_292_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.row, $event) || (ctx_r2.ops.setRowStyle.row = $event);
@@ -65538,7 +65579,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(295, "color");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(296, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_296_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_296_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.color, $event) || (ctx_r2.ops.setRowStyle.color = $event);
@@ -65549,7 +65590,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(299, "bg");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(300, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_300_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_300_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.backgroundColor, $event) || (ctx_r2.ops.setRowStyle.backgroundColor = $event);
@@ -65560,7 +65601,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(303, "bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(304, "label", 181)(305, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_305_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_305_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.fontWeight, $event) || (ctx_r2.ops.setRowStyle.fontWeight = $event);
@@ -65574,7 +65615,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(310, "italic");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(311, "label", 181)(312, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_312_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_312_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.fontStyle, $event) || (ctx_r2.ops.setRowStyle.fontStyle = $event);
@@ -65588,7 +65629,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(318, "size");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(319, "input", 206);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_319_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_319_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowStyle.fontSize, $event) || (ctx_r2.ops.setRowStyle.fontSize = $event);
@@ -65596,14 +65637,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(320, "div", 142)(321, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_321_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_321_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetRowStyle());
     });
     \u0275\u0275text(322, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(323, AppComponent_div_800_div_323_Template, 3, 1, "div", 144);
+    \u0275\u0275template(323, AppComponent_div_810_div_323_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(324, "div", 134)(325, "div", 135)(326, "code");
     \u0275\u0275text(327, "setColumnStyle");
@@ -65618,7 +65659,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(335, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(336, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_336_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_336_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.col, $event) || (ctx_r2.ops.setColStyle.col = $event);
@@ -65629,7 +65670,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(339, "color");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(340, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_340_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_340_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.color, $event) || (ctx_r2.ops.setColStyle.color = $event);
@@ -65640,7 +65681,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(343, "bg");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(344, "input", 205);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_344_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_344_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.backgroundColor, $event) || (ctx_r2.ops.setColStyle.backgroundColor = $event);
@@ -65651,7 +65692,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(347, "bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(348, "label", 181)(349, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_349_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_349_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.fontWeight, $event) || (ctx_r2.ops.setColStyle.fontWeight = $event);
@@ -65665,7 +65706,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(354, "italic");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(355, "label", 181)(356, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_356_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_356_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.fontStyle, $event) || (ctx_r2.ops.setColStyle.fontStyle = $event);
@@ -65679,7 +65720,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(362, "size");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(363, "input", 206);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_363_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_363_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColStyle.fontSize, $event) || (ctx_r2.ops.setColStyle.fontSize = $event);
@@ -65687,14 +65728,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(364, "div", 142)(365, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_365_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_365_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetColStyle());
     });
     \u0275\u0275text(366, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(367, AppComponent_div_800_div_367_Template, 3, 1, "div", 144);
+    \u0275\u0275template(367, AppComponent_div_810_div_367_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(368, "div", 134)(369, "div", 135)(370, "code");
     \u0275\u0275text(371, "clearCellStyle");
@@ -65709,7 +65750,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(379, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(380, "input", 169);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_380_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_380_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearStyle.cell, $event) || (ctx_r2.ops.clearStyle.cell = $event);
@@ -65717,14 +65758,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(381, "div", 142)(382, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_382_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_382_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearCellStyle());
     });
     \u0275\u0275text(383, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(384, AppComponent_div_800_div_384_Template, 3, 1, "div", 144);
+    \u0275\u0275template(384, AppComponent_div_810_div_384_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(385, "div", 134)(386, "div", 135)(387, "code");
     \u0275\u0275text(388, "clearRowStyle");
@@ -65739,7 +65780,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(396, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(397, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_397_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_397_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearRowStyle.row, $event) || (ctx_r2.ops.clearRowStyle.row = $event);
@@ -65747,14 +65788,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(398, "div", 142)(399, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_399_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_399_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearRowStyle());
     });
     \u0275\u0275text(400, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(401, AppComponent_div_800_div_401_Template, 3, 1, "div", 144);
+    \u0275\u0275template(401, AppComponent_div_810_div_401_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(402, "div", 134)(403, "div", 135)(404, "code");
     \u0275\u0275text(405, "clearColumnStyle");
@@ -65769,7 +65810,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(413, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(414, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_414_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_414_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearColStyle.col, $event) || (ctx_r2.ops.clearColStyle.col = $event);
@@ -65777,14 +65818,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(415, "div", 142)(416, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_416_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_416_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearColStyle());
     });
     \u0275\u0275text(417, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(418, AppComponent_div_800_div_418_Template, 3, 1, "div", 144);
+    \u0275\u0275template(418, AppComponent_div_810_div_418_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(419, "div", 134)(420, "div", 135)(421, "code");
     \u0275\u0275text(422, "clearAllStyles");
@@ -65799,14 +65840,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(429, "Rimuove tutti gli stili personalizzati dalla griglia");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(430, "div", 142)(431, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_431_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_431_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearAllStyles());
     });
     \u0275\u0275text(432, "Rimuovi tutti");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(433, AppComponent_div_800_div_433_Template, 3, 1, "div", 144);
+    \u0275\u0275template(433, AppComponent_div_810_div_433_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(434, "section", 207)(435, "div", 131)(436, "span", 132);
     \u0275\u0275text(437, "Sort");
@@ -65827,7 +65868,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(450, "div", 138)(451, "label");
     \u0275\u0275text(452, "Col ");
     \u0275\u0275elementStart(453, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_453_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_453_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.sort.col, $event) || (ctx_r2.ops.sort.col = $event);
@@ -65837,7 +65878,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(454, "label");
     \u0275\u0275text(455, "Dir ");
     \u0275\u0275elementStart(456, "select", 209);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_select_ngModelChange_456_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_select_ngModelChange_456_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.sort.direction, $event) || (ctx_r2.ops.sort.direction = $event);
@@ -65853,14 +65894,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(462, "null (restore)");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(463, "div", 142)(464, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_464_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_464_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSort());
     });
     \u0275\u0275text(465, "Sort");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(466, AppComponent_div_800_div_466_Template, 3, 1, "div", 144);
+    \u0275\u0275template(466, AppComponent_div_810_div_466_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(467, "div", 134)(468, "div", 135)(469, "code");
     \u0275\u0275text(470, "clearSort");
@@ -65875,14 +65916,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(477, "Ripristina l'ordine originale delle righe");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(478, "div", 142)(479, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_479_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_479_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearSort());
     });
     \u0275\u0275text(480, "Clear Sort");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(481, AppComponent_div_800_div_481_Template, 3, 1, "div", 144);
+    \u0275\u0275template(481, AppComponent_div_810_div_481_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(482, "div", 134)(483, "div", 135)(484, "code");
     \u0275\u0275text(485, "getSortState");
@@ -65915,7 +65956,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(509, "div", 138)(510, "label");
     \u0275\u0275text(511, "Col ");
     \u0275\u0275elementStart(512, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_512_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_512_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.col, $event) || (ctx_r2.ops.setHeaderStyle.col = $event);
@@ -65925,7 +65966,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(513, "label");
     \u0275\u0275text(514, "Color ");
     \u0275\u0275elementStart(515, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_515_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_515_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.color, $event) || (ctx_r2.ops.setHeaderStyle.color = $event);
@@ -65935,7 +65976,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(516, "label");
     \u0275\u0275text(517, "BG ");
     \u0275\u0275elementStart(518, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_518_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_518_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.backgroundColor, $event) || (ctx_r2.ops.setHeaderStyle.backgroundColor = $event);
@@ -65943,7 +65984,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(519, "label")(520, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_520_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_520_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.fontWeight, $event) || (ctx_r2.ops.setHeaderStyle.fontWeight = $event);
@@ -65953,7 +65994,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(521, " Bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(522, "label")(523, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_523_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_523_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.fontStyle, $event) || (ctx_r2.ops.setHeaderStyle.fontStyle = $event);
@@ -65965,7 +66006,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(525, "label");
     \u0275\u0275text(526, "Size ");
     \u0275\u0275elementStart(527, "input", 215);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_527_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_527_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeaderStyle.fontSize, $event) || (ctx_r2.ops.setHeaderStyle.fontSize = $event);
@@ -65973,14 +66014,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(528, "div", 142)(529, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_529_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_529_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetHeaderStyle());
     });
     \u0275\u0275text(530, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(531, AppComponent_div_800_div_531_Template, 3, 1, "div", 144);
+    \u0275\u0275template(531, AppComponent_div_810_div_531_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(532, "div", 134)(533, "div", 135)(534, "code");
     \u0275\u0275text(535, "clearHeaderColumnStyle");
@@ -65994,7 +66035,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(540, "div", 138)(541, "label");
     \u0275\u0275text(542, "Col ");
     \u0275\u0275elementStart(543, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_543_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_543_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearHeaderStyle.col, $event) || (ctx_r2.ops.clearHeaderStyle.col = $event);
@@ -66002,14 +66043,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(544, "div", 142)(545, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_545_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_545_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearHeaderStyle());
     });
     \u0275\u0275text(546, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(547, AppComponent_div_800_div_547_Template, 3, 1, "div", 144);
+    \u0275\u0275template(547, AppComponent_div_810_div_547_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(548, "div", 134)(549, "div", 135)(550, "code");
     \u0275\u0275text(551, "setFooterCellStyle");
@@ -66023,7 +66064,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(556, "div", 138)(557, "label");
     \u0275\u0275text(558, "X (col) ");
     \u0275\u0275elementStart(559, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_559_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_559_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.x, $event) || (ctx_r2.ops.setFooterStyle.x = $event);
@@ -66033,7 +66074,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(560, "label");
     \u0275\u0275text(561, "Y (row) ");
     \u0275\u0275elementStart(562, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_562_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_562_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.y, $event) || (ctx_r2.ops.setFooterStyle.y = $event);
@@ -66043,7 +66084,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(563, "label");
     \u0275\u0275text(564, "Color ");
     \u0275\u0275elementStart(565, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_565_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_565_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.color, $event) || (ctx_r2.ops.setFooterStyle.color = $event);
@@ -66053,7 +66094,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(566, "label");
     \u0275\u0275text(567, "BG ");
     \u0275\u0275elementStart(568, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_568_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_568_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.backgroundColor, $event) || (ctx_r2.ops.setFooterStyle.backgroundColor = $event);
@@ -66061,7 +66102,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(569, "label")(570, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_570_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_570_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.fontWeight, $event) || (ctx_r2.ops.setFooterStyle.fontWeight = $event);
@@ -66071,7 +66112,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(571, " Bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(572, "label")(573, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_573_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_573_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.fontStyle, $event) || (ctx_r2.ops.setFooterStyle.fontStyle = $event);
@@ -66083,7 +66124,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(575, "label");
     \u0275\u0275text(576, "Size ");
     \u0275\u0275elementStart(577, "input", 215);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_577_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_577_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterStyle.fontSize, $event) || (ctx_r2.ops.setFooterStyle.fontSize = $event);
@@ -66091,14 +66132,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(578, "div", 142)(579, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_579_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_579_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetFooterStyle());
     });
     \u0275\u0275text(580, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(581, AppComponent_div_800_div_581_Template, 3, 1, "div", 144);
+    \u0275\u0275template(581, AppComponent_div_810_div_581_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(582, "div", 134)(583, "div", 135)(584, "code");
     \u0275\u0275text(585, "setFooterRowStyle");
@@ -66112,7 +66153,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(590, "div", 138)(591, "label");
     \u0275\u0275text(592, "Row ");
     \u0275\u0275elementStart(593, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_593_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_593_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.row, $event) || (ctx_r2.ops.setFooterRowStyle.row = $event);
@@ -66122,7 +66163,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(594, "label");
     \u0275\u0275text(595, "Color ");
     \u0275\u0275elementStart(596, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_596_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_596_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.color, $event) || (ctx_r2.ops.setFooterRowStyle.color = $event);
@@ -66132,7 +66173,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(597, "label");
     \u0275\u0275text(598, "BG ");
     \u0275\u0275elementStart(599, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_599_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_599_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.backgroundColor, $event) || (ctx_r2.ops.setFooterRowStyle.backgroundColor = $event);
@@ -66140,7 +66181,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(600, "label")(601, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_601_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_601_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.fontWeight, $event) || (ctx_r2.ops.setFooterRowStyle.fontWeight = $event);
@@ -66150,7 +66191,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(602, " Bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(603, "label")(604, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_604_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_604_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.fontStyle, $event) || (ctx_r2.ops.setFooterRowStyle.fontStyle = $event);
@@ -66162,7 +66203,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(606, "label");
     \u0275\u0275text(607, "Size ");
     \u0275\u0275elementStart(608, "input", 215);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_608_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_608_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setFooterRowStyle.fontSize, $event) || (ctx_r2.ops.setFooterRowStyle.fontSize = $event);
@@ -66170,14 +66211,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(609, "div", 142)(610, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_610_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_610_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetFooterRowStyle());
     });
     \u0275\u0275text(611, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(612, AppComponent_div_800_div_612_Template, 3, 1, "div", 144);
+    \u0275\u0275template(612, AppComponent_div_810_div_612_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(613, "div", 134)(614, "div", 135)(615, "code");
     \u0275\u0275text(616, "clearFooterCellStyle");
@@ -66191,7 +66232,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(621, "div", 138)(622, "label");
     \u0275\u0275text(623, "X ");
     \u0275\u0275elementStart(624, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_624_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_624_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearFooterStyle.x, $event) || (ctx_r2.ops.clearFooterStyle.x = $event);
@@ -66201,7 +66242,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(625, "label");
     \u0275\u0275text(626, "Y ");
     \u0275\u0275elementStart(627, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_627_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_627_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearFooterStyle.y, $event) || (ctx_r2.ops.clearFooterStyle.y = $event);
@@ -66209,14 +66250,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(628, "div", 142)(629, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_629_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_629_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearFooterStyle());
     });
     \u0275\u0275text(630, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(631, AppComponent_div_800_div_631_Template, 3, 1, "div", 144);
+    \u0275\u0275template(631, AppComponent_div_810_div_631_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(632, "div", 134)(633, "div", 135)(634, "code");
     \u0275\u0275text(635, "setNestedHeaderCellStyle");
@@ -66230,7 +66271,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(640, "div", 138)(641, "label");
     \u0275\u0275text(642, "Row ");
     \u0275\u0275elementStart(643, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_643_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_643_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.row, $event) || (ctx_r2.ops.setNestedHeaderStyle.row = $event);
@@ -66240,7 +66281,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(644, "label");
     \u0275\u0275text(645, "Cell# ");
     \u0275\u0275elementStart(646, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_646_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_646_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.cellIndex, $event) || (ctx_r2.ops.setNestedHeaderStyle.cellIndex = $event);
@@ -66250,7 +66291,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(647, "label");
     \u0275\u0275text(648, "Color ");
     \u0275\u0275elementStart(649, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_649_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_649_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.color, $event) || (ctx_r2.ops.setNestedHeaderStyle.color = $event);
@@ -66260,7 +66301,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(650, "label");
     \u0275\u0275text(651, "BG ");
     \u0275\u0275elementStart(652, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_652_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_652_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.backgroundColor, $event) || (ctx_r2.ops.setNestedHeaderStyle.backgroundColor = $event);
@@ -66268,7 +66309,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(653, "label")(654, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_654_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_654_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.fontWeight, $event) || (ctx_r2.ops.setNestedHeaderStyle.fontWeight = $event);
@@ -66278,7 +66319,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(655, " Bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(656, "label")(657, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_657_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_657_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.fontStyle, $event) || (ctx_r2.ops.setNestedHeaderStyle.fontStyle = $event);
@@ -66290,7 +66331,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(659, "label");
     \u0275\u0275text(660, "Size ");
     \u0275\u0275elementStart(661, "input", 215);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_661_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_661_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderStyle.fontSize, $event) || (ctx_r2.ops.setNestedHeaderStyle.fontSize = $event);
@@ -66298,14 +66339,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(662, "div", 142)(663, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_663_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_663_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetNestedHeaderStyle());
     });
     \u0275\u0275text(664, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(665, AppComponent_div_800_div_665_Template, 3, 1, "div", 144);
+    \u0275\u0275template(665, AppComponent_div_810_div_665_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(666, "div", 134)(667, "div", 135)(668, "code");
     \u0275\u0275text(669, "setNestedHeaderRowStyle");
@@ -66319,7 +66360,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(674, "div", 138)(675, "label");
     \u0275\u0275text(676, "Row ");
     \u0275\u0275elementStart(677, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_677_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_677_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.row, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.row = $event);
@@ -66329,7 +66370,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(678, "label");
     \u0275\u0275text(679, "Color ");
     \u0275\u0275elementStart(680, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_680_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_680_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.color, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.color = $event);
@@ -66339,7 +66380,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(681, "label");
     \u0275\u0275text(682, "BG ");
     \u0275\u0275elementStart(683, "input", 214);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_683_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_683_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.backgroundColor, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.backgroundColor = $event);
@@ -66347,7 +66388,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(684, "label")(685, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_685_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_685_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.fontWeight, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.fontWeight = $event);
@@ -66357,7 +66398,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275text(686, " Bold");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(687, "label")(688, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_688_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_688_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.fontStyle, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.fontStyle = $event);
@@ -66369,7 +66410,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(690, "label");
     \u0275\u0275text(691, "Size ");
     \u0275\u0275elementStart(692, "input", 215);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_692_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_692_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setNestedHeaderRowStyle.fontSize, $event) || (ctx_r2.ops.setNestedHeaderRowStyle.fontSize = $event);
@@ -66377,14 +66418,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(693, "div", 142)(694, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_694_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_694_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetNestedHeaderRowStyle());
     });
     \u0275\u0275text(695, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(696, AppComponent_div_800_div_696_Template, 3, 1, "div", 144);
+    \u0275\u0275template(696, AppComponent_div_810_div_696_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(697, "div", 134)(698, "div", 135)(699, "code");
     \u0275\u0275text(700, "clearNestedHeaderCellStyle");
@@ -66398,7 +66439,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(705, "div", 138)(706, "label");
     \u0275\u0275text(707, "Row ");
     \u0275\u0275elementStart(708, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_708_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_708_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearNestedHeaderStyle.row, $event) || (ctx_r2.ops.clearNestedHeaderStyle.row = $event);
@@ -66408,7 +66449,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275elementStart(709, "label");
     \u0275\u0275text(710, "Cell# ");
     \u0275\u0275elementStart(711, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_800_Template_input_ngModelChange_711_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_810_Template_input_ngModelChange_711_listener($event) {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearNestedHeaderStyle.cellIndex, $event) || (ctx_r2.ops.clearNestedHeaderStyle.cellIndex = $event);
@@ -66416,14 +66457,14 @@ function AppComponent_div_800_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(712, "div", 142)(713, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_800_Template_button_click_713_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_810_Template_button_click_713_listener() {
       \u0275\u0275restoreView(_r24);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearNestedHeaderStyle());
     });
     \u0275\u0275text(714, "Rimuovi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(715, AppComponent_div_800_div_715_Template, 3, 1, "div", 144);
+    \u0275\u0275template(715, AppComponent_div_810_div_715_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -66688,7 +66729,7 @@ function AppComponent_div_800_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["clearNestedHeaderStyle"] !== void 0);
   }
 }
-function AppComponent_div_801_div_24_Template(rf, ctx) {
+function AppComponent_div_811_div_24_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66700,7 +66741,7 @@ function AppComponent_div_801_div_24_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setCellReadonly"]);
   }
 }
-function AppComponent_div_801_div_43_Template(rf, ctx) {
+function AppComponent_div_811_div_43_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66712,7 +66753,7 @@ function AppComponent_div_801_div_43_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setRowReadonly"]);
   }
 }
-function AppComponent_div_801_div_62_Template(rf, ctx) {
+function AppComponent_div_811_div_62_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66724,7 +66765,7 @@ function AppComponent_div_801_div_62_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setColumnReadonly"]);
   }
 }
-function AppComponent_div_801_div_75_Template(rf, ctx) {
+function AppComponent_div_811_div_75_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66736,7 +66777,7 @@ function AppComponent_div_801_div_75_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearAllReadonly"]);
   }
 }
-function AppComponent_div_801_div_91_Template(rf, ctx) {
+function AppComponent_div_811_div_91_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66748,7 +66789,7 @@ function AppComponent_div_801_div_91_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setLocked"]);
   }
 }
-function AppComponent_div_801_div_120_Template(rf, ctx) {
+function AppComponent_div_811_div_120_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66760,7 +66801,7 @@ function AppComponent_div_801_div_120_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("setData: ", ctx_r2.results["setData"], "");
   }
 }
-function AppComponent_div_801_div_121_Template(rf, ctx) {
+function AppComponent_div_811_div_121_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66772,7 +66813,7 @@ function AppComponent_div_801_div_121_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("appendData: ", ctx_r2.results["appendData"], "");
   }
 }
-function AppComponent_div_801_div_145_Template(rf, ctx) {
+function AppComponent_div_811_div_145_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66784,7 +66825,7 @@ function AppComponent_div_801_div_145_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["refresh"]);
   }
 }
-function AppComponent_div_801_div_176_Template(rf, ctx) {
+function AppComponent_div_811_div_176_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66796,7 +66837,7 @@ function AppComponent_div_801_div_176_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["download"]);
   }
 }
-function AppComponent_div_801_div_197_Template(rf, ctx) {
+function AppComponent_div_811_div_197_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66808,7 +66849,7 @@ function AppComponent_div_801_div_197_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["parseCSV"]);
   }
 }
-function AppComponent_div_801_div_220_Template(rf, ctx) {
+function AppComponent_div_811_div_220_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66820,7 +66861,7 @@ function AppComponent_div_801_div_220_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["search"]);
   }
 }
-function AppComponent_div_801_option_242_Template(rf, ctx) {
+function AppComponent_div_811_option_242_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "option", 238);
     \u0275\u0275text(1);
@@ -66833,7 +66874,7 @@ function AppComponent_div_801_option_242_Template(rf, ctx) {
     \u0275\u0275textInterpolate(k_r29);
   }
 }
-function AppComponent_div_801_div_246_Template(rf, ctx) {
+function AppComponent_div_811_div_246_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66845,7 +66886,7 @@ function AppComponent_div_801_div_246_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getText"]);
   }
 }
-function AppComponent_div_801_div_263_Template(rf, ctx) {
+function AppComponent_div_811_div_263_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66857,7 +66898,7 @@ function AppComponent_div_801_div_263_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnName"]);
   }
 }
-function AppComponent_div_801_div_280_Template(rf, ctx) {
+function AppComponent_div_811_div_280_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66869,7 +66910,7 @@ function AppComponent_div_801_div_280_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getIdFromColumnName"]);
   }
 }
-function AppComponent_div_801_div_306_Template(rf, ctx) {
+function AppComponent_div_811_div_306_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66881,7 +66922,7 @@ function AppComponent_div_801_div_306_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnByKey"]);
   }
 }
-function AppComponent_div_801_div_327_Template(rf, ctx) {
+function AppComponent_div_811_div_327_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66893,7 +66934,7 @@ function AppComponent_div_801_div_327_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getDropDownValue"]);
   }
 }
-function AppComponent_div_801_div_348_Template(rf, ctx) {
+function AppComponent_div_811_div_348_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66905,7 +66946,7 @@ function AppComponent_div_801_div_348_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["saveState"]);
   }
 }
-function AppComponent_div_801_div_361_Template(rf, ctx) {
+function AppComponent_div_811_div_361_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66917,7 +66958,7 @@ function AppComponent_div_801_div_361_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getPersistedData"]);
   }
 }
-function AppComponent_div_801_div_374_Template(rf, ctx) {
+function AppComponent_div_811_div_374_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -66929,7 +66970,7 @@ function AppComponent_div_801_div_374_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearPersistence"]);
   }
 }
-function AppComponent_div_801_Template(rf, ctx) {
+function AppComponent_div_811_Template(rf, ctx) {
   if (rf & 1) {
     const _r28 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 216)(2, "div", 131)(3, "span", 132);
@@ -66947,7 +66988,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementStart(14, "div", 138)(15, "label");
     \u0275\u0275text(16, "Cell ");
     \u0275\u0275elementStart(17, "input", 217);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_17_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_17_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellReadonly.cell, $event) || (ctx_r2.ops.setCellReadonly.cell = $event);
@@ -66955,7 +66996,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(18, "label", 218)(19, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_19_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_19_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCellReadonly.value, $event) || (ctx_r2.ops.setCellReadonly.value = $event);
@@ -66965,14 +67006,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(20, " Readonly");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(21, "div", 142)(22, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_22_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_22_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetCellReadonly());
     });
     \u0275\u0275text(23, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(24, AppComponent_div_801_div_24_Template, 3, 1, "div", 144);
+    \u0275\u0275template(24, AppComponent_div_811_div_24_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(25, "div", 134)(26, "div", 135)(27, "code");
     \u0275\u0275text(28, "setRowReadonly");
@@ -66986,7 +67027,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementStart(33, "div", 138)(34, "label");
     \u0275\u0275text(35, "Row ");
     \u0275\u0275elementStart(36, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_36_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_36_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowReadonly.row, $event) || (ctx_r2.ops.setRowReadonly.row = $event);
@@ -66994,7 +67035,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(37, "label", 218)(38, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_38_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_38_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowReadonly.value, $event) || (ctx_r2.ops.setRowReadonly.value = $event);
@@ -67004,14 +67045,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(39, " Readonly");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(40, "div", 142)(41, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_41_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_41_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetRowReadonly());
     });
     \u0275\u0275text(42, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(43, AppComponent_div_801_div_43_Template, 3, 1, "div", 144);
+    \u0275\u0275template(43, AppComponent_div_811_div_43_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(44, "div", 134)(45, "div", 135)(46, "code");
     \u0275\u0275text(47, "setColumnReadonly");
@@ -67025,7 +67066,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementStart(52, "div", 138)(53, "label");
     \u0275\u0275text(54, "Col ");
     \u0275\u0275elementStart(55, "input", 208);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_55_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_55_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnReadonly.col, $event) || (ctx_r2.ops.setColumnReadonly.col = $event);
@@ -67033,7 +67074,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(56, "label", 218)(57, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_57_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_57_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnReadonly.value, $event) || (ctx_r2.ops.setColumnReadonly.value = $event);
@@ -67043,14 +67084,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(58, " Readonly");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(59, "div", 142)(60, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_60_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_60_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetColumnReadonly());
     });
     \u0275\u0275text(61, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(62, AppComponent_div_801_div_62_Template, 3, 1, "div", 144);
+    \u0275\u0275template(62, AppComponent_div_811_div_62_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(63, "div", 134)(64, "div", 135)(65, "code");
     \u0275\u0275text(66, "clearAllReadonly");
@@ -67063,14 +67104,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(71, "div", 138);
     \u0275\u0275elementStart(72, "div", 142)(73, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_73_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_73_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearAllReadonly());
     });
     \u0275\u0275text(74, "Rimuovi tutti");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(75, AppComponent_div_801_div_75_Template, 3, 1, "div", 144);
+    \u0275\u0275template(75, AppComponent_div_811_div_75_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(76, "div", 134)(77, "div", 135)(78, "code");
     \u0275\u0275text(79, "setLocked");
@@ -67082,7 +67123,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(83, "Blocca/sblocca completamente la griglia. Se locked=true, nessuna modifica \xE8 possibile.");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(84, "div", 138)(85, "label", 218)(86, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_86_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_86_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setLocked.value, $event) || (ctx_r2.ops.setLocked.value = $event);
@@ -67092,14 +67133,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(87, " Bloccato");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(88, "div", 142)(89, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_89_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_89_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetLocked());
     });
     \u0275\u0275text(90, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(91, AppComponent_div_801_div_91_Template, 3, 1, "div", 144);
+    \u0275\u0275template(91, AppComponent_div_811_div_91_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(92, "section", 219)(93, "div", 131)(94, "span", 132);
     \u0275\u0275text(95, "setData / appendData");
@@ -67124,7 +67165,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(113, "[{col:val,...},...]");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(114, "textarea", 222);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_textarea_ngModelChange_114_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_textarea_ngModelChange_114_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setData.raw, $event) || (ctx_r2.ops.setData.raw = $event);
@@ -67132,7 +67173,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(115, "div", 223)(116, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_116_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_116_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetData());
@@ -67140,14 +67181,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(117, "Sostituisci");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(118, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_118_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_118_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opAppendData());
     });
     \u0275\u0275text(119, "Aggiungi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(120, AppComponent_div_801_div_120_Template, 3, 1, "div", 144)(121, AppComponent_div_801_div_121_Template, 3, 1, "div", 144);
+    \u0275\u0275template(120, AppComponent_div_811_div_120_Template, 3, 1, "div", 144)(121, AppComponent_div_811_div_121_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(122, "section", 224)(123, "div", 131)(124, "span", 132);
     \u0275\u0275text(125, "Dati Remoti");
@@ -67171,14 +67212,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(141, "div", 138);
     \u0275\u0275elementStart(142, "div", 142)(143, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_143_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_143_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRefresh());
     });
     \u0275\u0275text(144, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(145, AppComponent_div_801_div_145_Template, 3, 1, "div", 144);
+    \u0275\u0275template(145, AppComponent_div_811_div_145_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(146, "section", 225)(147, "div", 131)(148, "span", 132);
     \u0275\u0275text(149, "CSV");
@@ -67205,7 +67246,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(167, ".");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(168, "div", 138)(169, "div", 139)(170, "label")(171, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_171_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_171_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.download.includeHeaders, $event) || (ctx_r2.ops.download.includeHeaders = $event);
@@ -67215,14 +67256,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(172, " include headers");
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(173, "div", 142)(174, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_174_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_174_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDownload());
     });
     \u0275\u0275text(175, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(176, AppComponent_div_801_div_176_Template, 3, 1, "div", 144);
+    \u0275\u0275template(176, AppComponent_div_811_div_176_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(177, "div", 134)(178, "div", 135)(179, "code");
     \u0275\u0275text(180, "parseCSV");
@@ -67237,7 +67278,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(188, "CSV string");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(189, "textarea", 227);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_textarea_ngModelChange_189_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_textarea_ngModelChange_189_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.parseCSV.raw, $event) || (ctx_r2.ops.parseCSV.raw = $event);
@@ -67248,7 +67289,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(192, "delimiter");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(193, "input", 228);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_193_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_193_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.parseCSV.delimiter, $event) || (ctx_r2.ops.parseCSV.delimiter = $event);
@@ -67256,14 +67297,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(194, "div", 142)(195, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_195_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_195_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opParseCSV());
     });
     \u0275\u0275text(196, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(197, AppComponent_div_801_div_197_Template, 3, 1, "div", 144);
+    \u0275\u0275template(197, AppComponent_div_811_div_197_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(198, "section", 229)(199, "div", 131)(200, "span", 132);
     \u0275\u0275text(201, "Ricerca");
@@ -67280,7 +67321,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementStart(211, "div", 138)(212, "label");
     \u0275\u0275text(213, "query ");
     \u0275\u0275elementStart(214, "input", 230);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_214_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_214_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.search.query, $event) || (ctx_r2.ops.search.query = $event);
@@ -67288,7 +67329,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(215, "div", 142)(216, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_216_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_216_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSearch());
@@ -67296,14 +67337,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(217, "Cerca");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(218, "button", 231);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_218_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_218_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opResetSearch());
     });
     \u0275\u0275text(219, "Reset");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(220, AppComponent_div_801_div_220_Template, 3, 1, "div", 144);
+    \u0275\u0275template(220, AppComponent_div_811_div_220_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(221, "section", 232)(222, "div", 131)(223, "span", 132);
     \u0275\u0275text(224, "Utility");
@@ -67325,23 +67366,23 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(240, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(241, "select", 233);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_select_ngModelChange_241_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_select_ngModelChange_241_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getText.key, $event) || (ctx_r2.ops.getText.key = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275template(242, AppComponent_div_801_option_242_Template, 2, 2, "option", 234);
+    \u0275\u0275template(242, AppComponent_div_811_option_242_Template, 2, 2, "option", 234);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(243, "div", 142)(244, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_244_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_244_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetText());
     });
     \u0275\u0275text(245, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(246, AppComponent_div_801_div_246_Template, 3, 1, "div", 144);
+    \u0275\u0275template(246, AppComponent_div_811_div_246_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(247, "div", 134)(248, "div", 135)(249, "code");
     \u0275\u0275text(250, "getColumnName");
@@ -67356,7 +67397,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(258, "index");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(259, "input", 145);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_259_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_259_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnName.index, $event) || (ctx_r2.ops.getColumnName.index = $event);
@@ -67364,14 +67405,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(260, "div", 142)(261, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_261_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_261_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnName());
     });
     \u0275\u0275text(262, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(263, AppComponent_div_801_div_263_Template, 3, 1, "div", 144);
+    \u0275\u0275template(263, AppComponent_div_811_div_263_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(264, "div", 134)(265, "div", 135)(266, "code");
     \u0275\u0275text(267, "getIdFromColumnName");
@@ -67386,7 +67427,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(275, "name");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(276, "input", 235);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_276_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_276_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getIdFromColumnName.name, $event) || (ctx_r2.ops.getIdFromColumnName.name = $event);
@@ -67394,14 +67435,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(277, "div", 142)(278, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_278_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_278_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetIdFromColumnName());
     });
     \u0275\u0275text(279, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(280, AppComponent_div_801_div_280_Template, 3, 1, "div", 144);
+    \u0275\u0275template(280, AppComponent_div_811_div_280_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(281, "div", 134)(282, "div", 135)(283, "code");
     \u0275\u0275text(284, "getColumnByKey");
@@ -67428,7 +67469,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(301, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(302, "input", 236);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_302_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_302_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnByKey.key, $event) || (ctx_r2.ops.getColumnByKey.key = $event);
@@ -67436,14 +67477,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(303, "div", 142)(304, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_304_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_304_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnByKey());
     });
     \u0275\u0275text(305, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(306, AppComponent_div_801_div_306_Template, 3, 1, "div", 144);
+    \u0275\u0275template(306, AppComponent_div_811_div_306_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(307, "div", 134)(308, "div", 135)(309, "code");
     \u0275\u0275text(310, "getDropDownValue");
@@ -67458,7 +67499,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(318, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(319, "input", 161);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_319_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_319_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getDropDownValue.col, $event) || (ctx_r2.ops.getDropDownValue.col = $event);
@@ -67469,7 +67510,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275text(322, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(323, "input", 171);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_801_Template_input_ngModelChange_323_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_811_Template_input_ngModelChange_323_listener($event) {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getDropDownValue.key, $event) || (ctx_r2.ops.getDropDownValue.key = $event);
@@ -67477,14 +67518,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(324, "div", 142)(325, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_325_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_325_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetDropDownValue());
     });
     \u0275\u0275text(326, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(327, AppComponent_div_801_div_327_Template, 3, 1, "div", 144);
+    \u0275\u0275template(327, AppComponent_div_811_div_327_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(328, "section", 237)(329, "div", 131)(330, "span", 132);
     \u0275\u0275text(331, "Persistenza");
@@ -67504,14 +67545,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(344, "div", 138);
     \u0275\u0275elementStart(345, "div", 142)(346, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_346_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_346_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSaveState());
     });
     \u0275\u0275text(347, "Salva");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(348, AppComponent_div_801_div_348_Template, 3, 1, "div", 144);
+    \u0275\u0275template(348, AppComponent_div_811_div_348_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(349, "div", 134)(350, "div", 135)(351, "code");
     \u0275\u0275text(352, "getPersistedData");
@@ -67524,14 +67565,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(357, "div", 138);
     \u0275\u0275elementStart(358, "div", 142)(359, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_359_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_359_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetPersistedData());
     });
     \u0275\u0275text(360, "Leggi");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(361, AppComponent_div_801_div_361_Template, 3, 1, "div", 144);
+    \u0275\u0275template(361, AppComponent_div_811_div_361_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(362, "div", 134)(363, "div", 135)(364, "code");
     \u0275\u0275text(365, "clearPersistence");
@@ -67544,14 +67585,14 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(370, "div", 138);
     \u0275\u0275elementStart(371, "div", 142)(372, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_801_Template_button_click_372_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_811_Template_button_click_372_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearPersistence());
     });
     \u0275\u0275text(373, "Cancella");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(374, AppComponent_div_801_div_374_Template, 3, 1, "div", 144);
+    \u0275\u0275template(374, AppComponent_div_811_div_374_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -67674,7 +67715,7 @@ function AppComponent_div_801_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["clearPersistence"] !== void 0);
   }
 }
-function AppComponent_div_802_Template(rf, ctx) {
+function AppComponent_div_812_Template(rf, ctx) {
   if (rf & 1) {
     const _r30 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 185)(2, "div", 131)(3, "span", 132);
@@ -67692,7 +67733,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(16);
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(17, "div", 142)(18, "button", 242);
-    \u0275\u0275listener("click", function AppComponent_div_802_Template_button_click_18_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_812_Template_button_click_18_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.wireEvents();
@@ -67717,7 +67758,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(35, "Blocca la modifica di una cella");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(36, "div", 138)(37, "label", 181)(38, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_38_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_38_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockChange, $event) || (ctx_r2.guards.blockChange = $event);
@@ -67727,7 +67768,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(39, " Blocca");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(40, "label", 181)(41, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_41_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_41_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.transformChange, $event) || (ctx_r2.guards.transformChange = $event);
@@ -67737,7 +67778,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(42, " Trasforma in:");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(43, "input", 244);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_43_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_43_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.transformChangeValue, $event) || (ctx_r2.guards.transformChangeValue = $event);
@@ -67751,7 +67792,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(49, "Blocca l'inserimento riga");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(50, "div", 138)(51, "label", 181)(52, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_52_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_52_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockInsertRow, $event) || (ctx_r2.guards.blockInsertRow = $event);
@@ -67767,7 +67808,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(59, "Blocca la cancellazione riga");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(60, "div", 138)(61, "label", 181)(62, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_62_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_62_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockDeleteRow, $event) || (ctx_r2.guards.blockDeleteRow = $event);
@@ -67783,7 +67824,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(69, "Blocca l'inserimento colonna");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(70, "div", 138)(71, "label", 181)(72, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_72_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_72_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockInsertColumn, $event) || (ctx_r2.guards.blockInsertColumn = $event);
@@ -67799,7 +67840,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(79, "Blocca la cancellazione colonna");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(80, "div", 138)(81, "label", 181)(82, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_82_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_82_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockDeleteColumn, $event) || (ctx_r2.guards.blockDeleteColumn = $event);
@@ -67815,7 +67856,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(89, "Blocca lo spostamento colonna");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(90, "div", 138)(91, "label", 181)(92, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_92_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_92_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockMoveColumn, $event) || (ctx_r2.guards.blockMoveColumn = $event);
@@ -67831,7 +67872,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(99, "Blocca lo spostamento riga");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(100, "div", 138)(101, "label", 181)(102, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_102_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_102_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockMoveRow, $event) || (ctx_r2.guards.blockMoveRow = $event);
@@ -67847,7 +67888,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(109, "Blocca incolla");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(110, "div", 138)(111, "label", 181)(112, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_112_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_112_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockPaste, $event) || (ctx_r2.guards.blockPaste = $event);
@@ -67863,7 +67904,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(119, "Blocca unione celle");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(120, "div", 138)(121, "label", 181)(122, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_122_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_122_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockMerge, $event) || (ctx_r2.guards.blockMerge = $event);
@@ -67879,7 +67920,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(129, "Blocca ridimensionamento colonna");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(130, "div", 138)(131, "label", 181)(132, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_132_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_132_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockResizeColumn, $event) || (ctx_r2.guards.blockResizeColumn = $event);
@@ -67895,7 +67936,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(139, "Blocca ridimensionamento riga");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(140, "div", 138)(141, "label", 181)(142, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_142_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_142_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockResizeRow, $event) || (ctx_r2.guards.blockResizeRow = $event);
@@ -67911,13 +67952,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(149, "Prima del salvataggio edit cella (cancellabile / trasformabile)");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(150, "div", 138)(151, "label", 181)(152, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_152_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_152_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.blockEditionEnd, $event) || (ctx_r2.guards.blockEditionEnd = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_152_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_152_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -67926,13 +67967,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(153, " Blocca");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(154, "label", 181)(155, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_155_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_155_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.transformEditionEnd, $event) || (ctx_r2.guards.transformEditionEnd = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_155_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_155_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -67941,7 +67982,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(156, " Trasforma in:\xA0");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(157, "input", 246);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_157_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_157_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.transformEditionEndValue, $event) || (ctx_r2.guards.transformEditionEndValue = $event);
@@ -67961,13 +68002,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(170, "Modifica singola cella");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(171, "div", 138)(172, "label", 181)(173, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_173_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_173_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logAfterChange, $event) || (ctx_r2.guards.logAfterChange = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_173_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_173_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -67982,13 +68023,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(180, "Batch di modifiche celle");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(181, "div", 138)(182, "label", 181)(183, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_183_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_183_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logAfterChanges, $event) || (ctx_r2.guards.logAfterChanges = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_183_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_183_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68003,13 +68044,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(190, "Riga inserita");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(191, "div", 138)(192, "label", 181)(193, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_193_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_193_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logInsertRow, $event) || (ctx_r2.guards.logInsertRow = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_193_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_193_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68024,13 +68065,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(200, "Riga eliminata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(201, "div", 138)(202, "label", 181)(203, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_203_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_203_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logDeleteRow, $event) || (ctx_r2.guards.logDeleteRow = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_203_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_203_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68045,13 +68086,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(210, "Colonna inserita");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(211, "div", 138)(212, "label", 181)(213, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_213_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_213_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logInsertColumn, $event) || (ctx_r2.guards.logInsertColumn = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_213_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_213_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68066,13 +68107,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(220, "Colonna eliminata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(221, "div", 138)(222, "label", 181)(223, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_223_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_223_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logDeleteColumn, $event) || (ctx_r2.guards.logDeleteColumn = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_223_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_223_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68087,13 +68128,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(230, "Colonna spostata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(231, "div", 138)(232, "label", 181)(233, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_233_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_233_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logMoveColumn, $event) || (ctx_r2.guards.logMoveColumn = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_233_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_233_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68108,13 +68149,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(240, "Riga spostata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(241, "div", 138)(242, "label", 181)(243, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_243_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_243_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logMoveRow, $event) || (ctx_r2.guards.logMoveRow = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_243_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_243_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68129,13 +68170,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(250, "Incolla completato");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(251, "div", 138)(252, "label", 181)(253, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_253_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_253_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logPaste, $event) || (ctx_r2.guards.logPaste = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_253_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_253_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68150,13 +68191,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(260, "Unione celle completata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(261, "div", 138)(262, "label", 181)(263, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_263_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_263_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logMerge, $event) || (ctx_r2.guards.logMerge = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_263_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_263_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68171,13 +68212,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(270, "Colonna ridimensionata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(271, "div", 138)(272, "label", 181)(273, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_273_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_273_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logResizeColumn, $event) || (ctx_r2.guards.logResizeColumn = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_273_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_273_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68192,13 +68233,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(280, "Riga ridimensionata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(281, "div", 138)(282, "label", 181)(283, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_283_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_283_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logResizeRow, $event) || (ctx_r2.guards.logResizeRow = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_283_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_283_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68213,13 +68254,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(290, "Editing cella iniziato");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(291, "div", 138)(292, "label", 181)(293, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_293_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_293_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logEditionStart, $event) || (ctx_r2.guards.logEditionStart = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_293_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_293_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68234,13 +68275,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(300, "Editing cella terminato");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(301, "div", 138)(302, "label", 181)(303, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_303_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_303_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logEditionEnd, $event) || (ctx_r2.guards.logEditionEnd = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_303_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_303_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68255,13 +68296,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(310, "Colonna ordinata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(311, "div", 138)(312, "label", 181)(313, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_313_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_313_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logSort, $event) || (ctx_r2.guards.logSort = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_313_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_313_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68276,13 +68317,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(320, "Footer modificato");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(321, "div", 138)(322, "label", 181)(323, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_323_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_323_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logFooterChange, $event) || (ctx_r2.guards.logFooterChange = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_323_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_323_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68297,13 +68338,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(330, "Stato persistito in localStorage");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(331, "div", 138)(332, "label", 181)(333, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_333_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_333_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logPersist, $event) || (ctx_r2.guards.logPersist = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_333_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_333_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68318,13 +68359,13 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275text(340, "Selezione cambiata");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(341, "div", 138)(342, "label", 181)(343, "input", 245);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_802_Template_input_ngModelChange_343_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_812_Template_input_ngModelChange_343_listener($event) {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.guards.logSelection, $event) || (ctx_r2.guards.logSelection = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275listener("change", function AppComponent_div_802_Template_input_change_343_listener() {
+    \u0275\u0275listener("change", function AppComponent_div_812_Template_input_change_343_listener() {
       \u0275\u0275restoreView(_r30);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.wireEvents());
@@ -68407,7 +68448,7 @@ function AppComponent_div_802_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.guards.logSelection);
   }
 }
-function AppComponent_div_803_div_26_Template(rf, ctx) {
+function AppComponent_div_813_div_26_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68419,7 +68460,7 @@ function AppComponent_div_803_div_26_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setRowData"]);
   }
 }
-function AppComponent_div_803_div_47_Template(rf, ctx) {
+function AppComponent_div_813_div_47_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68431,7 +68472,7 @@ function AppComponent_div_803_div_47_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setColumnData"]);
   }
 }
-function AppComponent_div_803_div_64_Template(rf, ctx) {
+function AppComponent_div_813_div_64_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68443,7 +68484,7 @@ function AppComponent_div_803_div_64_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getLabel"]);
   }
 }
-function AppComponent_div_803_div_88_Template(rf, ctx) {
+function AppComponent_div_813_div_88_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68455,7 +68496,7 @@ function AppComponent_div_803_div_88_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getLabelFromCoords"]);
   }
 }
-function AppComponent_div_803_div_116_Template(rf, ctx) {
+function AppComponent_div_813_div_116_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68467,7 +68508,7 @@ function AppComponent_div_803_div_116_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getWidth"]);
   }
 }
-function AppComponent_div_803_div_117_Template(rf, ctx) {
+function AppComponent_div_813_div_117_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68479,7 +68520,7 @@ function AppComponent_div_803_div_117_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setWidth"]);
   }
 }
-function AppComponent_div_803_div_140_Template(rf, ctx) {
+function AppComponent_div_813_div_140_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68491,7 +68532,7 @@ function AppComponent_div_803_div_140_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getHeight"]);
   }
 }
-function AppComponent_div_803_div_141_Template(rf, ctx) {
+function AppComponent_div_813_div_141_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68503,7 +68544,7 @@ function AppComponent_div_803_div_141_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setHeight"]);
   }
 }
-function AppComponent_div_803_div_165_Template(rf, ctx) {
+function AppComponent_div_813_div_165_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68515,7 +68556,7 @@ function AppComponent_div_803_div_165_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["hideRow"]);
   }
 }
-function AppComponent_div_803_div_166_Template(rf, ctx) {
+function AppComponent_div_813_div_166_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68527,7 +68568,7 @@ function AppComponent_div_803_div_166_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["showRow"]);
   }
 }
-function AppComponent_div_803_div_185_Template(rf, ctx) {
+function AppComponent_div_813_div_185_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68539,7 +68580,7 @@ function AppComponent_div_803_div_185_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["hideColumn"]);
   }
 }
-function AppComponent_div_803_div_186_Template(rf, ctx) {
+function AppComponent_div_813_div_186_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68551,7 +68592,7 @@ function AppComponent_div_803_div_186_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["showColumn"]);
   }
 }
-function AppComponent_div_803_div_204_Template(rf, ctx) {
+function AppComponent_div_813_div_204_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68563,7 +68604,7 @@ function AppComponent_div_803_div_204_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getSelectedRows"]);
   }
 }
-function AppComponent_div_803_div_217_Template(rf, ctx) {
+function AppComponent_div_813_div_217_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68575,7 +68616,7 @@ function AppComponent_div_803_div_217_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getSelectedColumns"]);
   }
 }
-function AppComponent_div_803_div_233_Template(rf, ctx) {
+function AppComponent_div_813_div_233_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68587,7 +68628,7 @@ function AppComponent_div_803_div_233_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getHighlighted"]);
   }
 }
-function AppComponent_div_803_div_261_Template(rf, ctx) {
+function AppComponent_div_813_div_261_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68599,7 +68640,7 @@ function AppComponent_div_803_div_261_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getHeader"]);
   }
 }
-function AppComponent_div_803_div_262_Template(rf, ctx) {
+function AppComponent_div_813_div_262_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68611,7 +68652,7 @@ function AppComponent_div_803_div_262_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setHeader"]);
   }
 }
-function AppComponent_div_803_div_292_Template(rf, ctx) {
+function AppComponent_div_813_div_292_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68623,7 +68664,7 @@ function AppComponent_div_803_div_292_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getMeta"]);
   }
 }
-function AppComponent_div_803_div_293_Template(rf, ctx) {
+function AppComponent_div_813_div_293_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -68635,7 +68676,7 @@ function AppComponent_div_803_div_293_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setMeta"]);
   }
 }
-function AppComponent_div_803_Template(rf, ctx) {
+function AppComponent_div_813_Template(rf, ctx) {
   if (rf & 1) {
     const _r31 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 248)(2, "div", 131)(3, "span", 132);
@@ -68654,7 +68695,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(17, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(18, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_18_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowData.row, $event) || (ctx_r2.ops.setRowData.row = $event);
@@ -68665,7 +68706,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(21, "values (CSV)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(22, "input", 250);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_22_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_22_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setRowData.raw, $event) || (ctx_r2.ops.setRowData.raw = $event);
@@ -68673,14 +68714,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(23, "div", 142)(24, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_24_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_24_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetRowData());
     });
     \u0275\u0275text(25, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(26, AppComponent_div_803_div_26_Template, 3, 1, "div", 144);
+    \u0275\u0275template(26, AppComponent_div_813_div_26_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(27, "div", 134)(28, "div", 135)(29, "code");
     \u0275\u0275text(30, "setColumnData");
@@ -68695,7 +68736,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(38, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(39, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_39_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_39_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnData.col, $event) || (ctx_r2.ops.setColumnData.col = $event);
@@ -68706,7 +68747,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(42, "values (CSV)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(43, "input", 251);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_43_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_43_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setColumnData.raw, $event) || (ctx_r2.ops.setColumnData.raw = $event);
@@ -68714,14 +68755,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(44, "div", 142)(45, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_45_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_45_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetColumnData());
     });
     \u0275\u0275text(46, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(47, AppComponent_div_803_div_47_Template, 3, 1, "div", 144);
+    \u0275\u0275template(47, AppComponent_div_813_div_47_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(48, "div", 134)(49, "div", 135)(50, "code");
     \u0275\u0275text(51, "getLabel");
@@ -68736,7 +68777,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(59, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(60, "input", 252);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_60_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_60_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getLabel.cell, $event) || (ctx_r2.ops.getLabel.cell = $event);
@@ -68744,14 +68785,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(61, "div", 142)(62, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_62_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_62_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetLabel());
     });
     \u0275\u0275text(63, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(64, AppComponent_div_803_div_64_Template, 3, 1, "div", 144);
+    \u0275\u0275template(64, AppComponent_div_813_div_64_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(65, "div", 134)(66, "div", 135)(67, "code");
     \u0275\u0275text(68, "getLabelFromCoords");
@@ -68770,7 +68811,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(79, "x");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(80, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_80_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_80_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getLabelCoords.x, $event) || (ctx_r2.ops.getLabelCoords.x = $event);
@@ -68781,7 +68822,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(83, "y");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(84, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_84_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_84_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getLabelCoords.y, $event) || (ctx_r2.ops.getLabelCoords.y = $event);
@@ -68789,14 +68830,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(85, "div", 142)(86, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_86_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_86_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetLabelCoords());
     });
     \u0275\u0275text(87, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(88, AppComponent_div_803_div_88_Template, 3, 1, "div", 144);
+    \u0275\u0275template(88, AppComponent_div_813_div_88_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(89, "section", 248)(90, "div", 131)(91, "span", 132);
     \u0275\u0275text(92, "Dimensioni");
@@ -68814,7 +68855,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(105, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(106, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_106_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_106_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getWidth.col, $event) || (ctx_r2.ops.getWidth.col = $event);
@@ -68825,7 +68866,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(109, "width (px)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(110, "input", 253);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_110_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_110_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setWidth.width, $event) || (ctx_r2.ops.setWidth.width = $event);
@@ -68833,7 +68874,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(111, "div", 142)(112, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_112_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_112_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.getWidth.col = ctx_r2.ops.setWidth.col;
@@ -68842,14 +68883,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(113, "Get");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(114, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_114_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_114_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetWidth());
     });
     \u0275\u0275text(115, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(116, AppComponent_div_803_div_116_Template, 3, 1, "div", 144)(117, AppComponent_div_803_div_117_Template, 3, 1, "div", 144);
+    \u0275\u0275template(116, AppComponent_div_813_div_116_Template, 3, 1, "div", 144)(117, AppComponent_div_813_div_117_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(118, "div", 134)(119, "div", 135)(120, "code");
     \u0275\u0275text(121, "getHeight / setHeight");
@@ -68864,7 +68905,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(129, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(130, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_130_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_130_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getHeight.row, $event) || (ctx_r2.ops.getHeight.row = $event);
@@ -68875,7 +68916,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(133, "height (px)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(134, "input", 254);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_134_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_134_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeight.height, $event) || (ctx_r2.ops.setHeight.height = $event);
@@ -68883,7 +68924,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(135, "div", 142)(136, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_136_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_136_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.getHeight.row = ctx_r2.ops.setHeight.row;
@@ -68892,14 +68933,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(137, "Get");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(138, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_138_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_138_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetHeight());
     });
     \u0275\u0275text(139, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(140, AppComponent_div_803_div_140_Template, 3, 1, "div", 144)(141, AppComponent_div_803_div_141_Template, 3, 1, "div", 144);
+    \u0275\u0275template(140, AppComponent_div_813_div_140_Template, 3, 1, "div", 144)(141, AppComponent_div_813_div_141_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(142, "section", 248)(143, "div", 131)(144, "span", 132);
     \u0275\u0275text(145, "Visibilit\xE0 righe & colonne");
@@ -68917,7 +68958,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(158, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(159, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_159_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_159_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.hideRow.row, $event) || (ctx_r2.ops.hideRow.row = $event);
@@ -68925,7 +68966,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(160, "div", 142)(161, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_161_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_161_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opHideRow());
@@ -68933,7 +68974,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(162, "Hide");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(163, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_163_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_163_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.showRow.row = ctx_r2.ops.hideRow.row;
@@ -68941,7 +68982,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275text(164, "Show");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(165, AppComponent_div_803_div_165_Template, 3, 1, "div", 144)(166, AppComponent_div_803_div_166_Template, 3, 1, "div", 144);
+    \u0275\u0275template(165, AppComponent_div_813_div_165_Template, 3, 1, "div", 144)(166, AppComponent_div_813_div_166_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(167, "div", 134)(168, "div", 135)(169, "code");
     \u0275\u0275text(170, "hideColumn / showColumn");
@@ -68956,7 +68997,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(178, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(179, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_179_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_179_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.hideColumn.col, $event) || (ctx_r2.ops.hideColumn.col = $event);
@@ -68964,7 +69005,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(180, "div", 142)(181, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_181_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_181_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opHideColumn());
@@ -68972,7 +69013,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(182, "Hide");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(183, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_183_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_183_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.showColumn.col = ctx_r2.ops.hideColumn.col;
@@ -68980,7 +69021,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275text(184, "Show");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(185, AppComponent_div_803_div_185_Template, 3, 1, "div", 144)(186, AppComponent_div_803_div_186_Template, 3, 1, "div", 144);
+    \u0275\u0275template(185, AppComponent_div_813_div_185_Template, 3, 1, "div", 144)(186, AppComponent_div_813_div_186_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(187, "section", 248)(188, "div", 131)(189, "span", 132);
     \u0275\u0275text(190, "Selezione avanzata");
@@ -68996,14 +69037,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(200, "div", 138);
     \u0275\u0275elementStart(201, "div", 142)(202, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_202_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_202_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetSelectedRows());
     });
     \u0275\u0275text(203, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(204, AppComponent_div_803_div_204_Template, 3, 1, "div", 144);
+    \u0275\u0275template(204, AppComponent_div_813_div_204_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(205, "div", 134)(206, "div", 135)(207, "code");
     \u0275\u0275text(208, "getSelectedColumns");
@@ -69016,14 +69057,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(213, "div", 138);
     \u0275\u0275elementStart(214, "div", 142)(215, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_215_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_215_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetSelectedColumns());
     });
     \u0275\u0275text(216, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(217, AppComponent_div_803_div_217_Template, 3, 1, "div", 144);
+    \u0275\u0275template(217, AppComponent_div_813_div_217_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(218, "div", 134)(219, "div", 135)(220, "code");
     \u0275\u0275text(221, "getHighlighted");
@@ -69040,14 +69081,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(229, "div", 138);
     \u0275\u0275elementStart(230, "div", 142)(231, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_231_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_231_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetHighlighted());
     });
     \u0275\u0275text(232, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(233, AppComponent_div_803_div_233_Template, 3, 1, "div", 144);
+    \u0275\u0275template(233, AppComponent_div_813_div_233_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(234, "section", 248)(235, "div", 131)(236, "span", 132);
     \u0275\u0275text(237, "Header & Meta");
@@ -69065,7 +69106,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(250, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(251, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_251_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_251_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeader.col, $event) || (ctx_r2.ops.setHeader.col = $event);
@@ -69076,7 +69117,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(254, "titolo");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(255, "input", 255);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_255_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_255_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setHeader.title, $event) || (ctx_r2.ops.setHeader.title = $event);
@@ -69084,7 +69125,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(256, "div", 142)(257, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_257_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_257_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.getHeader.col = ctx_r2.ops.setHeader.col;
@@ -69093,14 +69134,14 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(258, "Get");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(259, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_259_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_259_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetHeader());
     });
     \u0275\u0275text(260, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(261, AppComponent_div_803_div_261_Template, 3, 1, "div", 144)(262, AppComponent_div_803_div_262_Template, 3, 1, "div", 144);
+    \u0275\u0275template(261, AppComponent_div_813_div_261_Template, 3, 1, "div", 144)(262, AppComponent_div_813_div_262_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(263, "div", 134)(264, "div", 135)(265, "code");
     \u0275\u0275text(266, "getMeta / setMeta");
@@ -69115,7 +69156,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(274, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(275, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_275_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_275_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getMeta.cell, $event) || (ctx_r2.ops.getMeta.cell = $event);
@@ -69126,7 +69167,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(278, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(279, "input", 257);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_279_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_279_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setMeta.key, $event) || (ctx_r2.ops.setMeta.key = $event);
@@ -69137,7 +69178,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(282, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(283, "input", 258);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_283_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_283_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setMeta.value, $event) || (ctx_r2.ops.setMeta.value = $event);
@@ -69145,7 +69186,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(284, "label", 218)(285, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_803_Template_input_ngModelChange_285_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_813_Template_input_ngModelChange_285_listener($event) {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getMeta.allCells, $event) || (ctx_r2.ops.getMeta.allCells = $event);
@@ -69155,7 +69196,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(286, " Tutte le celle");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(287, "div", 142)(288, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_288_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_288_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.setMeta.cell = ctx_r2.ops.getMeta.cell;
@@ -69164,7 +69205,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275text(289, "Get");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(290, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_803_Template_button_click_290_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_813_Template_button_click_290_listener() {
       \u0275\u0275restoreView(_r31);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.setMeta.cell = ctx_r2.ops.getMeta.cell;
@@ -69172,7 +69213,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     });
     \u0275\u0275text(291, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(292, AppComponent_div_803_div_292_Template, 3, 1, "div", 144)(293, AppComponent_div_803_div_293_Template, 3, 1, "div", 144);
+    \u0275\u0275template(292, AppComponent_div_813_div_292_Template, 3, 1, "div", 144)(293, AppComponent_div_813_div_293_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -69293,7 +69334,7 @@ function AppComponent_div_803_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["setMeta"] !== void 0);
   }
 }
-function AppComponent_div_804_div_22_Template(rf, ctx) {
+function AppComponent_div_814_div_22_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69305,7 +69346,7 @@ function AppComponent_div_804_div_22_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getStyle"]);
   }
 }
-function AppComponent_div_804_div_43_Template(rf, ctx) {
+function AppComponent_div_814_div_43_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69317,7 +69358,7 @@ function AppComponent_div_804_div_43_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getValueFromCoords"]);
   }
 }
-function AppComponent_div_804_div_60_Template(rf, ctx) {
+function AppComponent_div_814_div_60_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69329,7 +69370,7 @@ function AppComponent_div_804_div_60_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnOptions"]);
   }
 }
-function AppComponent_div_804_div_82_Template(rf, ctx) {
+function AppComponent_div_814_div_82_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69341,7 +69382,7 @@ function AppComponent_div_804_div_82_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["isReadOnly"]);
   }
 }
-function AppComponent_div_804_div_95_Template(rf, ctx) {
+function AppComponent_div_814_div_95_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69353,7 +69394,7 @@ function AppComponent_div_804_div_95_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["resetSelection"]);
   }
 }
-function AppComponent_div_804_div_110_Template(rf, ctx) {
+function AppComponent_div_814_div_110_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69365,7 +69406,7 @@ function AppComponent_div_804_div_110_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["hideIndex"]);
   }
 }
-function AppComponent_div_804_div_111_Template(rf, ctx) {
+function AppComponent_div_814_div_111_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69377,7 +69418,7 @@ function AppComponent_div_804_div_111_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["showIndex"]);
   }
 }
-function AppComponent_div_804_div_127_Template(rf, ctx) {
+function AppComponent_div_814_div_127_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69389,7 +69430,7 @@ function AppComponent_div_804_div_127_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["copy"]);
   }
 }
-function AppComponent_div_804_div_140_Template(rf, ctx) {
+function AppComponent_div_814_div_140_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69401,7 +69442,7 @@ function AppComponent_div_804_div_140_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["fullscreen"]);
   }
 }
-function AppComponent_div_804_Template(rf, ctx) {
+function AppComponent_div_814_Template(rf, ctx) {
   if (rf & 1) {
     const _r32 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 248)(2, "div", 131)(3, "span", 132);
@@ -69420,7 +69461,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(17, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(18, "input", 252);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_18_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getStyle.cell, $event) || (ctx_r2.ops.getStyle.cell = $event);
@@ -69428,14 +69469,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(19, "div", 142)(20, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_20_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_20_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetStyle());
     });
     \u0275\u0275text(21, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(22, AppComponent_div_804_div_22_Template, 3, 1, "div", 144);
+    \u0275\u0275template(22, AppComponent_div_814_div_22_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(23, "div", 134)(24, "div", 135)(25, "code");
     \u0275\u0275text(26, "getValueFromCoords");
@@ -69450,7 +69491,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(34, "x (col)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(35, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_35_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_35_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getValueFromCoords.x, $event) || (ctx_r2.ops.getValueFromCoords.x = $event);
@@ -69461,7 +69502,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(38, "y (row)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(39, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_39_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_39_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getValueFromCoords.y, $event) || (ctx_r2.ops.getValueFromCoords.y = $event);
@@ -69469,14 +69510,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(40, "div", 142)(41, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_41_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_41_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetValueFromCoords());
     });
     \u0275\u0275text(42, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(43, AppComponent_div_804_div_43_Template, 3, 1, "div", 144);
+    \u0275\u0275template(43, AppComponent_div_814_div_43_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(44, "div", 134)(45, "div", 135)(46, "code");
     \u0275\u0275text(47, "getColumnOptions");
@@ -69491,7 +69532,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(55, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(56, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_56_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_56_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnOptions.col, $event) || (ctx_r2.ops.getColumnOptions.col = $event);
@@ -69499,14 +69540,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(57, "div", 142)(58, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_58_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_58_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnOptions());
     });
     \u0275\u0275text(59, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(60, AppComponent_div_804_div_60_Template, 3, 1, "div", 144);
+    \u0275\u0275template(60, AppComponent_div_814_div_60_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(61, "section", 248)(62, "div", 131)(63, "span", 132);
     \u0275\u0275text(64, "Selezione & Indice");
@@ -69524,7 +69565,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(77, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(78, "input", 252);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_78_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_78_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.isReadOnly.cell, $event) || (ctx_r2.ops.isReadOnly.cell = $event);
@@ -69532,14 +69573,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(79, "div", 142)(80, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_80_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_80_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opIsReadOnly());
     });
     \u0275\u0275text(81, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(82, AppComponent_div_804_div_82_Template, 3, 1, "div", 144);
+    \u0275\u0275template(82, AppComponent_div_814_div_82_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(83, "div", 134)(84, "div", 135)(85, "code");
     \u0275\u0275text(86, "resetSelection");
@@ -69552,14 +69593,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(91, "div", 138);
     \u0275\u0275elementStart(92, "div", 142)(93, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_93_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_93_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opResetSelection());
     });
     \u0275\u0275text(94, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(95, AppComponent_div_804_div_95_Template, 3, 1, "div", 144);
+    \u0275\u0275template(95, AppComponent_div_814_div_95_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(96, "div", 134)(97, "div", 135)(98, "code");
     \u0275\u0275text(99, "hideIndex / showIndex");
@@ -69572,7 +69613,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(104, "div", 138);
     \u0275\u0275elementStart(105, "div", 142)(106, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_106_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_106_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opHideIndex());
@@ -69580,14 +69621,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(107, "Hide");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(108, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_108_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_108_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opShowIndex());
     });
     \u0275\u0275text(109, "Show");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(110, AppComponent_div_804_div_110_Template, 3, 1, "div", 144)(111, AppComponent_div_804_div_111_Template, 3, 1, "div", 144);
+    \u0275\u0275template(110, AppComponent_div_814_div_110_Template, 3, 1, "div", 144)(111, AppComponent_div_814_div_111_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(112, "div", 134)(113, "div", 135)(114, "code");
     \u0275\u0275text(115, "copy");
@@ -69599,7 +69640,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(119, "Copia la selezione corrente nella clipboard come testo tab-delimited. Se cut=true svuota le celle.");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(120, "div", 138)(121, "label", 218)(122, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_804_Template_input_ngModelChange_122_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_814_Template_input_ngModelChange_122_listener($event) {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.copy.cut, $event) || (ctx_r2.ops.copy.cut = $event);
@@ -69609,14 +69650,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275text(123, " Cut (cancella celle)");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(124, "div", 142)(125, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_125_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_125_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCopy());
     });
     \u0275\u0275text(126, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(127, AppComponent_div_804_div_127_Template, 3, 1, "div", 144);
+    \u0275\u0275template(127, AppComponent_div_814_div_127_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(128, "div", 134)(129, "div", 135)(130, "code");
     \u0275\u0275text(131, "fullscreen");
@@ -69629,14 +69670,14 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(136, "div", 138);
     \u0275\u0275elementStart(137, "div", 142)(138, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_804_Template_button_click_138_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_814_Template_button_click_138_listener() {
       \u0275\u0275restoreView(_r32);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opFullscreen());
     });
     \u0275\u0275text(139, "Toggle");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(140, AppComponent_div_804_div_140_Template, 3, 1, "div", 144);
+    \u0275\u0275template(140, AppComponent_div_814_div_140_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -69691,7 +69732,7 @@ function AppComponent_div_804_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["fullscreen"] !== void 0);
   }
 }
-function AppComponent_div_805_div_26_Template(rf, ctx) {
+function AppComponent_div_815_div_26_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69703,7 +69744,7 @@ function AppComponent_div_805_div_26_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setComments"]);
   }
 }
-function AppComponent_div_805_div_46_Template(rf, ctx) {
+function AppComponent_div_815_div_46_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69715,7 +69756,7 @@ function AppComponent_div_805_div_46_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getComments"]);
   }
 }
-function AppComponent_div_805_div_65_Template(rf, ctx) {
+function AppComponent_div_815_div_65_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69727,7 +69768,7 @@ function AppComponent_div_805_div_65_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["clearComments"]);
   }
 }
-function AppComponent_div_805_div_92_Template(rf, ctx) {
+function AppComponent_div_815_div_92_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69739,7 +69780,7 @@ function AppComponent_div_805_div_92_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setCommentsTemporized"]);
   }
 }
-function AppComponent_div_805_div_120_Template(rf, ctx) {
+function AppComponent_div_815_div_120_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69751,7 +69792,7 @@ function AppComponent_div_805_div_120_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["addClass"]);
   }
 }
-function AppComponent_div_805_div_121_Template(rf, ctx) {
+function AppComponent_div_815_div_121_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69763,7 +69804,7 @@ function AppComponent_div_805_div_121_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["removeClass"]);
   }
 }
-function AppComponent_div_805_div_138_Template(rf, ctx) {
+function AppComponent_div_815_div_138_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69775,7 +69816,7 @@ function AppComponent_div_805_div_138_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getClasses"]);
   }
 }
-function AppComponent_div_805_div_157_Template(rf, ctx) {
+function AppComponent_div_815_div_157_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -69787,7 +69828,7 @@ function AppComponent_div_805_div_157_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["resetStyle"]);
   }
 }
-function AppComponent_div_805_Template(rf, ctx) {
+function AppComponent_div_815_Template(rf, ctx) {
   if (rf & 1) {
     const _r33 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 248)(2, "div", 131)(3, "span", 132);
@@ -69806,7 +69847,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(17, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(18, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_18_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_18_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setComments.cell, $event) || (ctx_r2.ops.setComments.cell = $event);
@@ -69817,7 +69858,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(21, "commento");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(22, "input", 259);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_22_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_22_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setComments.comment, $event) || (ctx_r2.ops.setComments.comment = $event);
@@ -69825,14 +69866,14 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(23, "div", 142)(24, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_24_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_24_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetComments());
     });
     \u0275\u0275text(25, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(26, AppComponent_div_805_div_26_Template, 3, 1, "div", 144);
+    \u0275\u0275template(26, AppComponent_div_815_div_26_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(27, "div", 134)(28, "div", 135)(29, "code");
     \u0275\u0275text(30, "getComments");
@@ -69847,7 +69888,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(38, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(39, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_39_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_39_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getComments.cell, $event) || (ctx_r2.ops.getComments.cell = $event);
@@ -69855,7 +69896,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(40, "label", 218)(41, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_41_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_41_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getComments.allCells, $event) || (ctx_r2.ops.getComments.allCells = $event);
@@ -69865,14 +69906,14 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(42, " Tutte le celle");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(43, "div", 142)(44, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_44_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_44_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetComments());
     });
     \u0275\u0275text(45, "Get");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(46, AppComponent_div_805_div_46_Template, 3, 1, "div", 144);
+    \u0275\u0275template(46, AppComponent_div_815_div_46_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(47, "div", 134)(48, "div", 135)(49, "code");
     \u0275\u0275text(50, "clearComments");
@@ -69889,7 +69930,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(60, "?");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(61, "input", 260);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_61_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_61_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.clearComments.cell, $event) || (ctx_r2.ops.clearComments.cell = $event);
@@ -69897,14 +69938,14 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(62, "div", 142)(63, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_63_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_63_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opClearComments());
     });
     \u0275\u0275text(64, "Clear");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(65, AppComponent_div_805_div_65_Template, 3, 1, "div", 144);
+    \u0275\u0275template(65, AppComponent_div_815_div_65_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(66, "div", 134)(67, "div", 135)(68, "code");
     \u0275\u0275text(69, "setCommentsTemporized");
@@ -69919,7 +69960,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(77, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(78, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_78_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_78_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.cell, $event) || (ctx_r2.ops.setCommentsTemporized.cell = $event);
@@ -69930,7 +69971,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(81, "commento");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(82, "input", 261);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_82_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_82_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.comment, $event) || (ctx_r2.ops.setCommentsTemporized.comment = $event);
@@ -69943,7 +69984,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(87, "ms");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(88, "input", 262);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_88_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_88_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCommentsTemporized.duration, $event) || (ctx_r2.ops.setCommentsTemporized.duration = $event);
@@ -69951,14 +69992,14 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(89, "div", 142)(90, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_90_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_90_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetCommentsTemporized());
     });
     \u0275\u0275text(91, "Set + Show");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(92, AppComponent_div_805_div_92_Template, 3, 1, "div", 144);
+    \u0275\u0275template(92, AppComponent_div_815_div_92_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(93, "section", 248)(94, "div", 131)(95, "span", 132);
     \u0275\u0275text(96, "Classi CSS dinamiche");
@@ -69976,7 +70017,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(109, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(110, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_110_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_110_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.addClass.cell, $event) || (ctx_r2.ops.addClass.cell = $event);
@@ -69987,7 +70028,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(113, "class");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(114, "input", 263);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_114_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_114_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.addClass.className, $event) || (ctx_r2.ops.addClass.className = $event);
@@ -69995,7 +70036,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(115, "div", 142)(116, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_116_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_116_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opAddClass());
@@ -70003,7 +70044,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(117, "Add");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(118, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_118_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_118_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.removeClass.cell = ctx_r2.ops.addClass.cell;
@@ -70012,7 +70053,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275text(119, "Remove");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(120, AppComponent_div_805_div_120_Template, 3, 1, "div", 144)(121, AppComponent_div_805_div_121_Template, 3, 1, "div", 144);
+    \u0275\u0275template(120, AppComponent_div_815_div_120_Template, 3, 1, "div", 144)(121, AppComponent_div_815_div_121_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(122, "div", 134)(123, "div", 135)(124, "code");
     \u0275\u0275text(125, "getClasses");
@@ -70027,7 +70068,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(133, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(134, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_134_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_134_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getClasses.cell, $event) || (ctx_r2.ops.getClasses.cell = $event);
@@ -70035,7 +70076,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(135, "div", 142)(136, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_136_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_136_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       ctx_r2.ops.getClasses.cell = ctx_r2.ops.addClass.cell;
@@ -70043,7 +70084,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275text(137, "Get");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(138, AppComponent_div_805_div_138_Template, 3, 1, "div", 144);
+    \u0275\u0275template(138, AppComponent_div_815_div_138_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(139, "div", 134)(140, "div", 135)(141, "code");
     \u0275\u0275text(142, "resetStyle");
@@ -70060,7 +70101,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275text(152, "?");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(153, "input", 264);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_805_Template_input_ngModelChange_153_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_815_Template_input_ngModelChange_153_listener($event) {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.resetStyle.cell, $event) || (ctx_r2.ops.resetStyle.cell = $event);
@@ -70068,14 +70109,14 @@ function AppComponent_div_805_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(154, "div", 142)(155, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_805_Template_button_click_155_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_815_Template_button_click_155_listener() {
       \u0275\u0275restoreView(_r33);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opResetStyle());
     });
     \u0275\u0275text(156, "Reset");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(157, AppComponent_div_805_div_157_Template, 3, 1, "div", 144);
+    \u0275\u0275template(157, AppComponent_div_815_div_157_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -70138,7 +70179,7 @@ function AppComponent_div_805_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["resetStyle"] !== void 0);
   }
 }
-function AppComponent_div_806_div_25_Template(rf, ctx) {
+function AppComponent_div_816_div_25_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70150,7 +70191,7 @@ function AppComponent_div_806_div_25_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnOptions"]);
   }
 }
-function AppComponent_div_806_div_45_Template(rf, ctx) {
+function AppComponent_div_816_div_45_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70162,7 +70203,7 @@ function AppComponent_div_806_div_45_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getJsonRow"]);
   }
 }
-function AppComponent_div_806_div_65_Template(rf, ctx) {
+function AppComponent_div_816_div_65_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70174,7 +70215,7 @@ function AppComponent_div_806_div_65_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["isColMerged"]);
   }
 }
-function AppComponent_div_806_div_88_Template(rf, ctx) {
+function AppComponent_div_816_div_88_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70186,7 +70227,7 @@ function AppComponent_div_806_div_88_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["orderBy"]);
   }
 }
-function AppComponent_div_806_div_101_Template(rf, ctx) {
+function AppComponent_div_816_div_101_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70198,7 +70239,7 @@ function AppComponent_div_806_div_101_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["refreshSelection"]);
   }
 }
-function AppComponent_div_806_div_117_Template(rf, ctx) {
+function AppComponent_div_816_div_117_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70210,7 +70251,7 @@ function AppComponent_div_806_div_117_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setReadOnly"]);
   }
 }
-function AppComponent_div_806_div_141_Template(rf, ctx) {
+function AppComponent_div_816_div_141_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70222,7 +70263,7 @@ function AppComponent_div_806_div_141_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setCheckRadioValue"]);
   }
 }
-function AppComponent_div_806_div_169_Template(rf, ctx) {
+function AppComponent_div_816_div_169_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70234,7 +70275,7 @@ function AppComponent_div_806_div_169_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["updateMeta"]);
   }
 }
-function AppComponent_div_806_div_191_Template(rf, ctx) {
+function AppComponent_div_816_div_191_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70246,7 +70287,7 @@ function AppComponent_div_806_div_191_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["parseNumber"]);
   }
 }
-function AppComponent_div_806_div_212_Template(rf, ctx) {
+function AppComponent_div_816_div_212_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70258,7 +70299,7 @@ function AppComponent_div_806_div_212_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["parseValue"]);
   }
 }
-function AppComponent_div_806_div_225_Template(rf, ctx) {
+function AppComponent_div_816_div_225_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70270,7 +70311,7 @@ function AppComponent_div_806_div_225_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getFreezeWidth"]);
   }
 }
-function AppComponent_div_806_div_238_Template(rf, ctx) {
+function AppComponent_div_816_div_238_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70282,7 +70323,7 @@ function AppComponent_div_806_div_238_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["hash"]);
   }
 }
-function AppComponent_div_806_div_269_Template(rf, ctx) {
+function AppComponent_div_816_div_269_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70294,7 +70335,7 @@ function AppComponent_div_806_div_269_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["injectArray"]);
   }
 }
-function AppComponent_div_806_div_293_Template(rf, ctx) {
+function AppComponent_div_816_div_293_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70306,7 +70347,7 @@ function AppComponent_div_806_div_293_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getCell"]);
   }
 }
-function AppComponent_div_806_div_309_Template(rf, ctx) {
+function AppComponent_div_816_div_309_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70318,7 +70359,7 @@ function AppComponent_div_806_div_309_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getElement"]);
   }
 }
-function AppComponent_div_806_div_342_Template(rf, ctx) {
+function AppComponent_div_816_div_342_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70330,7 +70371,7 @@ function AppComponent_div_806_div_342_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setStyle"]);
   }
 }
-function AppComponent_div_806_div_362_Template(rf, ctx) {
+function AppComponent_div_816_div_362_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70342,7 +70383,7 @@ function AppComponent_div_806_div_362_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getColumnNameFromId"]);
   }
 }
-function AppComponent_div_806_div_386_Template(rf, ctx) {
+function AppComponent_div_816_div_386_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70354,7 +70395,7 @@ function AppComponent_div_806_div_386_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getCellFromCoords"]);
   }
 }
-function AppComponent_div_806_div_406_Template(rf, ctx) {
+function AppComponent_div_816_div_406_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70366,7 +70407,7 @@ function AppComponent_div_806_div_406_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["openFilter"] || ctx_r2.results["resetFilters"]);
   }
 }
-function AppComponent_div_806_div_422_Template(rf, ctx) {
+function AppComponent_div_816_div_422_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70378,7 +70419,7 @@ function AppComponent_div_806_div_422_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["save"]);
   }
 }
-function AppComponent_div_806_div_441_Template(rf, ctx) {
+function AppComponent_div_816_div_441_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70390,7 +70431,7 @@ function AppComponent_div_806_div_441_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["destroy"]);
   }
 }
-function AppComponent_div_806_div_470_Template(rf, ctx) {
+function AppComponent_div_816_div_470_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70402,7 +70443,7 @@ function AppComponent_div_806_div_470_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["updateSelectionFromCoords"]);
   }
 }
-function AppComponent_div_806_div_486_Template(rf, ctx) {
+function AppComponent_div_816_div_486_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70414,7 +70455,7 @@ function AppComponent_div_806_div_486_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["whichPage"]);
   }
 }
-function AppComponent_div_806_div_509_Template(rf, ctx) {
+function AppComponent_div_816_div_509_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70426,7 +70467,7 @@ function AppComponent_div_806_div_509_Template(rf, ctx) {
     \u0275\u0275textInterpolate1("pagina corrente: ", ctx_r2.results["page"], "");
   }
 }
-function AppComponent_div_806_div_524_Template(rf, ctx) {
+function AppComponent_div_816_div_524_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70438,7 +70479,7 @@ function AppComponent_div_806_div_524_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["loadUp"] || ctx_r2.results["loadDown"]);
   }
 }
-function AppComponent_div_806_div_540_Template(rf, ctx) {
+function AppComponent_div_816_div_540_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70450,7 +70491,7 @@ function AppComponent_div_806_div_540_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["getPageCount"]);
   }
 }
-function AppComponent_div_806_div_561_Template(rf, ctx) {
+function AppComponent_div_816_div_561_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70462,7 +70503,7 @@ function AppComponent_div_806_div_561_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["closeFilter"]);
   }
 }
-function AppComponent_div_806_div_582_Template(rf, ctx) {
+function AppComponent_div_816_div_582_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70474,7 +70515,7 @@ function AppComponent_div_806_div_582_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setDictionary"]);
   }
 }
-function AppComponent_div_806_div_595_Template(rf, ctx) {
+function AppComponent_div_816_div_595_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70486,7 +70527,7 @@ function AppComponent_div_806_div_595_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setExtensions"]);
   }
 }
-function AppComponent_div_806_div_608_Template(rf, ctx) {
+function AppComponent_div_816_div_608_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70498,7 +70539,7 @@ function AppComponent_div_806_div_608_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["setHistory"]);
   }
 }
-function AppComponent_div_806_div_630_Template(rf, ctx) {
+function AppComponent_div_816_div_630_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70510,7 +70551,7 @@ function AppComponent_div_806_div_630_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["executeFormula"]);
   }
 }
-function AppComponent_div_806_div_647_Template(rf, ctx) {
+function AppComponent_div_816_div_647_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70522,7 +70563,7 @@ function AppComponent_div_806_div_647_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["doubleDigitFormat"]);
   }
 }
-function AppComponent_div_806_div_667_Template(rf, ctx) {
+function AppComponent_div_816_div_667_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 167)(1, "code");
     \u0275\u0275text(2);
@@ -70534,7 +70575,7 @@ function AppComponent_div_806_div_667_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r2.results["validLetter"]);
   }
 }
-function AppComponent_div_806_Template(rf, ctx) {
+function AppComponent_div_816_Template(rf, ctx) {
   if (rf & 1) {
     const _r34 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "div", 129)(1, "section", 248)(2, "div", 131)(3, "span", 132);
@@ -70557,7 +70598,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(20, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(21, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_21_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_21_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnOptions2.col, $event) || (ctx_r2.ops.getColumnOptions2.col = $event);
@@ -70565,14 +70606,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(22, "div", 142)(23, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_23_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_23_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnOptions2());
     });
     \u0275\u0275text(24, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(25, AppComponent_div_806_div_25_Template, 3, 1, "div", 144);
+    \u0275\u0275template(25, AppComponent_div_816_div_25_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(26, "div", 134)(27, "div", 135)(28, "code");
     \u0275\u0275text(29, "getJsonRow");
@@ -70591,7 +70632,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(40, "row");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(41, "input", 265);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_41_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_41_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getJsonRow2.row, $event) || (ctx_r2.ops.getJsonRow2.row = $event);
@@ -70599,14 +70640,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(42, "div", 142)(43, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_43_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_43_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetJsonRow2());
     });
     \u0275\u0275text(44, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(45, AppComponent_div_806_div_45_Template, 3, 1, "div", 144);
+    \u0275\u0275template(45, AppComponent_div_816_div_45_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(46, "div", 134)(47, "div", 135)(48, "code");
     \u0275\u0275text(49, "isColMerged");
@@ -70625,7 +70666,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(60, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(61, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_61_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_61_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.isColMerged2.col, $event) || (ctx_r2.ops.isColMerged2.col = $event);
@@ -70633,14 +70674,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(62, "div", 142)(63, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_63_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_63_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opIsColMerged2());
     });
     \u0275\u0275text(64, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(65, AppComponent_div_806_div_65_Template, 3, 1, "div", 144);
+    \u0275\u0275template(65, AppComponent_div_816_div_65_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(66, "div", 134)(67, "div", 135)(68, "code");
     \u0275\u0275text(69, "orderBy");
@@ -70659,7 +70700,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(80, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(81, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_81_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_81_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.orderBy2.col, $event) || (ctx_r2.ops.orderBy2.col = $event);
@@ -70667,7 +70708,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(82, "label", 218)(83, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_83_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_83_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.orderBy2.asc, $event) || (ctx_r2.ops.orderBy2.asc = $event);
@@ -70677,14 +70718,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(84, " ASC");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(85, "div", 142)(86, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_86_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_86_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opOrderBy2());
     });
     \u0275\u0275text(87, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(88, AppComponent_div_806_div_88_Template, 3, 1, "div", 144);
+    \u0275\u0275template(88, AppComponent_div_816_div_88_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(89, "div", 134)(90, "div", 135)(91, "code");
     \u0275\u0275text(92, "refreshSelection");
@@ -70697,14 +70738,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(97, "div", 138);
     \u0275\u0275elementStart(98, "div", 142)(99, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_99_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_99_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opRefreshSelection2());
     });
     \u0275\u0275text(100, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(101, AppComponent_div_806_div_101_Template, 3, 1, "div", 144);
+    \u0275\u0275template(101, AppComponent_div_816_div_101_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(102, "div", 134)(103, "div", 135)(104, "code");
     \u0275\u0275text(105, "setReadOnly");
@@ -70716,7 +70757,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(109, "Imposta la griglia in sola lettura globale (false = editable).");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(110, "div", 138)(111, "label", 218)(112, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_112_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_112_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setReadOnly2.value, $event) || (ctx_r2.ops.setReadOnly2.value = $event);
@@ -70726,14 +70767,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(113, " Read-only");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(114, "div", 142)(115, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_115_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_115_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetReadOnly2());
     });
     \u0275\u0275text(116, "Applica");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(117, AppComponent_div_806_div_117_Template, 3, 1, "div", 144);
+    \u0275\u0275template(117, AppComponent_div_816_div_117_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(118, "div", 134)(119, "div", 135)(120, "code");
     \u0275\u0275text(121, "setCheckRadioValue");
@@ -70748,7 +70789,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(129, "x");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(130, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_130_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_130_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCheckRadioVal.x, $event) || (ctx_r2.ops.setCheckRadioVal.x = $event);
@@ -70759,7 +70800,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(133, "y");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(134, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_134_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_134_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCheckRadioVal.y, $event) || (ctx_r2.ops.setCheckRadioVal.y = $event);
@@ -70767,7 +70808,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(135, "label", 218)(136, "input", 35);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_136_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_136_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setCheckRadioVal.value, $event) || (ctx_r2.ops.setCheckRadioVal.value = $event);
@@ -70777,14 +70818,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(137, " Checked");
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(138, "div", 142)(139, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_139_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_139_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetCheckRadioVal());
     });
     \u0275\u0275text(140, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(141, AppComponent_div_806_div_141_Template, 3, 1, "div", 144);
+    \u0275\u0275template(141, AppComponent_div_816_div_141_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(142, "div", 134)(143, "div", 135)(144, "code");
     \u0275\u0275text(145, "updateMeta");
@@ -70803,7 +70844,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(156, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(157, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_157_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_157_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateMeta2.cell, $event) || (ctx_r2.ops.updateMeta2.cell = $event);
@@ -70814,7 +70855,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(160, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(161, "input", 266);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_161_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_161_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateMeta2.key, $event) || (ctx_r2.ops.updateMeta2.key = $event);
@@ -70825,7 +70866,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(164, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(165, "input", 267);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_165_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_165_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateMeta2.value, $event) || (ctx_r2.ops.updateMeta2.value = $event);
@@ -70833,14 +70874,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(166, "div", 142)(167, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_167_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_167_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opUpdateMeta2());
     });
     \u0275\u0275text(168, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(169, AppComponent_div_806_div_169_Template, 3, 1, "div", 144);
+    \u0275\u0275template(169, AppComponent_div_816_div_169_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(170, "section", 248)(171, "div", 131)(172, "span", 132);
     \u0275\u0275text(173, "Utility & DOM");
@@ -70858,7 +70899,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(186, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(187, "input", 268);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_187_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_187_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.parseNumber2.raw, $event) || (ctx_r2.ops.parseNumber2.raw = $event);
@@ -70866,14 +70907,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(188, "div", 142)(189, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_189_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_189_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opParseNumber2());
     });
     \u0275\u0275text(190, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(191, AppComponent_div_806_div_191_Template, 3, 1, "div", 144);
+    \u0275\u0275template(191, AppComponent_div_816_div_191_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(192, "div", 134)(193, "div", 135)(194, "code");
     \u0275\u0275text(195, "parseValue");
@@ -70888,7 +70929,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(203, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(204, "input", 266);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_204_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_204_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.parseValue2.raw, $event) || (ctx_r2.ops.parseValue2.raw = $event);
@@ -70899,7 +70940,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(207, "col");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(208, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_208_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_208_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.parseValue2.col, $event) || (ctx_r2.ops.parseValue2.col = $event);
@@ -70907,14 +70948,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(209, "div", 142)(210, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_210_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_210_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opParseValue2());
     });
     \u0275\u0275text(211, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(212, AppComponent_div_806_div_212_Template, 3, 1, "div", 144);
+    \u0275\u0275template(212, AppComponent_div_816_div_212_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(213, "div", 134)(214, "div", 135)(215, "code");
     \u0275\u0275text(216, "getFreezeWidth");
@@ -70927,14 +70968,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(221, "div", 138);
     \u0275\u0275elementStart(222, "div", 142)(223, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_223_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_223_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetFreezeWidth2());
     });
     \u0275\u0275text(224, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(225, AppComponent_div_806_div_225_Template, 3, 1, "div", 144);
+    \u0275\u0275template(225, AppComponent_div_816_div_225_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(226, "div", 134)(227, "div", 135)(228, "code");
     \u0275\u0275text(229, "hash");
@@ -70947,14 +70988,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(234, "div", 138);
     \u0275\u0275elementStart(235, "div", 142)(236, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_236_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_236_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opHash2());
     });
     \u0275\u0275text(237, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(238, AppComponent_div_806_div_238_Template, 3, 1, "div", 144);
+    \u0275\u0275template(238, AppComponent_div_816_div_238_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(239, "div", 134)(240, "div", 135)(241, "code");
     \u0275\u0275text(242, "injectArray");
@@ -70977,7 +71018,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(256, "x");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(257, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_257_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_257_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.injectArray2.x, $event) || (ctx_r2.ops.injectArray2.x = $event);
@@ -70988,7 +71029,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(260, "y");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(261, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_261_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_261_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.injectArray2.y, $event) || (ctx_r2.ops.injectArray2.y = $event);
@@ -70999,7 +71040,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(264, "rows");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(265, "input", 270);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_265_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_265_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.injectArray2.raw, $event) || (ctx_r2.ops.injectArray2.raw = $event);
@@ -71007,14 +71048,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(266, "div", 142)(267, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_267_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_267_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opInjectArray2());
     });
     \u0275\u0275text(268, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(269, AppComponent_div_806_div_269_Template, 3, 1, "div", 144);
+    \u0275\u0275template(269, AppComponent_div_816_div_269_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(270, "div", 134)(271, "div", 135)(272, "code");
     \u0275\u0275text(273, "getCell");
@@ -71033,7 +71074,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(284, "x");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(285, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_285_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_285_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCell2.x, $event) || (ctx_r2.ops.getCell2.x = $event);
@@ -71044,7 +71085,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(288, "y");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(289, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_289_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_289_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCell2.y, $event) || (ctx_r2.ops.getCell2.y = $event);
@@ -71052,14 +71093,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(290, "div", 142)(291, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_291_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_291_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetCell2());
     });
     \u0275\u0275text(292, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(293, AppComponent_div_806_div_293_Template, 3, 1, "div", 144);
+    \u0275\u0275template(293, AppComponent_div_816_div_293_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(294, "div", 134)(295, "div", 135)(296, "code");
     \u0275\u0275text(297, "getElement");
@@ -71076,14 +71117,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(305, "div", 138);
     \u0275\u0275elementStart(306, "div", 142)(307, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_307_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_307_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetElement2());
     });
     \u0275\u0275text(308, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(309, AppComponent_div_806_div_309_Template, 3, 1, "div", 144);
+    \u0275\u0275template(309, AppComponent_div_816_div_309_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(310, "section", 248)(311, "div", 131)(312, "span", 132);
     \u0275\u0275text(313, "Nuovi alias (v2)");
@@ -71105,7 +71146,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(329, "cell");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(330, "input", 256);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_330_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_330_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setStyle2.cell, $event) || (ctx_r2.ops.setStyle2.cell = $event);
@@ -71116,7 +71157,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(333, "prop");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(334, "input", 150);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_334_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_334_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setStyle2.prop, $event) || (ctx_r2.ops.setStyle2.prop = $event);
@@ -71127,7 +71168,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(337, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(338, "input", 268);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_338_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_338_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setStyle2.value, $event) || (ctx_r2.ops.setStyle2.value = $event);
@@ -71135,14 +71176,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(339, "div", 142)(340, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_340_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_340_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetStyle2());
     });
     \u0275\u0275text(341, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(342, AppComponent_div_806_div_342_Template, 3, 1, "div", 144);
+    \u0275\u0275template(342, AppComponent_div_816_div_342_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(343, "div", 134)(344, "div", 135)(345, "code");
     \u0275\u0275text(346, "getColumnNameFromId");
@@ -71161,7 +71202,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(357, "index");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(358, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_358_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_358_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getColumnNameFromId2.index, $event) || (ctx_r2.ops.getColumnNameFromId2.index = $event);
@@ -71169,14 +71210,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(359, "div", 142)(360, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_360_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_360_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetColumnNameFromId2());
     });
     \u0275\u0275text(361, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(362, AppComponent_div_806_div_362_Template, 3, 1, "div", 144);
+    \u0275\u0275template(362, AppComponent_div_816_div_362_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(363, "div", 134)(364, "div", 135)(365, "code");
     \u0275\u0275text(366, "getCellFromCoords");
@@ -71195,7 +71236,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(377, "x");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(378, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_378_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_378_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCellFromCoords2.x, $event) || (ctx_r2.ops.getCellFromCoords2.x = $event);
@@ -71206,7 +71247,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(381, "y");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(382, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_382_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_382_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.getCellFromCoords2.y, $event) || (ctx_r2.ops.getCellFromCoords2.y = $event);
@@ -71214,14 +71255,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(383, "div", 142)(384, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_384_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_384_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetCellFromCoords2());
     });
     \u0275\u0275text(385, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(386, AppComponent_div_806_div_386_Template, 3, 1, "div", 144);
+    \u0275\u0275template(386, AppComponent_div_816_div_386_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(387, "div", 134)(388, "div", 135)(389, "code");
     \u0275\u0275text(390, "openFilter / resetFilters");
@@ -71240,7 +71281,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(400, "div", 138);
     \u0275\u0275elementStart(401, "div", 142)(402, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_402_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_402_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opOpenFilter());
@@ -71248,14 +71289,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(403, "openFilter");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(404, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_404_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_404_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opResetFilters2());
     });
     \u0275\u0275text(405, "resetFilters");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(406, AppComponent_div_806_div_406_Template, 3, 1, "div", 144);
+    \u0275\u0275template(406, AppComponent_div_816_div_406_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(407, "div", 134)(408, "div", 135)(409, "code");
     \u0275\u0275text(410, "save");
@@ -71272,14 +71313,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(418, "div", 138);
     \u0275\u0275elementStart(419, "div", 142)(420, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_420_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_420_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSave());
     });
     \u0275\u0275text(421, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(422, AppComponent_div_806_div_422_Template, 3, 1, "div", 144);
+    \u0275\u0275template(422, AppComponent_div_816_div_422_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(423, "div", 134)(424, "div", 135)(425, "code");
     \u0275\u0275text(426, "destroy");
@@ -71300,14 +71341,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(437, "div", 138);
     \u0275\u0275elementStart(438, "div", 142)(439, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_439_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_439_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDestroy());
     });
     \u0275\u0275text(440, "destroy");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(441, AppComponent_div_806_div_441_Template, 3, 1, "div", 144);
+    \u0275\u0275template(441, AppComponent_div_816_div_441_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(442, "div", 134)(443, "div", 135)(444, "code");
     \u0275\u0275text(445, "updateSelectionFromCoords");
@@ -71322,7 +71363,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(453, "x1");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(454, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_454_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_454_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateSelFromCoords.x1, $event) || (ctx_r2.ops.updateSelFromCoords.x1 = $event);
@@ -71333,7 +71374,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(457, "y1");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(458, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_458_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_458_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateSelFromCoords.y1, $event) || (ctx_r2.ops.updateSelFromCoords.y1 = $event);
@@ -71344,7 +71385,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(461, "x2");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(462, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_462_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_462_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateSelFromCoords.x2, $event) || (ctx_r2.ops.updateSelFromCoords.x2 = $event);
@@ -71355,7 +71396,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(465, "y2");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(466, "input", 269);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_466_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_466_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.updateSelFromCoords.y2, $event) || (ctx_r2.ops.updateSelFromCoords.y2 = $event);
@@ -71363,14 +71404,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(467, "div", 142)(468, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_468_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_468_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opUpdateSelFromCoords());
     });
     \u0275\u0275text(469, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(470, AppComponent_div_806_div_470_Template, 3, 1, "div", 144);
+    \u0275\u0275template(470, AppComponent_div_816_div_470_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(471, "div", 134)(472, "div", 135)(473, "code");
     \u0275\u0275text(474, "whichPage");
@@ -71387,14 +71428,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(482, "div", 138);
     \u0275\u0275elementStart(483, "div", 142)(484, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_484_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_484_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opWhichPage2());
     });
     \u0275\u0275text(485, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(486, AppComponent_div_806_div_486_Template, 3, 1, "div", 144);
+    \u0275\u0275template(486, AppComponent_div_816_div_486_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(487, "div", 134)(488, "div", 135)(489, "code");
     \u0275\u0275text(490, "page / loadPage");
@@ -71417,7 +71458,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(504, "n");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(505, "input", 249);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_505_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_505_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.pageNav.n, $event) || (ctx_r2.ops.pageNav.n = $event);
@@ -71425,14 +71466,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(506, "div", 142)(507, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_507_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_507_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opPageNav());
     });
     \u0275\u0275text(508, "Vai");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(509, AppComponent_div_806_div_509_Template, 3, 1, "div", 144);
+    \u0275\u0275template(509, AppComponent_div_816_div_509_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(510, "div", 134)(511, "div", 135)(512, "code");
     \u0275\u0275text(513, "loadUp / loadDown");
@@ -71445,7 +71486,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(518, "div", 138);
     \u0275\u0275elementStart(519, "div", 142)(520, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_520_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_520_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opLoadUp());
@@ -71453,14 +71494,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(521, "\u2190 prev");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(522, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_522_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_522_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opLoadDown());
     });
     \u0275\u0275text(523, "next \u2192");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(524, AppComponent_div_806_div_524_Template, 3, 1, "div", 144);
+    \u0275\u0275template(524, AppComponent_div_816_div_524_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(525, "div", 134)(526, "div", 135)(527, "code");
     \u0275\u0275text(528, "getPageCount");
@@ -71477,14 +71518,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(536, "div", 138);
     \u0275\u0275elementStart(537, "div", 142)(538, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_538_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_538_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opGetPageCount());
     });
     \u0275\u0275text(539, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(540, AppComponent_div_806_div_540_Template, 3, 1, "div", 144);
+    \u0275\u0275template(540, AppComponent_div_816_div_540_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(541, "section", 248)(542, "div", 131)(543, "span", 132);
     \u0275\u0275text(544, "i18n / Estensioni / Storico");
@@ -71504,14 +71545,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(557, "div", 138);
     \u0275\u0275elementStart(558, "div", 142)(559, "button", 146);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_559_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_559_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opCloseFilter());
     });
     \u0275\u0275text(560, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(561, AppComponent_div_806_div_561_Template, 3, 1, "div", 144);
+    \u0275\u0275template(561, AppComponent_div_816_div_561_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(562, "div", 134)(563, "div", 135)(564, "code");
     \u0275\u0275text(565, "setDictionary");
@@ -71526,7 +71567,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(573, "key");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(574, "input", 271);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_574_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_574_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setDictionary2.key, $event) || (ctx_r2.ops.setDictionary2.key = $event);
@@ -71537,7 +71578,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(577, "value");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(578, "input", 268);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_578_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_578_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.setDictionary2.value, $event) || (ctx_r2.ops.setDictionary2.value = $event);
@@ -71545,14 +71586,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(579, "div", 142)(580, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_580_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_580_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetDictionary2());
     });
     \u0275\u0275text(581, "Set");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(582, AppComponent_div_806_div_582_Template, 3, 1, "div", 144);
+    \u0275\u0275template(582, AppComponent_div_816_div_582_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(583, "div", 134)(584, "div", 135)(585, "code");
     \u0275\u0275text(586, "setExtensions");
@@ -71565,14 +71606,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(591, "div", 138);
     \u0275\u0275elementStart(592, "div", 142)(593, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_593_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_593_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetExtensions());
     });
     \u0275\u0275text(594, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(595, AppComponent_div_806_div_595_Template, 3, 1, "div", 144);
+    \u0275\u0275template(595, AppComponent_div_816_div_595_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(596, "div", 134)(597, "div", 135)(598, "code");
     \u0275\u0275text(599, "setHistory");
@@ -71585,14 +71626,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275elementEnd()();
     \u0275\u0275element(604, "div", 138);
     \u0275\u0275elementStart(605, "div", 142)(606, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_606_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_606_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opSetHistory2());
     });
     \u0275\u0275text(607, "Snapshot");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(608, AppComponent_div_806_div_608_Template, 3, 1, "div", 144);
+    \u0275\u0275template(608, AppComponent_div_816_div_608_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(609, "section", 248)(610, "div", 131)(611, "span", 132);
     \u0275\u0275text(612, "Utility");
@@ -71610,7 +71651,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(625, "expr");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(626, "input", 272);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_626_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_626_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.executeFormula2.expr, $event) || (ctx_r2.ops.executeFormula2.expr = $event);
@@ -71618,14 +71659,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(627, "div", 142)(628, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_628_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_628_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opExecuteFormula2());
     });
     \u0275\u0275text(629, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(630, AppComponent_div_806_div_630_Template, 3, 1, "div", 144);
+    \u0275\u0275template(630, AppComponent_div_816_div_630_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(631, "div", 134)(632, "div", 135)(633, "code");
     \u0275\u0275text(634, "doubleDigitFormat");
@@ -71640,7 +71681,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(642, "n");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(643, "input", 273);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_643_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_643_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.doubleDigitFormat2.n, $event) || (ctx_r2.ops.doubleDigitFormat2.n = $event);
@@ -71648,14 +71689,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(644, "div", 142)(645, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_645_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_645_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opDoubleDigitFormat2());
     });
     \u0275\u0275text(646, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(647, AppComponent_div_806_div_647_Template, 3, 1, "div", 144);
+    \u0275\u0275template(647, AppComponent_div_816_div_647_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(648, "div", 134)(649, "div", 135)(650, "code");
     \u0275\u0275text(651, "validLetter");
@@ -71674,7 +71715,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275text(662, "c");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(663, "input", 274);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_806_Template_input_ngModelChange_663_listener($event) {
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_816_Template_input_ngModelChange_663_listener($event) {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.ops.validLetter2.c, $event) || (ctx_r2.ops.validLetter2.c = $event);
@@ -71682,14 +71723,14 @@ function AppComponent_div_806_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(664, "div", 142)(665, "button", 143);
-    \u0275\u0275listener("click", function AppComponent_div_806_Template_button_click_665_listener() {
+    \u0275\u0275listener("click", function AppComponent_div_816_Template_button_click_665_listener() {
       \u0275\u0275restoreView(_r34);
       const ctx_r2 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r2.opValidLetter2());
     });
     \u0275\u0275text(666, "Esegui");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(667, AppComponent_div_806_div_667_Template, 3, 1, "div", 144);
+    \u0275\u0275template(667, AppComponent_div_816_div_667_Template, 3, 1, "div", 144);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -71904,7 +71945,7 @@ function AppComponent_div_806_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r2.results["validLetter"] !== void 0);
   }
 }
-function AppComponent_div_816_Template(rf, ctx) {
+function AppComponent_div_826_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 275)(1, "span", 276);
     \u0275\u0275text(2);
@@ -71922,7 +71963,7 @@ function AppComponent_div_816_Template(rf, ctx) {
     \u0275\u0275textInterpolate(e_r35.message);
   }
 }
-function AppComponent_div_817_Template(rf, ctx) {
+function AppComponent_div_827_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 278);
     \u0275\u0275text(1, " Nessun evento registrato. ");
@@ -72074,6 +72115,8 @@ var AppComponent = class _AppComponent {
     stickyFooter: true,
     // column filter row
     columnFilter: false,
+    // footer aggregati solo su righe visibili (SUBTOTAL-like)
+    footerOnVisibleRows: false,
     // dimensions
     tableHeight: "420",
     tableWidth: "",
@@ -72716,6 +72759,7 @@ var AppComponent = class _AppComponent {
       stickyFooter: this.cfg.stickyFooter,
       // ── column filter row ─────────────────────────────────────────────────
       columnFilter: this.cfg.columnFilter,
+      footerOnVisibleRows: this.cfg.footerOnVisibleRows,
       // ── dimensions ───────────────────────────────────────────────────────
       tableHeight: this.cfg.tableHeight ? `${this.cfg.tableHeight}px` : void 0,
       tableWidth: this.cfg.tableWidth || void 0,
@@ -73199,6 +73243,7 @@ var AppComponent = class _AppComponent {
       stickyHeader: this.cfg.stickyHeader,
       stickyFooter: this.cfg.stickyFooter,
       columnFilter: this.cfg.columnFilter,
+      footerOnVisibleRows: this.cfg.footerOnVisibleRows,
       tableOverflow: this.cfg.tableOverflow,
       tableWidth: this.cfg.tableWidth || void 0,
       tableHeight: this.cfg.tableHeight ? `${this.cfg.tableHeight}px` : void 0,
@@ -74074,7 +74119,7 @@ var AppComponent = class _AppComponent {
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.grid = _t.first);
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.customContextMenuTpl = _t.first);
     }
-  }, standalone: false, decls: 824, vars: 142, consts: [["customContextMenuTpl", ""], [1, "toolbar"], [1, "toolbar__group"], [1, "toolbar__label"], [1, "btn", "btn--primary", 3, "click"], [1, "btn", "btn--secondary", 3, "click"], [1, "btn", "btn--secondary", 3, "click", "disabled"], [1, "btn", "btn--secondary", 3, "click", "disabled", "title"], [1, "btn", "btn--ghost", 3, "click"], [1, "toolbar__spacer"], [1, "toolbar__status"], [1, "page"], [1, "demo-header"], [1, "demo-header__brand"], [1, "demo-header__logo"], [1, "demo-header__title"], [1, "demo-header__sub"], [1, "demo-header__badges"], [1, "demo-header__badge", "demo-header__badge--blue"], [1, "demo-header__badge", "demo-header__badge--purple"], [1, "demo-header__badge", "demo-header__badge--green"], [1, "status-bar"], [1, "status-bar__item"], [1, "status-bar__sep"], [1, "main-tabs"], [1, "main-tab-bar"], [1, "main-tab-btn", 3, "click"], [1, "main-tab-btn__icon"], [1, "main-tab-panel", "main-tab-panel--config", 3, "hidden"], [1, "config-panel"], [1, "config-panel__body"], [1, "config-section"], [1, "config-section__title"], [1, "config-toggle"], [1, "config-toggle__switch"], ["type", "checkbox", 3, "ngModelChange", "ngModel"], [1, "config-toggle__switch-track"], [1, "config-toggle__switch-thumb"], [1, "config-toggle__info"], [1, "config-toggle__name"], [1, "config-toggle__desc"], [1, "config-field"], [1, "config-field__label"], [1, "config-field__desc"], [2, "width", "140px", 3, "ngModelChange", "ngModel"], ["value", ""], ["value", "rows"], ["value", "columns"], ["value", "both"], [3, "ngModelChange", "ngModel"], ["value", "clip"], ["value", "ellipsis"], ["class", "config-field", 4, "ngIf"], ["class", "config-toggle", 4, "ngIf"], ["type", "number", "min", "0", "step", "1", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "10", 3, "ngModelChange", "ngModel"], ["value", "left"], ["value", "center"], ["value", "right"], ["type", "number", "min", "0", "step", "4", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "10", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "200", "step", "20", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "5", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "width", "120px", 3, "ngModelChange", "ngModel"], ["value", "inline"], ["type", "text", "placeholder", "0,1,2", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://example.com/data.csv", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "export", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", ",", "maxlength", "2", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://api.example.com/data", 3, "ngModelChange", "ngModel"], [2, "height", "28px", "border", "1px solid #d1d5db", "border-radius", "4px", "padding", "0 6px", 3, "ngModelChange", "ngModel"], ["value", "GET"], ["value", "POST"], ["type", "text", "placeholder", '{"page":1,"limit":50}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "6px", "cursor", "pointer"], [2, "display", "flex", "flex-wrap", "wrap", "gap", "6px", "margin-top", "6px"], ["style", "display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 6px;border:1px solid #333;border-radius:4px;cursor:pointer;white-space:nowrap", 3, "background", "color", 4, "ngFor", "ngForOf"], ["type", "text", "placeholder", '{"0":"highlight"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"13px","color":"#333"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"12px","fontWeight":"bold"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"backgroundColor":"#e8eaf6"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontStyle":"italic","color":"#666"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"addRow":"Nuova riga"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "jxcell-demo", 3, "ngModelChange", "ngModel", "disabled"], ["type", "range", "min", "0", "max", "1", "step", "0.05", 2, "width", "100%", "margin-top", "4px", 3, "ngModelChange", "ngModel", "disabled"], [1, "main-tab-panel", "main-tab-panel--grid", 3, "hidden"], ["source", "http", "name", "http", 3, "contained"], [3, "ready", "options"], [1, "main-tab-panel", "main-tab-panel--readme", 3, "hidden"], [1, "readme-doc"], ["class", "readme-doc__status", 4, "ngIf"], ["class", "readme-doc__status readme-doc__status--error", 4, "ngIf"], [1, "readme-doc__content", "markdown-body", 3, "innerHTML"], [1, "api-explorer"], [1, "api-explorer__head"], [1, "api-explorer__title"], [1, "api-explorer__desc"], [1, "api-explorer__body"], [1, "api-tab-bar"], [1, "api-tab-btn", 3, "click"], [1, "api-tab-btn__count"], [1, "api-tab-panels"], ["class", "api-tab-panel", 4, "ngIf"], [1, "log-section"], [1, "log-header"], [1, "log-header__title"], [1, "log-header__count"], [1, "btn", "btn--ghost", "btn--sm", 3, "click"], [1, "demo-log"], ["class", "demo-log__entry", 3, "demo-log__entry--change", "demo-log__entry--nav", "demo-log__entry--error", 4, "ngFor", "ngForOf"], ["class", "demo-log__empty", 4, "ngIf"], [2, "margin-top", "40px", "padding", "0 24px 40px"], [2, "font-size", "1.1rem", "font-weight", "700", "margin-bottom", "8px", "color", "#344054"], [2, "font-size", ".85rem", "color", "#667085", "margin-bottom", "16px"], [3, "data", "columns", "options"], ["type", "text", "placeholder", "es. 0,2,5", "title", "Indici colonna separati da virgola per cui disabilitare il menu", 1, "config-field__input", 3, "ngModelChange", "ngModel"], [1, "config-field__hint"], [2, "display", "flex", "align-items", "center", "gap", "4px", "font-size", "11px", "padding", "2px 6px", "border", "1px solid #333", "border-radius", "4px", "cursor", "pointer", "white-space", "nowrap"], ["type", "checkbox", 2, "margin", "0", 3, "ngModelChange", "ngModel"], [1, "readme-doc__status"], [1, "readme-doc__status", "readme-doc__status--error"], [1, "jx-ctx-menu", "jx-ctx-menu--demo"], [1, "jx-ctx-menu__header"], [1, "jx-ctx-menu__value", 3, "title"], [1, "jx-ctx-separator"], [1, "jx-ctx-item", 3, "click"], [1, "jx-ctx-item", "jx-ctx-item--danger", 3, "click"], [1, "api-tab-panel"], [1, "api-section", "api-section--rows"], [1, "api-section__head"], [1, "api-section__label"], [1, "api-table"], [1, "api-row"], [1, "api-row__name"], [1, "api-row__sig"], [1, "api-row__desc"], [1, "api-row__params"], [1, "api-p"], ["type", "number", "placeholder", "fine", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 3, "ngModelChange", "ngModel"], [1, "api-row__btns"], [1, "api-btn", 3, "click", "disabled"], ["class", "api-row__out", 4, "ngIf"], ["type", "number", "min", "0", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--danger", 3, "click", "disabled"], ["id", "sec-cols", 1, "api-section", "api-section--cols"], ["type", "text", "placeholder", "vuoto", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "19", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "140px", 3, "ngModelChange", "ngModel"], [2, "width", "110px", 3, "ngModelChange", "ngModel"], ["value", "text"], ["value", "numeric"], ["value", "checkbox"], ["value", "dropdown"], ["value", "autocomplete"], ["value", "calendar"], ["value", "color"], ["value", "html"], ["value", "hidden"], ["type", "number", "min", "0", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "\\d", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "4px"], [1, "api-row__out"], ["id", "sec-cells", 1, "api-section", "api-section--cells"], ["type", "text", "placeholder", "A1", 3, "ngModelChange", "ngModel"], [1, "api-p", "api-p--wide"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "nuovo valore", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--alt", 3, "click", "disabled"], ["type", "text", "placeholder", "N1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "=B1*C1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1,B1,C1", 3, "ngModelChange", "ngModel"], ["id", "sec-merge", 1, "api-section", "api-section--merge"], ["type", "text", "placeholder", "vuoto = tutti", 3, "ngModelChange", "ngModel"], [1, "api-row__note"], ["id", "sec-footer", 1, "api-section", "api-section--footer"], [1, "api-toggle"], ["id", "sec-fill", 1, "api-section", "api-section--fill"], [4, "ngIf"], ["id", "sec-nav", 1, "api-section", "api-section--nav"], [1, "api-section", "api-section--nav"], ["id", "sec-edit", 1, "api-section", "api-section--edit"], ["id", "sec-history", 1, "api-section", "api-section--history"], ["id", "sec-export", 1, "api-section", "api-section--export"], ["type", "number", "min", "0", "placeholder", "tutti", 3, "ngModelChange", "ngModel"], ["id", "sec-styles", 1, "api-section", "api-section--styles"], [1, "api-select", 2, "height", "26px", "font-size", "11px", 3, "ngModelChange", "ngModel"], ["value", "cell"], ["value", "row"], ["value", "col"], ["class", "api-p", 4, "ngIf"], ["value", "all"], ["value", "top"], ["value", "bottom"], ["value", "solid"], ["value", "dashed"], ["value", "dotted"], ["value", "double"], ["value", "none"], ["type", "number", "min", "1", "max", "8", 2, "width", "46px", 3, "ngModelChange", "ngModel"], ["type", "color", 2, "padding", "1px", "height", "26px", "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 2, "width", "54px", 3, "ngModelChange", "ngModel"], ["id", "sec-sort", 1, "api-section", "api-section--sort"], ["type", "number", "min", "0", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-select", 3, "ngModelChange", "ngModel"], ["value", "asc"], ["value", "desc"], [3, "ngValue"], ["id", "sec-hf", 1, "api-section", "api-section--hf"], ["type", "color", 1, "api-color", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["id", "sec-readonly", 1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "A1", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-checkbox"], ["id", "sec-setdata", 1, "api-section", "api-section--setdata"], [1, "api-row__params", 2, "flex-direction", "column", "align-items", "flex-start", "gap", "6px"], [2, "font-size", "12px", "color", "#666"], ["rows", "5", "placeholder", '[["Alice","Roma",30],["Bob","Milano",25]]', 2, "width", "100%", "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "6px", 3, "ngModelChange", "ngModel"], [1, "api-row__btns", 2, "display", "flex", "flex-direction", "column", "gap", "6px"], ["id", "sec-remote", 1, "api-section", "api-section--remote"], ["id", "sec-csv", 1, "api-section", "api-section--csv"], [1, "api-row__params", 2, "flex-direction", "column", "gap", "6px"], ["rows", "3", 2, "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "4px", "width", "100%", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "2", 2, "width", "50px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--search"], ["type", "text", "placeholder", "testo da cercare", 1, "api-input", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--secondary", 3, "click", "disabled"], [1, "api-section", "api-section--export"], [2, "font-size", "11px", "height", "27px", "border", "1px solid #444", "border-radius", "4px", "padding", "0 6px", "background", "#1e2736", "color", "#e8edf5", 3, "ngModelChange", "ngModel"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "es. status", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--persistence"], [3, "value"], [1, "api-section__desc"], [1, "api-row__params", 2, "flex", "1", "align-self", "center"], [2, "font-size", "12px", "color", "#a78bfa"], [1, "api-btn", 3, "click"], [1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "valore", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["type", "checkbox", 3, "ngModelChange", "change", "ngModel"], ["type", "text", 2, "width", "90px", "font-size", "12px", "padding", "2px 4px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--cells"], [1, "api-section"], ["type", "number", "min", "0", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "v1,v2,v3", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b,c,d", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "40", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "22", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "note", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "testo", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "120px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "3000", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "highlight", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", 2, "width", "50px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b|c,d", 2, "width", "110px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "undo", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "150px", 3, "ngModelChange", "ngModel"], ["type", "number", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "1", 2, "width", "45px", 3, "ngModelChange", "ngModel"], [1, "demo-log__entry"], [1, "demo-log__time"], [1, "demo-log__msg"], [1, "demo-log__empty"]], template: function AppComponent_Template(rf, ctx) {
+  }, standalone: false, decls: 834, vars: 143, consts: [["customContextMenuTpl", ""], [1, "toolbar"], [1, "toolbar__group"], [1, "toolbar__label"], [1, "btn", "btn--primary", 3, "click"], [1, "btn", "btn--secondary", 3, "click"], [1, "btn", "btn--secondary", 3, "click", "disabled"], [1, "btn", "btn--secondary", 3, "click", "disabled", "title"], [1, "btn", "btn--ghost", 3, "click"], [1, "toolbar__spacer"], [1, "toolbar__status"], [1, "page"], [1, "demo-header"], [1, "demo-header__brand"], [1, "demo-header__logo"], [1, "demo-header__title"], [1, "demo-header__sub"], [1, "demo-header__badges"], [1, "demo-header__badge", "demo-header__badge--blue"], [1, "demo-header__badge", "demo-header__badge--purple"], [1, "demo-header__badge", "demo-header__badge--green"], [1, "status-bar"], [1, "status-bar__item"], [1, "status-bar__sep"], [1, "main-tabs"], [1, "main-tab-bar"], [1, "main-tab-btn", 3, "click"], [1, "main-tab-btn__icon"], [1, "main-tab-panel", "main-tab-panel--config", 3, "hidden"], [1, "config-panel"], [1, "config-panel__body"], [1, "config-section"], [1, "config-section__title"], [1, "config-toggle"], [1, "config-toggle__switch"], ["type", "checkbox", 3, "ngModelChange", "ngModel"], [1, "config-toggle__switch-track"], [1, "config-toggle__switch-thumb"], [1, "config-toggle__info"], [1, "config-toggle__name"], [1, "config-toggle__desc"], [1, "config-field"], [1, "config-field__label"], [1, "config-field__desc"], [2, "width", "140px", 3, "ngModelChange", "ngModel"], ["value", ""], ["value", "rows"], ["value", "columns"], ["value", "both"], [3, "ngModelChange", "ngModel"], ["value", "clip"], ["value", "ellipsis"], ["class", "config-field", 4, "ngIf"], ["class", "config-toggle", 4, "ngIf"], ["type", "number", "min", "0", "step", "1", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "10", 3, "ngModelChange", "ngModel"], ["value", "left"], ["value", "center"], ["value", "right"], ["type", "number", "min", "0", "step", "4", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "10", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "200", "step", "20", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "step", "5", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "width", "120px", 3, "ngModelChange", "ngModel"], ["value", "inline"], ["type", "text", "placeholder", "0,1,2", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://example.com/data.csv", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "export", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", ",", "maxlength", "2", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "https://api.example.com/data", 3, "ngModelChange", "ngModel"], [2, "height", "28px", "border", "1px solid #d1d5db", "border-radius", "4px", "padding", "0 6px", 3, "ngModelChange", "ngModel"], ["value", "GET"], ["value", "POST"], ["type", "text", "placeholder", '{"page":1,"limit":50}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "6px", "cursor", "pointer"], [2, "display", "flex", "flex-wrap", "wrap", "gap", "6px", "margin-top", "6px"], ["style", "display:flex;align-items:center;gap:4px;font-size:11px;padding:2px 6px;border:1px solid #333;border-radius:4px;cursor:pointer;white-space:nowrap", 3, "background", "color", 4, "ngFor", "ngForOf"], ["type", "text", "placeholder", '{"0":"highlight"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"13px","color":"#333"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontSize":"12px","fontWeight":"bold"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"backgroundColor":"#e8eaf6"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"fontStyle":"italic","color":"#666"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", '{"addRow":"Nuova riga"}', 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "jxcell-demo", 3, "ngModelChange", "ngModel", "disabled"], ["type", "range", "min", "0", "max", "1", "step", "0.05", 2, "width", "100%", "margin-top", "4px", 3, "ngModelChange", "ngModel", "disabled"], [1, "main-tab-panel", "main-tab-panel--grid", 3, "hidden"], ["source", "http", "name", "http", 3, "contained"], [3, "ready", "options"], [1, "main-tab-panel", "main-tab-panel--readme", 3, "hidden"], [1, "readme-doc"], ["class", "readme-doc__status", 4, "ngIf"], ["class", "readme-doc__status readme-doc__status--error", 4, "ngIf"], [1, "readme-doc__content", "markdown-body", 3, "innerHTML"], [1, "api-explorer"], [1, "api-explorer__head"], [1, "api-explorer__title"], [1, "api-explorer__desc"], [1, "api-explorer__body"], [1, "api-tab-bar"], [1, "api-tab-btn", 3, "click"], [1, "api-tab-btn__count"], [1, "api-tab-panels"], ["class", "api-tab-panel", 4, "ngIf"], [1, "log-section"], [1, "log-header"], [1, "log-header__title"], [1, "log-header__count"], [1, "btn", "btn--ghost", "btn--sm", 3, "click"], [1, "demo-log"], ["class", "demo-log__entry", 3, "demo-log__entry--change", "demo-log__entry--nav", "demo-log__entry--error", 4, "ngFor", "ngForOf"], ["class", "demo-log__empty", 4, "ngIf"], [2, "margin-top", "40px", "padding", "0 24px 40px"], [2, "font-size", "1.1rem", "font-weight", "700", "margin-bottom", "8px", "color", "#344054"], [2, "font-size", ".85rem", "color", "#667085", "margin-bottom", "16px"], [3, "data", "columns", "options"], ["type", "text", "placeholder", "es. 0,2,5", "title", "Indici colonna separati da virgola per cui disabilitare il menu", 1, "config-field__input", 3, "ngModelChange", "ngModel"], [1, "config-field__hint"], [2, "display", "flex", "align-items", "center", "gap", "4px", "font-size", "11px", "padding", "2px 6px", "border", "1px solid #333", "border-radius", "4px", "cursor", "pointer", "white-space", "nowrap"], ["type", "checkbox", 2, "margin", "0", 3, "ngModelChange", "ngModel"], [1, "readme-doc__status"], [1, "readme-doc__status", "readme-doc__status--error"], [1, "jx-ctx-menu", "jx-ctx-menu--demo"], [1, "jx-ctx-menu__header"], [1, "jx-ctx-menu__value", 3, "title"], [1, "jx-ctx-separator"], [1, "jx-ctx-item", 3, "click"], [1, "jx-ctx-item", "jx-ctx-item--danger", 3, "click"], [1, "api-tab-panel"], [1, "api-section", "api-section--rows"], [1, "api-section__head"], [1, "api-section__label"], [1, "api-table"], [1, "api-row"], [1, "api-row__name"], [1, "api-row__sig"], [1, "api-row__desc"], [1, "api-row__params"], [1, "api-p"], ["type", "number", "placeholder", "fine", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 3, "ngModelChange", "ngModel"], [1, "api-row__btns"], [1, "api-btn", 3, "click", "disabled"], ["class", "api-row__out", 4, "ngIf"], ["type", "number", "min", "0", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--danger", 3, "click", "disabled"], ["id", "sec-cols", 1, "api-section", "api-section--cols"], ["type", "text", "placeholder", "vuoto", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", "max", "19", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "140px", 3, "ngModelChange", "ngModel"], [2, "width", "110px", 3, "ngModelChange", "ngModel"], ["value", "text"], ["value", "numeric"], ["value", "checkbox"], ["value", "dropdown"], ["value", "autocomplete"], ["value", "calendar"], ["value", "color"], ["value", "html"], ["value", "hidden"], ["type", "number", "min", "0", 2, "width", "60px", 3, "ngModelChange", "ngModel"], [2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "+## ### ### ####", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "#", 2, "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "\\d", 2, "width", "80px", 3, "ngModelChange", "ngModel"], [2, "display", "flex", "align-items", "center", "gap", "4px"], [1, "api-row__out"], ["id", "sec-cells", 1, "api-section", "api-section--cells"], ["type", "text", "placeholder", "A1", 3, "ngModelChange", "ngModel"], [1, "api-p", "api-p--wide"], ["type", "text", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "nuovo valore", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--alt", 3, "click", "disabled"], ["type", "text", "placeholder", "N1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "=B1*C1", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1,B1,C1", 3, "ngModelChange", "ngModel"], ["id", "sec-merge", 1, "api-section", "api-section--merge"], ["type", "text", "placeholder", "vuoto = tutti", 3, "ngModelChange", "ngModel"], [1, "api-row__note"], ["id", "sec-footer", 1, "api-section", "api-section--footer"], [1, "api-toggle"], ["id", "sec-fill", 1, "api-section", "api-section--fill"], [4, "ngIf"], ["id", "sec-nav", 1, "api-section", "api-section--nav"], [1, "api-section", "api-section--nav"], ["id", "sec-edit", 1, "api-section", "api-section--edit"], ["id", "sec-history", 1, "api-section", "api-section--history"], ["id", "sec-export", 1, "api-section", "api-section--export"], ["type", "number", "min", "0", "placeholder", "tutti", 3, "ngModelChange", "ngModel"], ["id", "sec-styles", 1, "api-section", "api-section--styles"], [1, "api-select", 2, "height", "26px", "font-size", "11px", 3, "ngModelChange", "ngModel"], ["value", "cell"], ["value", "row"], ["value", "col"], ["class", "api-p", 4, "ngIf"], ["value", "all"], ["value", "top"], ["value", "bottom"], ["value", "solid"], ["value", "dashed"], ["value", "dotted"], ["value", "double"], ["value", "none"], ["type", "number", "min", "1", "max", "8", 2, "width", "46px", 3, "ngModelChange", "ngModel"], ["type", "color", 2, "padding", "1px", "height", "26px", "width", "40px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 2, "width", "54px", 3, "ngModelChange", "ngModel"], ["id", "sec-sort", 1, "api-section", "api-section--sort"], ["type", "number", "min", "0", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-select", 3, "ngModelChange", "ngModel"], ["value", "asc"], ["value", "desc"], [3, "ngValue"], ["id", "sec-hf", 1, "api-section", "api-section--hf"], ["type", "color", 1, "api-color", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "14px", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["id", "sec-readonly", 1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "A1", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], [1, "api-checkbox"], ["id", "sec-setdata", 1, "api-section", "api-section--setdata"], [1, "api-row__params", 2, "flex-direction", "column", "align-items", "flex-start", "gap", "6px"], [2, "font-size", "12px", "color", "#666"], ["rows", "5", "placeholder", '[["Alice","Roma",30],["Bob","Milano",25]]', 2, "width", "100%", "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "6px", 3, "ngModelChange", "ngModel"], [1, "api-row__btns", 2, "display", "flex", "flex-direction", "column", "gap", "6px"], ["id", "sec-remote", 1, "api-section", "api-section--remote"], ["id", "sec-csv", 1, "api-section", "api-section--csv"], [1, "api-row__params", 2, "flex-direction", "column", "gap", "6px"], ["rows", "3", 2, "font-family", "monospace", "font-size", "12px", "border", "1px solid #ccc", "border-radius", "4px", "padding", "4px", "width", "100%", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "2", 2, "width", "50px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--search"], ["type", "text", "placeholder", "testo da cercare", 1, "api-input", 3, "ngModelChange", "ngModel"], [1, "api-btn", "api-btn--secondary", 3, "click", "disabled"], [1, "api-section", "api-section--export"], [2, "font-size", "11px", "height", "27px", "border", "1px solid #444", "border-radius", "4px", "padding", "0 6px", "background", "#1e2736", "color", "#e8edf5", 3, "ngModelChange", "ngModel"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "text", 2, "width", "60px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "es. status", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--persistence"], [3, "value"], [1, "api-section__desc"], [1, "api-row__params", 2, "flex", "1", "align-self", "center"], [2, "font-size", "12px", "color", "#a78bfa"], [1, "api-btn", 3, "click"], [1, "api-section", "api-section--readonly"], ["type", "text", "placeholder", "valore", 1, "api-input", "api-input--sm", 3, "ngModelChange", "ngModel"], ["type", "checkbox", 3, "ngModelChange", "change", "ngModel"], ["type", "text", 2, "width", "90px", "font-size", "12px", "padding", "2px 4px", 3, "ngModelChange", "ngModel"], [1, "api-section", "api-section--cells"], [1, "api-section"], ["type", "number", "min", "0", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "v1,v2,v3", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b,c,d", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "40", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "22", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "A1", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "note", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "testo", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "160px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "120px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "Nota...", 2, "width", "140px", 3, "ngModelChange", "ngModel"], ["type", "number", "placeholder", "3000", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "highlight", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "vuoto = tutti", 2, "width", "130px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "1", 2, "width", "55px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "70px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "90px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "100px", 3, "ngModelChange", "ngModel"], ["type", "number", "min", "0", 2, "width", "50px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "a,b|c,d", 2, "width", "110px", 3, "ngModelChange", "ngModel"], ["type", "text", "placeholder", "undo", 2, "width", "80px", 3, "ngModelChange", "ngModel"], ["type", "text", 2, "width", "150px", 3, "ngModelChange", "ngModel"], ["type", "number", 2, "width", "65px", 3, "ngModelChange", "ngModel"], ["type", "text", "maxlength", "1", 2, "width", "45px", 3, "ngModelChange", "ngModel"], [1, "demo-log__entry"], [1, "demo-log__time"], [1, "demo-log__msg"], [1, "demo-log__empty"]], template: function AppComponent_Template(rf, ctx) {
     if (rf & 1) {
       const _r1 = \u0275\u0275getCurrentView();
       \u0275\u0275elementStart(0, "div", 1)(1, "div", 2)(2, "span", 3);
@@ -74894,528 +74939,543 @@ var AppComponent = class _AppComponent {
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(505, "span", 40);
       \u0275\u0275text(506, "Mostra una riga di input sotto l'intestazione per filtrare per colonna in tempo reale.");
+      \u0275\u0275elementEnd()()();
+      \u0275\u0275elementStart(507, "label", 33)(508, "span", 34)(509, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_509_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.cfg.footerOnVisibleRows, $event) || (ctx.cfg.footerOnVisibleRows = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(510, "span", 36)(511, "span", 37);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(512, "div", 38)(513, "span", 39);
+      \u0275\u0275text(514, "Footer su righe visibili");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(515, "span", 40);
+      \u0275\u0275text(516, "I totali/aggregati del footer si ricalcolano solo sulle righe visibili (escludendo ricerca, filtri e righe nascoste), come SUBTOTAL di Excel.");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(507, "div", 31)(508, "div", 32);
-      \u0275\u0275text(509, "CSV");
+      \u0275\u0275elementStart(517, "div", 31)(518, "div", 32);
+      \u0275\u0275text(519, "CSV");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(510, "div", 41)(511, "span", 42);
-      \u0275\u0275text(512, "CSV source (URL o stringa)");
+      \u0275\u0275elementStart(520, "div", 41)(521, "span", 42);
+      \u0275\u0275text(522, "CSV source (URL o stringa)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(513, "span", 43);
-      \u0275\u0275text(514, "URL remoto o stringa CSV inline. Prioritario rispetto a ");
-      \u0275\u0275elementStart(515, "code");
-      \u0275\u0275text(516, "url");
+      \u0275\u0275elementStart(523, "span", 43);
+      \u0275\u0275text(524, "URL remoto o stringa CSV inline. Prioritario rispetto a ");
+      \u0275\u0275elementStart(525, "code");
+      \u0275\u0275text(526, "url");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(517, ".");
+      \u0275\u0275text(527, ".");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(518, "input", 66);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_518_listener($event) {
+      \u0275\u0275elementStart(528, "input", 66);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_528_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.csv, $event) || (ctx.cfg.csv = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(519, "div", 41)(520, "span", 42);
-      \u0275\u0275text(521, "CSV file name");
+      \u0275\u0275elementStart(529, "div", 41)(530, "span", 42);
+      \u0275\u0275text(531, "CSV file name");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(522, "span", 43);
-      \u0275\u0275text(523, "Nome del file scaricato con ");
-      \u0275\u0275elementStart(524, "code");
-      \u0275\u0275text(525, "download()");
+      \u0275\u0275elementStart(532, "span", 43);
+      \u0275\u0275text(533, "Nome del file scaricato con ");
+      \u0275\u0275elementStart(534, "code");
+      \u0275\u0275text(535, "download()");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(526, " (senza estensione).");
+      \u0275\u0275text(536, " (senza estensione).");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(527, "input", 67);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_527_listener($event) {
+      \u0275\u0275elementStart(537, "input", 67);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_537_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.csvFileName, $event) || (ctx.cfg.csvFileName = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(528, "div", 41)(529, "span", 42);
-      \u0275\u0275text(530, "CSV delimiter");
+      \u0275\u0275elementStart(538, "div", 41)(539, "span", 42);
+      \u0275\u0275text(540, "CSV delimiter");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(531, "span", 43);
-      \u0275\u0275text(532, "Delimitatore usato nel CSV. Default: ");
-      \u0275\u0275elementStart(533, "code");
-      \u0275\u0275text(534, ",");
+      \u0275\u0275elementStart(541, "span", 43);
+      \u0275\u0275text(542, "Delimitatore usato nel CSV. Default: ");
+      \u0275\u0275elementStart(543, "code");
+      \u0275\u0275text(544, ",");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(535, "input", 68);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_535_listener($event) {
+      \u0275\u0275elementStart(545, "input", 68);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_545_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.csvDelimiter, $event) || (ctx.cfg.csvDelimiter = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(536, "label", 33)(537, "span", 34)(538, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_538_listener($event) {
-        \u0275\u0275restoreView(_r1);
-        \u0275\u0275twoWayBindingSet(ctx.cfg.csvHeaders, $event) || (ctx.cfg.csvHeaders = $event);
-        return \u0275\u0275resetView($event);
-      });
-      \u0275\u0275elementEnd();
-      \u0275\u0275element(539, "span", 36)(540, "span", 37);
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(541, "div", 38)(542, "span", 39);
-      \u0275\u0275text(543, "CSV headers (import)");
-      \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(544, "span", 40);
-      \u0275\u0275text(545, "Prima riga del CSV usata come intestazioni di colonna.");
-      \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(546, "label", 33)(547, "span", 34)(548, "input", 35);
       \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_548_listener($event) {
         \u0275\u0275restoreView(_r1);
-        \u0275\u0275twoWayBindingSet(ctx.cfg.allowExport, $event) || (ctx.cfg.allowExport = $event);
+        \u0275\u0275twoWayBindingSet(ctx.cfg.csvHeaders, $event) || (ctx.cfg.csvHeaders = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
       \u0275\u0275element(549, "span", 36)(550, "span", 37);
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(551, "div", 38)(552, "span", 39);
-      \u0275\u0275text(553, "Allow export");
+      \u0275\u0275text(553, "CSV headers (import)");
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(554, "span", 40);
-      \u0275\u0275text(555, "Abilita il download CSV. Se false, ");
-      \u0275\u0275elementStart(556, "code");
-      \u0275\u0275text(557, "download()");
-      \u0275\u0275elementEnd();
-      \u0275\u0275text(558, " \xE8 bloccato.");
+      \u0275\u0275text(555, "Prima riga del CSV usata come intestazioni di colonna.");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(559, "label", 33)(560, "span", 34)(561, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_561_listener($event) {
+      \u0275\u0275elementStart(556, "label", 33)(557, "span", 34)(558, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_558_listener($event) {
+        \u0275\u0275restoreView(_r1);
+        \u0275\u0275twoWayBindingSet(ctx.cfg.allowExport, $event) || (ctx.cfg.allowExport = $event);
+        return \u0275\u0275resetView($event);
+      });
+      \u0275\u0275elementEnd();
+      \u0275\u0275element(559, "span", 36)(560, "span", 37);
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(561, "div", 38)(562, "span", 39);
+      \u0275\u0275text(563, "Allow export");
+      \u0275\u0275elementEnd();
+      \u0275\u0275elementStart(564, "span", 40);
+      \u0275\u0275text(565, "Abilita il download CSV. Se false, ");
+      \u0275\u0275elementStart(566, "code");
+      \u0275\u0275text(567, "download()");
+      \u0275\u0275elementEnd();
+      \u0275\u0275text(568, " \xE8 bloccato.");
+      \u0275\u0275elementEnd()()();
+      \u0275\u0275elementStart(569, "label", 33)(570, "span", 34)(571, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_571_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.includeHeadersOnDownload, $event) || (ctx.cfg.includeHeadersOnDownload = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275element(562, "span", 36)(563, "span", 37);
+      \u0275\u0275element(572, "span", 36)(573, "span", 37);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(564, "div", 38)(565, "span", 39);
-      \u0275\u0275text(566, "Include headers on download");
+      \u0275\u0275elementStart(574, "div", 38)(575, "span", 39);
+      \u0275\u0275text(576, "Include headers on download");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(567, "span", 40);
-      \u0275\u0275text(568, "Aggiunge la riga di intestazione nel CSV scaricato.");
+      \u0275\u0275elementStart(577, "span", 40);
+      \u0275\u0275text(578, "Aggiunge la riga di intestazione nel CSV scaricato.");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(569, "div", 31)(570, "div", 32);
-      \u0275\u0275text(571, "Dati Remoti");
+      \u0275\u0275elementStart(579, "div", 31)(580, "div", 32);
+      \u0275\u0275text(581, "Dati Remoti");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(572, "div", 41)(573, "span", 42);
-      \u0275\u0275text(574, "URL");
+      \u0275\u0275elementStart(582, "div", 41)(583, "span", 42);
+      \u0275\u0275text(584, "URL");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(575, "span", 43);
-      \u0275\u0275text(576, "Endpoint JSON da cui caricare i dati. Lascia vuoto per usare i dati locali.");
+      \u0275\u0275elementStart(585, "span", 43);
+      \u0275\u0275text(586, "Endpoint JSON da cui caricare i dati. Lascia vuoto per usare i dati locali.");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(577, "input", 69);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_577_listener($event) {
+      \u0275\u0275elementStart(587, "input", 69);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_587_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.url, $event) || (ctx.cfg.url = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(578, "div", 41)(579, "span", 42);
-      \u0275\u0275text(580, "Method");
+      \u0275\u0275elementStart(588, "div", 41)(589, "span", 42);
+      \u0275\u0275text(590, "Method");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(581, "span", 43);
-      \u0275\u0275text(582, "Metodo HTTP per la richiesta (");
-      \u0275\u0275elementStart(583, "code");
-      \u0275\u0275text(584, "GET");
+      \u0275\u0275elementStart(591, "span", 43);
+      \u0275\u0275text(592, "Metodo HTTP per la richiesta (");
+      \u0275\u0275elementStart(593, "code");
+      \u0275\u0275text(594, "GET");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(585, " o ");
-      \u0275\u0275elementStart(586, "code");
-      \u0275\u0275text(587, "POST");
+      \u0275\u0275text(595, " o ");
+      \u0275\u0275elementStart(596, "code");
+      \u0275\u0275text(597, "POST");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(588, ").");
+      \u0275\u0275text(598, ").");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(589, "select", 70);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_select_ngModelChange_589_listener($event) {
+      \u0275\u0275elementStart(599, "select", 70);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_select_ngModelChange_599_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.method, $event) || (ctx.cfg.method = $event);
         return \u0275\u0275resetView($event);
       });
-      \u0275\u0275elementStart(590, "option", 71);
-      \u0275\u0275text(591, "GET");
+      \u0275\u0275elementStart(600, "option", 71);
+      \u0275\u0275text(601, "GET");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(592, "option", 72);
-      \u0275\u0275text(593, "POST");
+      \u0275\u0275elementStart(602, "option", 72);
+      \u0275\u0275text(603, "POST");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(594, "div", 41)(595, "span", 42);
-      \u0275\u0275text(596, "Request variables (JSON)");
+      \u0275\u0275elementStart(604, "div", 41)(605, "span", 42);
+      \u0275\u0275text(606, "Request variables (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(597, "span", 43);
-      \u0275\u0275text(598, "Parametri extra come oggetto JSON. GET \u2192 query string, POST \u2192 body JSON.");
+      \u0275\u0275elementStart(607, "span", 43);
+      \u0275\u0275text(608, "Parametri extra come oggetto JSON. GET \u2192 query string, POST \u2192 body JSON.");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(599, "input", 73);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_599_listener($event) {
+      \u0275\u0275elementStart(609, "input", 73);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_609_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.requestVariables, $event) || (ctx.cfg.requestVariables = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(600, "label", 33)(601, "span", 34)(602, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_602_listener($event) {
+      \u0275\u0275elementStart(610, "label", 33)(611, "span", 34)(612, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_612_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.loadingSpin, $event) || (ctx.cfg.loadingSpin = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275element(603, "span", 36)(604, "span", 37);
+      \u0275\u0275element(613, "span", 36)(614, "span", 37);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(605, "div", 38)(606, "span", 39);
-      \u0275\u0275text(607, "Loading spinner");
+      \u0275\u0275elementStart(615, "div", 38)(616, "span", 39);
+      \u0275\u0275text(617, "Loading spinner");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(608, "span", 40);
-      \u0275\u0275text(609, "Mostra un overlay con spinner durante il fetch remoto.");
+      \u0275\u0275elementStart(618, "span", 40);
+      \u0275\u0275text(619, "Mostra un overlay con spinner durante il fetch remoto.");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(610, "div", 31)(611, "div", 32);
-      \u0275\u0275text(612, "Maschera input (Telefono)");
+      \u0275\u0275elementStart(620, "div", 31)(621, "div", 32);
+      \u0275\u0275text(622, "Maschera input (Telefono)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(613, "div", 41)(614, "span", 42);
-      \u0275\u0275text(615, "Pattern maschera");
+      \u0275\u0275elementStart(623, "div", 41)(624, "span", 42);
+      \u0275\u0275text(625, "Pattern maschera");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(616, "span", 43);
-      \u0275\u0275text(617, "Pattern per la colonna Telefono. Usa ");
-      \u0275\u0275elementStart(618, "code");
-      \u0275\u0275text(619, "#");
+      \u0275\u0275elementStart(626, "span", 43);
+      \u0275\u0275text(627, "Pattern per la colonna Telefono. Usa ");
+      \u0275\u0275elementStart(628, "code");
+      \u0275\u0275text(629, "#");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(620, " come token (es. ");
-      \u0275\u0275elementStart(621, "code");
-      \u0275\u0275text(622, "+## ### ### ####");
+      \u0275\u0275text(630, " come token (es. ");
+      \u0275\u0275elementStart(631, "code");
+      \u0275\u0275text(632, "+## ### ### ####");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(623, "). Vuoto = nessuna maschera.");
+      \u0275\u0275text(633, "). Vuoto = nessuna maschera.");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(624, "input", 74);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_624_listener($event) {
+      \u0275\u0275elementStart(634, "input", 74);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_634_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.phoneMaskPattern, $event) || (ctx.cfg.phoneMaskPattern = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(625, "div", 41)(626, "span", 42);
-      \u0275\u0275text(627, "Token");
+      \u0275\u0275elementStart(635, "div", 41)(636, "span", 42);
+      \u0275\u0275text(637, "Token");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(628, "input", 75);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_628_listener($event) {
+      \u0275\u0275elementStart(638, "input", 75);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_638_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.phoneMaskToken, $event) || (ctx.cfg.phoneMaskToken = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(629, "div", 41)(630, "label", 76)(631, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_631_listener($event) {
+      \u0275\u0275elementStart(639, "div", 41)(640, "label", 76)(641, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_641_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.phoneMaskAllowEmpty, $event) || (ctx.cfg.phoneMaskAllowEmpty = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(632, "span");
-      \u0275\u0275text(633, "Allow empty (campo opzionale)");
+      \u0275\u0275elementStart(642, "span");
+      \u0275\u0275text(643, "Allow empty (campo opzionale)");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(634, "div", 31)(635, "div", 32);
-      \u0275\u0275text(636, "Colonne nascoste");
+      \u0275\u0275elementStart(644, "div", 31)(645, "div", 32);
+      \u0275\u0275text(646, "Colonne nascoste");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(637, "div", 41)(638, "span", 43);
-      \u0275\u0275text(639, "Seleziona le colonne da nascondere. Richiede ");
-      \u0275\u0275elementStart(640, "strong");
-      \u0275\u0275text(641, "Reinizializza");
+      \u0275\u0275elementStart(647, "div", 41)(648, "span", 43);
+      \u0275\u0275text(649, "Seleziona le colonne da nascondere. Richiede ");
+      \u0275\u0275elementStart(650, "strong");
+      \u0275\u0275text(651, "Reinizializza");
       \u0275\u0275elementEnd();
-      \u0275\u0275text(642, ".");
+      \u0275\u0275text(652, ".");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(643, "div", 77);
-      \u0275\u0275template(644, AppComponent_label_644_Template, 3, 6, "label", 78);
+      \u0275\u0275elementStart(653, "div", 77);
+      \u0275\u0275template(654, AppComponent_label_654_Template, 3, 6, "label", 78);
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(645, "div", 31)(646, "div", 32);
-      \u0275\u0275text(647, "Celle: Classi CSS");
+      \u0275\u0275elementStart(655, "div", 31)(656, "div", 32);
+      \u0275\u0275text(657, "Celle: Classi CSS");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(648, "div", 41)(649, "span", 42);
-      \u0275\u0275text(650, "classes (JSON)");
+      \u0275\u0275elementStart(658, "div", 41)(659, "span", 42);
+      \u0275\u0275text(660, "classes (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(651, "span", 43);
-      \u0275\u0275text(652, "Mappa colonna \u2192 classi CSS extra. Es: ");
-      \u0275\u0275elementStart(653, "code");
-      \u0275\u0275text(654, '{"0":"highlight","2":"danger"}');
+      \u0275\u0275elementStart(661, "span", 43);
+      \u0275\u0275text(662, "Mappa colonna \u2192 classi CSS extra. Es: ");
+      \u0275\u0275elementStart(663, "code");
+      \u0275\u0275text(664, '{"0":"highlight","2":"danger"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(655, "input", 79);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_655_listener($event) {
+      \u0275\u0275elementStart(665, "input", 79);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_665_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.classesInput, $event) || (ctx.cfg.classesInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(656, "div", 31)(657, "div", 32);
-      \u0275\u0275text(658, "Stile default celle");
+      \u0275\u0275elementStart(666, "div", 31)(667, "div", 32);
+      \u0275\u0275text(668, "Stile default celle");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(659, "div", 41)(660, "span", 42);
-      \u0275\u0275text(661, "defaultCellStyle (JSON)");
+      \u0275\u0275elementStart(669, "div", 41)(670, "span", 42);
+      \u0275\u0275text(671, "defaultCellStyle (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(662, "span", 43);
-      \u0275\u0275text(663, "Stile base applicato a tutte le celle. Sovrascrivibile per colonna/riga/cella. Es: ");
-      \u0275\u0275elementStart(664, "code");
-      \u0275\u0275text(665, '{"fontSize":"13px","color":"#333"}');
+      \u0275\u0275elementStart(672, "span", 43);
+      \u0275\u0275text(673, "Stile base applicato a tutte le celle. Sovrascrivibile per colonna/riga/cella. Es: ");
+      \u0275\u0275elementStart(674, "code");
+      \u0275\u0275text(675, '{"fontSize":"13px","color":"#333"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(666, "input", 80);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_666_listener($event) {
+      \u0275\u0275elementStart(676, "input", 80);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_676_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.defaultCellStyleInput, $event) || (ctx.cfg.defaultCellStyleInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(667, "div", 41)(668, "span", 42);
-      \u0275\u0275text(669, "defaultHeaderStyle (JSON)");
+      \u0275\u0275elementStart(677, "div", 41)(678, "span", 42);
+      \u0275\u0275text(679, "defaultHeaderStyle (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(670, "span", 43);
-      \u0275\u0275text(671, "Stile base per tutte le celle dell'header principale. Es: ");
-      \u0275\u0275elementStart(672, "code");
-      \u0275\u0275text(673, '{"fontSize":"12px","fontWeight":"bold"}');
+      \u0275\u0275elementStart(680, "span", 43);
+      \u0275\u0275text(681, "Stile base per tutte le celle dell'header principale. Es: ");
+      \u0275\u0275elementStart(682, "code");
+      \u0275\u0275text(683, '{"fontSize":"12px","fontWeight":"bold"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(674, "input", 81);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_674_listener($event) {
+      \u0275\u0275elementStart(684, "input", 81);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_684_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.defaultHeaderStyleInput, $event) || (ctx.cfg.defaultHeaderStyleInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(675, "div", 41)(676, "span", 42);
-      \u0275\u0275text(677, "defaultNestedHeaderStyle (JSON)");
+      \u0275\u0275elementStart(685, "div", 41)(686, "span", 42);
+      \u0275\u0275text(687, "defaultNestedHeaderStyle (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(678, "span", 43);
-      \u0275\u0275text(679, "Stile base per tutte le celle dei nested header. Es: ");
-      \u0275\u0275elementStart(680, "code");
-      \u0275\u0275text(681, '{"backgroundColor":"#e8eaf6","color":"#1a237e"}');
+      \u0275\u0275elementStart(688, "span", 43);
+      \u0275\u0275text(689, "Stile base per tutte le celle dei nested header. Es: ");
+      \u0275\u0275elementStart(690, "code");
+      \u0275\u0275text(691, '{"backgroundColor":"#e8eaf6","color":"#1a237e"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(682, "input", 82);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_682_listener($event) {
+      \u0275\u0275elementStart(692, "input", 82);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_692_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.defaultNestedHeaderStyleInput, $event) || (ctx.cfg.defaultNestedHeaderStyleInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(683, "div", 41)(684, "span", 42);
-      \u0275\u0275text(685, "defaultFooterStyle (JSON)");
+      \u0275\u0275elementStart(693, "div", 41)(694, "span", 42);
+      \u0275\u0275text(695, "defaultFooterStyle (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(686, "span", 43);
-      \u0275\u0275text(687, "Stile base per tutte le celle del footer. Es: ");
-      \u0275\u0275elementStart(688, "code");
-      \u0275\u0275text(689, '{"fontStyle":"italic","color":"#666"}');
+      \u0275\u0275elementStart(696, "span", 43);
+      \u0275\u0275text(697, "Stile base per tutte le celle del footer. Es: ");
+      \u0275\u0275elementStart(698, "code");
+      \u0275\u0275text(699, '{"fontStyle":"italic","color":"#666"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(690, "input", 83);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_690_listener($event) {
+      \u0275\u0275elementStart(700, "input", 83);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_700_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.defaultFooterStyleInput, $event) || (ctx.cfg.defaultFooterStyleInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(691, "div", 31)(692, "div", 32);
-      \u0275\u0275text(693, "i18n (testi UI)");
+      \u0275\u0275elementStart(701, "div", 31)(702, "div", 32);
+      \u0275\u0275text(703, "i18n (testi UI)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(694, "div", 41)(695, "span", 42);
-      \u0275\u0275text(696, "text overrides (JSON)");
+      \u0275\u0275elementStart(704, "div", 41)(705, "span", 42);
+      \u0275\u0275text(706, "text overrides (JSON)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(697, "span", 43);
-      \u0275\u0275text(698, "Oggetto JSON con le chiavi da sovrascrivere. Es: ");
-      \u0275\u0275elementStart(699, "code");
-      \u0275\u0275text(700, '{"addRow":"+ Riga"}');
+      \u0275\u0275elementStart(707, "span", 43);
+      \u0275\u0275text(708, "Oggetto JSON con le chiavi da sovrascrivere. Es: ");
+      \u0275\u0275elementStart(709, "code");
+      \u0275\u0275text(710, '{"addRow":"+ Riga"}');
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(701, "input", 84);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_701_listener($event) {
+      \u0275\u0275elementStart(711, "input", 84);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_711_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.textOverridesInput, $event) || (ctx.cfg.textOverridesInput = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(702, "div", 31)(703, "div", 32);
-      \u0275\u0275text(704, "Persistenza (localStorage)");
+      \u0275\u0275elementStart(712, "div", 31)(713, "div", 32);
+      \u0275\u0275text(714, "Persistenza (localStorage)");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(705, "label", 33)(706, "span", 34)(707, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_707_listener($event) {
+      \u0275\u0275elementStart(715, "label", 33)(716, "span", 34)(717, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_717_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.persistenceEnabled, $event) || (ctx.cfg.persistenceEnabled = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275element(708, "span", 36)(709, "span", 37);
+      \u0275\u0275element(718, "span", 36)(719, "span", 37);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(710, "div", 38)(711, "span", 39);
-      \u0275\u0275text(712, "Salvataggio automatico");
+      \u0275\u0275elementStart(720, "div", 38)(721, "span", 39);
+      \u0275\u0275text(722, "Salvataggio automatico");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(713, "span", 40);
-      \u0275\u0275text(714, "Salva i dati in localStorage ad ogni modifica e li ripristina al caricamento.");
+      \u0275\u0275elementStart(723, "span", 40);
+      \u0275\u0275text(724, "Salva i dati in localStorage ad ogni modifica e li ripristina al caricamento.");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(715, "div", 41)(716, "span", 42);
-      \u0275\u0275text(717, "chiave localStorage");
+      \u0275\u0275elementStart(725, "div", 41)(726, "span", 42);
+      \u0275\u0275text(727, "chiave localStorage");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(718, "input", 85);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_718_listener($event) {
+      \u0275\u0275elementStart(728, "input", 85);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_728_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.persistenceKey, $event) || (ctx.cfg.persistenceKey = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(719, "div", 31)(720, "div", 32);
-      \u0275\u0275text(721, "Ricerca");
+      \u0275\u0275elementStart(729, "div", 31)(730, "div", 32);
+      \u0275\u0275text(731, "Ricerca");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(722, "label", 33)(723, "span", 34)(724, "input", 35);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_724_listener($event) {
+      \u0275\u0275elementStart(732, "label", 33)(733, "span", 34)(734, "input", 35);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_734_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.searchHideRows, $event) || (ctx.cfg.searchHideRows = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275element(725, "span", 36)(726, "span", 37);
+      \u0275\u0275element(735, "span", 36)(736, "span", 37);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(727, "div", 38)(728, "span", 39);
-      \u0275\u0275text(729, "Nascondi righe non trovate");
+      \u0275\u0275elementStart(737, "div", 38)(738, "span", 39);
+      \u0275\u0275text(739, "Nascondi righe non trovate");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(730, "span", 40);
-      \u0275\u0275text(731, "Se disabilitato, le righe non trovate vengono opacizzate invece di sparire.");
+      \u0275\u0275elementStart(740, "span", 40);
+      \u0275\u0275text(741, "Se disabilitato, le righe non trovate vengono opacizzate invece di sparire.");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(732, "div", 41)(733, "span", 42);
-      \u0275\u0275text(734, "opacit\xE0 non-match ");
-      \u0275\u0275elementStart(735, "strong");
-      \u0275\u0275text(736);
+      \u0275\u0275elementStart(742, "div", 41)(743, "span", 42);
+      \u0275\u0275text(744, "opacit\xE0 non-match ");
+      \u0275\u0275elementStart(745, "strong");
+      \u0275\u0275text(746);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(737, "input", 86);
-      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_737_listener($event) {
+      \u0275\u0275elementStart(747, "input", 86);
+      \u0275\u0275twoWayListener("ngModelChange", function AppComponent_Template_input_ngModelChange_747_listener($event) {
         \u0275\u0275restoreView(_r1);
         \u0275\u0275twoWayBindingSet(ctx.cfg.searchDimOpacity, $event) || (ctx.cfg.searchDimOpacity = $event);
         return \u0275\u0275resetView($event);
       });
       \u0275\u0275elementEnd()()()()()();
-      \u0275\u0275elementStart(738, "div", 87);
-      \u0275\u0275element(739, "pl-loading-overlay", 88);
-      \u0275\u0275elementStart(740, "jx-table", 89);
-      \u0275\u0275listener("ready", function AppComponent_Template_jx_table_ready_740_listener($event) {
+      \u0275\u0275elementStart(748, "div", 87);
+      \u0275\u0275element(749, "pl-loading-overlay", 88);
+      \u0275\u0275elementStart(750, "jx-table", 89);
+      \u0275\u0275listener("ready", function AppComponent_Template_jx_table_ready_750_listener($event) {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.onReady($event));
       });
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(741, "div", 90)(742, "div", 91);
-      \u0275\u0275template(743, AppComponent_div_743_Template, 2, 0, "div", 92)(744, AppComponent_div_744_Template, 2, 1, "div", 93);
-      \u0275\u0275element(745, "div", 94);
+      \u0275\u0275elementStart(751, "div", 90)(752, "div", 91);
+      \u0275\u0275template(753, AppComponent_div_753_Template, 2, 0, "div", 92)(754, AppComponent_div_754_Template, 2, 1, "div", 93);
+      \u0275\u0275element(755, "div", 94);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(746, AppComponent_ng_template_746_Template, 30, 4, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
+      \u0275\u0275template(756, AppComponent_ng_template_756_Template, 30, 4, "ng-template", null, 0, \u0275\u0275templateRefExtractor);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(748, "div", 95)(749, "div", 96)(750, "h2", 97);
-      \u0275\u0275text(751, "API Explorer");
+      \u0275\u0275elementStart(758, "div", 95)(759, "div", 96)(760, "h2", 97);
+      \u0275\u0275text(761, "API Explorer");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(752, "p", 98);
-      \u0275\u0275text(753, "Ogni metodo pubblico \u2014 parametri modificabili, risultato inline dopo ogni chiamata");
+      \u0275\u0275elementStart(762, "p", 98);
+      \u0275\u0275text(763, "Ogni metodo pubblico \u2014 parametri modificabili, risultato inline dopo ogni chiamata");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(754, "div", 99)(755, "nav", 100)(756, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_756_listener() {
+      \u0275\u0275elementStart(764, "div", 99)(765, "nav", 100)(766, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_766_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "rows-cols");
       });
-      \u0275\u0275text(757, " Righe & Colonne ");
-      \u0275\u0275elementStart(758, "span", 102);
-      \u0275\u0275text(759, "8");
+      \u0275\u0275text(767, " Righe & Colonne ");
+      \u0275\u0275elementStart(768, "span", 102);
+      \u0275\u0275text(769, "8");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(760, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_760_listener() {
+      \u0275\u0275elementStart(770, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_770_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "cells");
       });
-      \u0275\u0275text(761, " Celle & Fill ");
-      \u0275\u0275elementStart(762, "span", 102);
-      \u0275\u0275text(763, "8");
+      \u0275\u0275text(771, " Celle & Fill ");
+      \u0275\u0275elementStart(772, "span", 102);
+      \u0275\u0275text(773, "8");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(764, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_764_listener() {
+      \u0275\u0275elementStart(774, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_774_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "merge-nav");
       });
-      \u0275\u0275text(765, " Merge & Selezione ");
-      \u0275\u0275elementStart(766, "span", 102);
-      \u0275\u0275text(767, "9");
+      \u0275\u0275text(775, " Merge & Selezione ");
+      \u0275\u0275elementStart(776, "span", 102);
+      \u0275\u0275text(777, "9");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(768, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_768_listener() {
+      \u0275\u0275elementStart(778, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_778_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "styles");
       });
-      \u0275\u0275text(769, " Stili & Sort ");
-      \u0275\u0275elementStart(770, "span", 102);
-      \u0275\u0275text(771, "12");
+      \u0275\u0275text(779, " Stili & Sort ");
+      \u0275\u0275elementStart(780, "span", 102);
+      \u0275\u0275text(781, "12");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(772, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_772_listener() {
+      \u0275\u0275elementStart(782, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_782_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "data");
       });
-      \u0275\u0275text(773, " Dati & CSV ");
-      \u0275\u0275elementStart(774, "span", 102);
-      \u0275\u0275text(775, "10");
+      \u0275\u0275text(783, " Dati & CSV ");
+      \u0275\u0275elementStart(784, "span", 102);
+      \u0275\u0275text(785, "10");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(776, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_776_listener() {
+      \u0275\u0275elementStart(786, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_786_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "events");
       });
-      \u0275\u0275text(777, " Observable Events ");
-      \u0275\u0275elementStart(778, "span", 102);
-      \u0275\u0275text(779, "12");
+      \u0275\u0275text(787, " Observable Events ");
+      \u0275\u0275elementStart(788, "span", 102);
+      \u0275\u0275text(789, "12");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(780, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_780_listener() {
+      \u0275\u0275elementStart(790, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_790_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "visibility");
       });
-      \u0275\u0275text(781, " Visibilit\xE0 & Dim ");
-      \u0275\u0275elementStart(782, "span", 102);
-      \u0275\u0275text(783, "14");
+      \u0275\u0275text(791, " Visibilit\xE0 & Dim ");
+      \u0275\u0275elementStart(792, "span", 102);
+      \u0275\u0275text(793, "14");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(784, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_784_listener() {
+      \u0275\u0275elementStart(794, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_794_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "style-coord");
       });
-      \u0275\u0275text(785, " Stile & Coord ");
-      \u0275\u0275elementStart(786, "span", 102);
-      \u0275\u0275text(787, "5");
+      \u0275\u0275text(795, " Stile & Coord ");
+      \u0275\u0275elementStart(796, "span", 102);
+      \u0275\u0275text(797, "5");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(788, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_788_listener() {
+      \u0275\u0275elementStart(798, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_798_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "annotations");
       });
-      \u0275\u0275text(789, " Commenti & Classi ");
-      \u0275\u0275elementStart(790, "span", 102);
-      \u0275\u0275text(791, "8");
+      \u0275\u0275text(799, " Commenti & Classi ");
+      \u0275\u0275elementStart(800, "span", 102);
+      \u0275\u0275text(801, "8");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(792, "button", 101);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_792_listener() {
+      \u0275\u0275elementStart(802, "button", 101);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_802_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.activeApiTab = "compat");
       });
-      \u0275\u0275text(793, " jExcel Compat ");
-      \u0275\u0275elementStart(794, "span", 102);
-      \u0275\u0275text(795, "15");
+      \u0275\u0275text(803, " jExcel Compat ");
+      \u0275\u0275elementStart(804, "span", 102);
+      \u0275\u0275text(805, "15");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(796, "div", 103);
-      \u0275\u0275template(797, AppComponent_div_797_Template, 319, 46, "div", 104)(798, AppComponent_div_798_Template, 302, 52, "div", 104)(799, AppComponent_div_799_Template, 255, 37, "div", 104)(800, AppComponent_div_800_Template, 716, 129, "div", 104)(801, AppComponent_div_801_Template, 375, 59, "div", 104)(802, AppComponent_div_802_Template, 345, 35, "div", 104)(803, AppComponent_div_803_Template, 294, 57, "div", 104)(804, AppComponent_div_804_Template, 141, 24, "div", 104)(805, AppComponent_div_805_Template, 158, 28, "div", 104)(806, AppComponent_div_806_Template, 668, 104, "div", 104);
+      \u0275\u0275elementStart(806, "div", 103);
+      \u0275\u0275template(807, AppComponent_div_807_Template, 319, 46, "div", 104)(808, AppComponent_div_808_Template, 302, 52, "div", 104)(809, AppComponent_div_809_Template, 255, 37, "div", 104)(810, AppComponent_div_810_Template, 716, 129, "div", 104)(811, AppComponent_div_811_Template, 375, 59, "div", 104)(812, AppComponent_div_812_Template, 345, 35, "div", 104)(813, AppComponent_div_813_Template, 294, 57, "div", 104)(814, AppComponent_div_814_Template, 141, 24, "div", 104)(815, AppComponent_div_815_Template, 158, 28, "div", 104)(816, AppComponent_div_816_Template, 668, 104, "div", 104);
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(807, "div", 105)(808, "div", 106)(809, "h3", 107);
-      \u0275\u0275text(810, "Event Log");
+      \u0275\u0275elementStart(817, "div", 105)(818, "div", 106)(819, "h3", 107);
+      \u0275\u0275text(820, "Event Log");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(811, "span", 108);
-      \u0275\u0275text(812);
+      \u0275\u0275elementStart(821, "span", 108);
+      \u0275\u0275text(822);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(813, "button", 109);
-      \u0275\u0275listener("click", function AppComponent_Template_button_click_813_listener() {
+      \u0275\u0275elementStart(823, "button", 109);
+      \u0275\u0275listener("click", function AppComponent_Template_button_click_823_listener() {
         \u0275\u0275restoreView(_r1);
         return \u0275\u0275resetView(ctx.clearLog());
       });
-      \u0275\u0275text(814, "Pulisci");
+      \u0275\u0275text(824, "Pulisci");
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(815, "div", 110);
-      \u0275\u0275template(816, AppComponent_div_816_Template, 5, 8, "div", 111)(817, AppComponent_div_817_Template, 2, 0, "div", 112);
+      \u0275\u0275elementStart(825, "div", 110);
+      \u0275\u0275template(826, AppComponent_div_826_Template, 5, 8, "div", 111)(827, AppComponent_div_827_Template, 2, 0, "div", 112);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(818, "section", 113)(819, "h2", 114);
-      \u0275\u0275text(820, " Virtual Scroll \u2014 1 000 righe ");
+      \u0275\u0275elementStart(828, "section", 113)(829, "h2", 114);
+      \u0275\u0275text(830, " Virtual Scroll \u2014 1 000 righe ");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(821, "p", 115);
-      \u0275\u0275text(822, " Solo le righe visibili + un buffer di 5 vengono renderizzate nel DOM. Lo scrollbar riflette l'altezza totale di tutte e 1 000 le righe. ");
+      \u0275\u0275elementStart(831, "p", 115);
+      \u0275\u0275text(832, " Solo le righe visibili + un buffer di 5 vengono renderizzate nel DOM. Lo scrollbar riflette l'altezza totale di tutte e 1 000 le righe. ");
       \u0275\u0275elementEnd();
-      \u0275\u0275element(823, "jx-grid", 116);
+      \u0275\u0275element(833, "jx-grid", 116);
       \u0275\u0275elementEnd()();
     }
     if (rf & 2) {
@@ -75538,6 +75598,8 @@ var AppComponent = class _AppComponent {
       \u0275\u0275twoWayProperty("ngModel", ctx.cfg.stickyFooter);
       \u0275\u0275advance(10);
       \u0275\u0275twoWayProperty("ngModel", ctx.cfg.columnFilter);
+      \u0275\u0275advance(10);
+      \u0275\u0275twoWayProperty("ngModel", ctx.cfg.footerOnVisibleRows);
       \u0275\u0275advance(19);
       \u0275\u0275twoWayProperty("ngModel", ctx.cfg.csv);
       \u0275\u0275advance(9);
@@ -76207,6 +76269,18 @@ var AppComponent = class _AppComponent {
           <div class="config-toggle__info">\r
             <span class="config-toggle__name">Filter row</span>\r
             <span class="config-toggle__desc">Mostra una riga di input sotto l'intestazione per filtrare per colonna in tempo reale.</span>\r
+          </div>\r
+        </label>\r
+\r
+        <label class="config-toggle">\r
+          <span class="config-toggle__switch">\r
+            <input type="checkbox" [(ngModel)]="cfg.footerOnVisibleRows" />\r
+            <span class="config-toggle__switch-track"></span>\r
+            <span class="config-toggle__switch-thumb"></span>\r
+          </span>\r
+          <div class="config-toggle__info">\r
+            <span class="config-toggle__name">Footer su righe visibili</span>\r
+            <span class="config-toggle__desc">I totali/aggregati del footer si ricalcolano solo sulle righe visibili (escludendo ricerca, filtri e righe nascoste), come SUBTOTAL di Excel.</span>\r
           </div>\r
         </label>\r
       </div>\r
@@ -78638,7 +78712,7 @@ var AppModule = class _AppModule {
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    O,
+    B,
     PlLoadingTraceModule.forRoot({
       shared: { debounceMs: 200 },
       http: { animationType: "bar", modal: false },
@@ -78663,7 +78737,7 @@ var AppModule = class _AppModule {
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        O,
+        B,
         PlLoadingTraceModule.forRoot({
           shared: { debounceMs: 200 },
           http: { animationType: "bar", modal: false },

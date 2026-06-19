@@ -44481,7 +44481,7 @@ function __thead_10_tr_6_td_1_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r3 = \u0275\u0275nextContext(3);
-    \u0275\u0275property("ngStyle", ctx_r3.getFilterRowCellStyle());
+    \u0275\u0275property("ngStyle", ctx_r3.getFilterRowHeaderStyle());
   }
 }
 function __thead_10_tr_6_td_2_input_1_Template(rf, ctx) {
@@ -44517,7 +44517,7 @@ function __thead_10_tr_6_td_2_Template(rf, ctx) {
   if (rf & 2) {
     const x_r30 = ctx.index;
     const ctx_r3 = \u0275\u0275nextContext(3);
-    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r30))("ngStyle", ctx_r3.getFilterRowCellStyle());
+    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r30))("ngStyle", ctx_r3.getFilterRowCellStyle(x_r30));
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.isFilterableColumn(x_r30));
     \u0275\u0275advance();
@@ -49259,12 +49259,17 @@ var $ = class _$ {
   clearAllColumnFilters() {
     this.workbook.clearColumnFilters();
   }
-  getFilterRowCellStyle() {
-    return true !== this.options.stickyHeader ? {} : {
-      position: "sticky",
-      top: (this.nestedHeaderRows.length + 1) * this.headerRowHeight + "px",
-      zIndex: "60"
-    };
+  getFilterRowCellStyle(e) {
+    const t = {};
+    if (true === this.options.stickyHeader) {
+      const e2 = (this.nestedHeaderRows.length + 1) * this.headerRowHeight;
+      t.position = "sticky", t.top = `${e2}px`, t.zIndex = "60";
+    }
+    return void 0 !== e && this.isFrozenColumn(e) && (t.position = "sticky", t.left = `${this.getFrozenColumnLeft(e)}px`, t.zIndex = true === this.options.stickyHeader ? "62" : "52", t.backgroundColor = "var(--jx-header-bg, #f1f3f9)"), t;
+  }
+  getFilterRowHeaderStyle() {
+    const e = this.getFilterRowCellStyle();
+    return e.position = "sticky", e.left = "0px", e.zIndex = "63", e.backgroundColor = "var(--jx-header-bg, #f1f3f9)", e;
   }
   getSortDirection(e) {
     const t = this.workbook.getSortState();
@@ -51235,11 +51240,11 @@ var $ = class _$ {
         </tr>\r
         <!-- Filter row: displayed under the main header when columnFilter is enabled -->\r
         <tr *ngIf="options.columnFilter === true" class="jx-filter-row">\r
-          <td *ngIf="options.rowHeaders !== false" class="jx-filter-spacer" [ngStyle]="getFilterRowCellStyle()"></td>\r
+          <td *ngIf="options.rowHeaders !== false" class="jx-filter-spacer" [ngStyle]="getFilterRowHeaderStyle()"></td>\r
           <td *ngFor="let h of headers; let x = index; trackBy: trackByColumn"\r
             [hidden]="isHiddenColumn(x)"\r
             class="jx-filter-cell"\r
-            [ngStyle]="getFilterRowCellStyle()">\r
+            [ngStyle]="getFilterRowCellStyle(x)">\r
             <input *ngIf="isFilterableColumn(x)"\r
               type="text"\r
               class="jx-filter-input"\r

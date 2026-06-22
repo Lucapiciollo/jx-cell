@@ -48686,7 +48686,7 @@ var $ = class _$ {
     })), this.sub.add(this.workbook.locked$.subscribe(() => {
       this.cdr.markForCheck();
     })), this.sub.add(this.workbook.config$.subscribe(() => {
-      this.cdr.markForCheck();
+      this.scheduleColWidthsRebuild(), this.cdr.markForCheck();
     })), this.sub.add(this.workbook.loading$.subscribe((e) => {
       this.loading = e, this.cdr.markForCheck();
     })), this.sub.add(this.workbook.search$.subscribe((e) => {
@@ -49195,7 +49195,7 @@ var $ = class _$ {
   }
   getFrozenColumnLeft(e) {
     let t = false !== this.options.rowHeaders ? this._renderedRowHeaderWidth || this.rowHeaderWidth : 0;
-    for (let o = 0; o < e; o++) this.isFrozenColumn(o) && (t += this._renderedColWidths[o] ?? this.getColumnWidth(o));
+    for (let o = 0; o < e; o++) this.isFrozenColumn(o) && (t += this.getColumnWidth(o));
     return t;
   }
   isCellCopied(e, t) {

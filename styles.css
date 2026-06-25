@@ -188,6 +188,8 @@ jx-table .jexcel tbody td {
   text-overflow: ellipsis;
   vertical-align: middle;
   transition: background var(--jx-transition);
+  -webkit-user-select: none;
+  user-select: none;
   position: relative;
 }
 jx-table .jexcel tbody td > span,
@@ -258,6 +260,14 @@ jx-table .jexcel input.editor {
   background: var(--jx-cell-bg);
   color: var(--jx-text);
   border-radius: var(--jx-radius-sm) var(--jx-radius-sm) 0 0;
+  -webkit-user-select: text;
+  user-select: text;
+}
+jx-table .jexcel td input,
+jx-table .jexcel td textarea,
+jx-table .jexcel td select {
+  -webkit-user-select: text;
+  user-select: text;
 }
 jx-table .jexcel select,
 jx-table .jexcel input[type=date],

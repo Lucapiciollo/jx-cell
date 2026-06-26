@@ -239,7 +239,12 @@ jx-table .jexcel tfoot td {
 jx-table .jexcel_selectall,
 jx-table .jexcel_row {
   background: var(--jx-header-bg) !important;
-  border: 1px solid var(--jx-border) !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-top-color: var(--jx-rowheader-border-top-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+  border-right-color: var(--jx-rowheader-border-right-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+  border-bottom-color: var(--jx-rowheader-border-bottom-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+  border-left-color: var(--jx-rowheader-border-left-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
   color: var(--jx-text-muted);
   font-size: var(--jx-font-size-xs);
   font-weight: 600;

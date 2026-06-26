@@ -21,6 +21,7 @@
    - [Colonne (columns)](#colonne-columns)
    - [Modifica e interazione](#modifica-e-interazione)
    - [Layout e visualizzazione](#layout-e-visualizzazione)
+   - [Virtualizzazione righe (Virtual Scroll)](#virtualizzazione-righe-virtual-scroll)
    - [Header e footer fissi — colonne congelate](#header-e-footer-fissi--colonne-congelate)
    - [Ordinamento](#ordinamento)
    - [Ricerca e filtri](#ricerca-e-filtri)
@@ -76,7 +77,7 @@
     - [Celle personalizzate in `jx-grid`](#celle-personalizzate-in-jx-grid)
     - [Personalizzazione SCSS di `jx-grid`](#personalizzazione-scss-di-jx-grid)
 
-> Documentazione aggiornata al 2026-06-12
+> Documentazione aggiornata al 2026-06-26
 
 ---
 
@@ -489,6 +490,12 @@ const options: JxCellOptions = {
   // OBBLIGATORIO per sticky header/footer e freeze.
   tableHeight: '500px',
 
+  // Alternativa a tableHeight: indica quante righe dati devono essere visibili
+  // contemporaneamente. jx-table calcola automaticamente l'altezza come:
+  //   34px (header colonne) + visibleRowCount × defaultRowHeight
+  // Se tableHeight è impostato, ha la precedenza su visibleRowCount.
+  visibleRowCount: 10,
+
   // Larghezza del contenitore scroll. Se omessa usa la larghezza naturale.
   tableWidth: '100%',
 
@@ -497,6 +504,44 @@ const options: JxCellOptions = {
   tableOverflow: true,
 };
 ```
+
+### Virtualizzazione righe (Virtual Scroll)
+
+Per dataset con centinaia o migliaia di righe, `jx-table` supporta un motore di
+**row virtualization** nativo: mantiene nel DOM solo la finestra di righe visibili
+più un buffer di overscan, riducendo il rendering iniziale fino al **−96%**
+(esempio: 400 righe → da 626 ms a 25 ms).
+
+```typescript
+const options: JxCellOptions = {
+  // Attiva la virtualizzazione delle righe.
+  // Disabilitata automaticamente se sono presenti celle con rowspan > 1.
+  virtualScroll: true,
+
+  // OBBLIGATORIO con virtualScroll: definisce l'altezza del viewport.
+  // Puoi usare tableHeight (stringa CSS) oppure visibleRowCount (n. righe).
+  tableHeight: '480px',
+  // — oppure —
+  visibleRowCount: 15,    // 34 + 15 × defaultRowHeight px
+
+  // Numero di righe extra renderizzate oltre il viewport (sopra e sotto).
+  // Aumentare per ridurre il lampeggio durante scroll lento. Default: 8.
+  virtualScrollOverscan: 8,
+
+  // Limite massimo di righe extra aggiunte dall'overscan dinamico basato
+  // sulla velocità di scroll. Buffer anti-flash durante scroll veloce.
+  // Default: 40.
+  virtualScrollMaxVelocityOverscan: 40,
+
+  tableOverflow: true,    // OBBLIGATORIO
+};
+```
+
+> **Limitazioni**:
+> - Incompatibile con celle unite che occupano più righe (`mergeCells` con rowspan > 1):
+>   la virtualizzazione si disabilita automaticamente con un avviso in console.
+> - Le righe congelate (`freezeRows`) vengono sempre renderizzate indipendentemente
+>   dalla finestra virtuale.
 
 ### Header e footer fissi — colonne congelate
 
@@ -2910,7 +2955,7 @@ il sistema di dependency injection Angular.
 | Motore | motore interno della libreria | Angular nativo (`*ngFor`) |
 | Funzionalità avanzate (merge, formula engine, sticky header, …) | ✅ | ❌ |
 | API RxJS / `JxWorkbookService` | ✅ | ❌ |
-| Dataset molto grandi con virtual scroll | ⚠️ sperimentale | ✅ built-in |
+| Dataset molto grandi con virtual scroll | ✅ built-in | ✅ built-in |
 | Tipizzazione generica `T` | ❌ (array di array) | ✅ `JxGridComponent<T>` |
 | Celle Angular custom native | parziale | ✅ |
 | Change detection OnPush-friendly | parziale | ✅ |

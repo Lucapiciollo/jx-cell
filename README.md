@@ -3,7 +3,7 @@
 > **Componente table per Angular** — v6.9.0
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
-> API TypeScript tipizzata · Temi via CSS custom properties · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
+> API TypeScript tipizzata · Temi via CSS custom properties · Icone personalizzabili (`JX_ICONS`) · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
 
 ---
 
@@ -64,8 +64,9 @@
    - [Cella sub-header (Nested Header Cell)](#cella-sub-header-nested-header-cell)
 10. [Context menu personalizzato](#context-menu-personalizzato)
 11. [Temi e stili](#temi-e-stili)
-12. [Indirizzi e formule](#indirizzi-e-formule)
-13. [Esempio completo](#esempio-completo)
+12. [Icone personalizzate](#icone-personalizzate)
+13. [Indirizzi e formule](#indirizzi-e-formule)
+14. [Esempio completo](#esempio-completo)
 14. [Componente `jx-grid` — data-grid nativo Angular](#componente-jx-grid--data-grid-nativo-angular)
     - [Quando usare `jx-grid` vs `jx-table`](#quando-usare-jx-grid-vs-jx-table)
     - [Setup e utilizzo base](#setup-e-utilizzo-base)
@@ -2774,6 +2775,108 @@ oppure direttamente su `jx-table`:
 | `--jx-row-height` | `$jx-row-height` | `32px` | Altezza riga dati |
 | `--jx-toolbar-height` | `$jx-toolbar-height` | `36px` | Altezza toolbar |
 | `--jx-transition` | `$jx-transition` | `0.12s ease` | Durata transizioni CSS |
+
+---
+
+## Icone personalizzate
+
+Tutte le icone di sistema usate da `jx-table` (ordinamento, menu contestuale, paginazione, freccia combo della toolbar, chiusura del popup commento, placeholder del filtro colonna) sono personalizzabili tramite l'`InjectionToken` **`JX_ICONS`**.
+
+La mappa di override è strutturata in due livelli — **nome componente → chiave icona → valore** — così si capisce a colpo d'occhio a quale componente appartiene ogni icona. Ogni chiave che **non** fornisci usa automaticamente l'icona di sistema di default (`JX_DEFAULT_ICONS`).
+
+Un valore icona può essere un semplice glifo (`'▲'`), un'entità HTML (`'&#x2398;'`), markup HTML (`'<i class="fa fa-copy"></i>'`) o un SVG inline (`'<svg>…</svg>'`): viene reso tramite `[innerHTML]`.
+
+> ⚠️ **Sicurezza** — I valori passano per `bypassSecurityTrustHtml`, necessario per consentire SVG/HTML. Devono quindi provenire dallo sviluppatore (configurazione fidata), **mai** da input utente.
+
+### Configurazione
+
+```typescript
+// app.module.ts
+import { NgModule } from '@angular/core';
+import { JxCellModule, JX_ICONS, JxIconOverrides } from 'jx-cell';
+
+const MY_ICONS: JxIconOverrides = {
+  'jx-table': {
+    // Ordinamento (intestazioni di colonna)
+    sortAsc:  '<svg viewBox="0 0 24 24" width="12" height="12"><path d="M7 14l5-5 5 5z" fill="currentColor"/></svg>',
+    sortDesc: '<svg viewBox="0 0 24 24" width="12" height="12"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg>',
+    sortNone: '<i class="fa fa-sort"></i>',
+
+    // Filtro colonna (solo testo: il placeholder non rende HTML/SVG)
+    filterPlaceholder: 'Cerca…',
+
+    // Menu contestuale
+    contextCopy:  '<i class="fa fa-copy"></i>',
+    contextPaste: '<i class="fa fa-paste"></i>',
+
+    // Paginazione
+    pageFirst:    '«',
+    pagePrevious: '‹',
+    pageNext:     '›',
+    pageLast:     '»',
+
+    // Le chiavi non elencate mantengono il default di sistema
+  },
+};
+
+@NgModule({
+  imports: [JxCellModule],
+  providers: [
+    { provide: JX_ICONS, useValue: MY_ICONS },
+  ],
+})
+export class AppModule {}
+```
+
+### Chiavi disponibili per `jx-table`
+
+| Chiave | Default | Dove appare |
+|---|---|---|
+| `sortAsc` | `▲` | Indicatore ordinamento crescente (header) |
+| `sortDesc` | `▼` | Indicatore ordinamento decrescente (header) |
+| `sortNone` | `⇅` | Colonna ordinabile non ordinata (header) |
+| `comboArrow` | `▼` | Freccia dropdown dei combo della toolbar |
+| `filterPlaceholder` | `🔍` | Placeholder dell'input filtro colonna *(solo testo)* |
+| `filterIndicator` | _(funnel SVG)_ | Icona filtro sull'header di colonna (colonne filtrabili, evidenziata se il filtro è attivo) |
+| `contextCopy` | `⎘` | Menu contestuale → Copia |
+| `contextPaste` | `⎙` | Menu contestuale → Incolla |
+| `contextInsertRowBefore` | `⤒` | Menu contestuale → Inserisci riga prima |
+| `contextInsertRowAfter` | `⤓` | Menu contestuale → Inserisci riga dopo |
+| `contextDeleteRows` | `✕` | Menu contestuale → Elimina righe |
+| `contextInsertColumnBefore` | `⤐` | Menu contestuale → Inserisci colonna prima |
+| `contextInsertColumnAfter` | `⤑` | Menu contestuale → Inserisci colonna dopo |
+| `contextDeleteColumns` | `✕` | Menu contestuale → Elimina colonne |
+| `contextOrderAsc` | `▲` | Menu contestuale → Ordina crescente |
+| `contextOrderDesc` | `▼` | Menu contestuale → Ordina decrescente |
+| `pageFirst` | `⇤` | Paginazione → Prima pagina |
+| `pagePrevious` | `‹` | Paginazione → Pagina precedente |
+| `pageNext` | `›` | Paginazione → Pagina successiva |
+| `pageLast` | `⇥` | Paginazione → Ultima pagina |
+| `addColumn` | `+` | Pulsante "aggiungi colonna" |
+| `commentClose` | `✕` | Pulsante chiusura popup commento |
+
+> La chiave `filterPlaceholder` è renderizzata in un attributo `placeholder`, quindi accetta **solo testo semplice** (niente HTML/SVG). Tutte le altre chiavi supportano glifo, HTML o SVG.
+
+### Come funziona internamente
+
+Il servizio `JxIconService` (`providedIn: 'root'`) risolve ogni icona con la precedenza **override → default**:
+
+```typescript
+import { JxIconService } from 'jx-cell';
+
+// component / key → SafeHtml (per [innerHTML]) — supporta glifo/HTML/SVG
+icons.get('jx-table', 'sortAsc');
+
+// component / key → string grezza (per attributi testuali, es. placeholder)
+icons.getRaw('jx-table', 'filterPlaceholder');
+```
+
+Il componente `jx-table` espone due helper usati internamente dal template, utili anche nelle tue celle personalizzate se inietti lo stesso servizio:
+
+| Helper | Ritorna | Uso |
+|---|---|---|
+| `icon(key)` | `SafeHtml` | Binding `[innerHTML]` (glifo/HTML/SVG) |
+| `iconRaw(key)` | `string` | Contesti solo-testo (es. `[attr.placeholder]`) |
 
 ---
 

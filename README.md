@@ -563,12 +563,19 @@ const options: JxCellOptions = {
   // Le celle congelate hanno uno sfondo opaco (--jx-header-bg).
   freezeColumns: 2,
 
+  // Congela le ultime N colonne al bordo DESTRO: il body scorre orizzontalmente
+  // tra le colonne ferme a sinistra e quelle ferme a destra.
+  freezeColumnsRight: 1,
+
   // Congela le prime N righe del tbody durante lo scroll verticale.
   freezeRows: 1,
 
   // Lista precisa di indici colonna (0-based) da congelare.
   // Alternativa più flessibile a freezeColumns: permette colonne non contigue.
   frozenColumnIndexes: [0, 1, 2],
+
+  // Come frozenColumnIndexes ma per il bordo destro.
+  frozenColumnIndexesRight: [8, 9],
 
   // Mostra una riga di input filtro sotto ogni header colonna.
   columnFilter: false,
@@ -754,6 +761,12 @@ const options: JxCellOptions = {
 | `component` | `Type<...>` | Componente Angular custom (vedi §Cella sub-header). |
 
 **Normalizzazione automatica**: la libreria aggiunge celle vuote per coprire le colonne rimanenti.
+
+**Colonne senza gruppo (rowspan automatico)**: una colonna non coperta da alcun gruppo
+(cella vuota con `colspan: 1` in tutte le righe `nestedHeaders`) rende la sua intestazione
+principale su un'unica cella che occupa in verticale tutta l'altezza dell'header
+(rowspan). Così non resta una cella nested vuota che scorre autonomamente sopra la
+colonna, e l'intestazione mantiene ordinamento/resize/filtro.
 
 **Formule nei titoli**:
 

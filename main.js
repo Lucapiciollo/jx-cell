@@ -43992,19 +43992,29 @@ var _c1 = ["editorInput"];
 var _c2 = ["defaultContextMenuTpl"];
 var _c3 = () => [];
 var _c4 = (a0, a1) => ({
+  $implicit: a0,
+  rowspan: a1,
+  spanned: true
+});
+var _c5 = (a0) => ({
+  $implicit: a0,
+  rowspan: 1,
+  spanned: false
+});
+var _c6 = (a0, a1) => ({
   top: a0,
   left: a1
 });
 var _forTrack0 = ($index, $item) => $item.y;
 function P_div_2_ng_container_1_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "span", 33);
+    \u0275\u0275element(0, "span", 35);
   }
 }
 function P_div_2_ng_container_1_i_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "i", 34);
+    \u0275\u0275elementStart(0, "i", 36);
     \u0275\u0275listener("click", function P_div_2_ng_container_1_i_2_Template_i_click_0_listener($event) {
       \u0275\u0275restoreView(_r2);
       const item_r3 = \u0275\u0275nextContext().$implicit;
@@ -44023,7 +44033,7 @@ function P_div_2_ng_container_1_i_2_Template(rf, ctx) {
 }
 function P_div_2_ng_container_1_select_3_option_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 37);
+    \u0275\u0275elementStart(0, "option", 39);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -44037,14 +44047,14 @@ function P_div_2_ng_container_1_select_3_option_1_Template(rf, ctx) {
 function P_div_2_ng_container_1_select_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "select", 35);
+    \u0275\u0275elementStart(0, "select", 37);
     \u0275\u0275listener("change", function P_div_2_ng_container_1_select_3_Template_select_change_0_listener($event) {
       \u0275\u0275restoreView(_r5);
       const item_r3 = \u0275\u0275nextContext().$implicit;
       const ctx_r3 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r3.onToolbarSelectChange($event, item_r3));
     });
-    \u0275\u0275template(1, P_div_2_ng_container_1_select_3_option_1_Template, 2, 2, "option", 36);
+    \u0275\u0275template(1, P_div_2_ng_container_1_select_3_option_1_Template, 2, 2, "option", 38);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44058,9 +44068,9 @@ function P_div_2_ng_container_1_select_3_Template(rf, ctx) {
 function P_div_2_ng_container_1_i_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "i", 38);
+    \u0275\u0275elementStart(0, "i", 40);
     \u0275\u0275text(1);
-    \u0275\u0275elementStart(2, "input", 39);
+    \u0275\u0275elementStart(2, "input", 41);
     \u0275\u0275listener("input", function P_div_2_ng_container_1_i_4_Template_input_input_2_listener($event) {
       \u0275\u0275restoreView(_r7);
       const item_r3 = \u0275\u0275nextContext().$implicit;
@@ -44080,19 +44090,19 @@ function P_div_2_ng_container_1_ng_container_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "div", 40)(2, "button", 41);
+    \u0275\u0275elementStart(1, "div", 42)(2, "button", 43);
     \u0275\u0275listener("click", function P_div_2_ng_container_1_ng_container_5_Template_button_click_2_listener($event) {
       \u0275\u0275restoreView(_r8);
       const anchor_r9 = \u0275\u0275reference(7);
       const ctx_r3 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r3.triggerComboMenu($event, anchor_r9));
     });
-    \u0275\u0275elementStart(3, "span", 42);
+    \u0275\u0275elementStart(3, "span", 44);
     \u0275\u0275text(4);
     \u0275\u0275elementEnd();
-    \u0275\u0275element(5, "span", 43);
+    \u0275\u0275element(5, "span", 45);
     \u0275\u0275elementEnd();
-    \u0275\u0275element(6, "span", 44, 3);
+    \u0275\u0275element(6, "span", 46, 3);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
@@ -44118,7 +44128,7 @@ function P_div_2_ng_container_1_ng_container_5_Template(rf, ctx) {
 function P_div_2_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_div_2_ng_container_1_span_1_Template, 1, 0, "span", 28)(2, P_div_2_ng_container_1_i_2_Template, 2, 5, "i", 29)(3, P_div_2_ng_container_1_select_3_Template, 2, 3, "select", 30)(4, P_div_2_ng_container_1_i_4_Template, 3, 3, "i", 31)(5, P_div_2_ng_container_1_ng_container_5_Template, 8, 12, "ng-container", 32);
+    \u0275\u0275template(1, P_div_2_ng_container_1_span_1_Template, 1, 0, "span", 30)(2, P_div_2_ng_container_1_i_2_Template, 2, 5, "i", 31)(3, P_div_2_ng_container_1_select_3_Template, 2, 3, "select", 32)(4, P_div_2_ng_container_1_i_4_Template, 3, 3, "i", 33)(5, P_div_2_ng_container_1_ng_container_5_Template, 8, 12, "ng-container", 34);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
@@ -44137,8 +44147,8 @@ function P_div_2_ng_container_1_Template(rf, ctx) {
 }
 function P_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 26);
-    \u0275\u0275template(1, P_div_2_ng_container_1_Template, 6, 5, "ng-container", 27);
+    \u0275\u0275elementStart(0, "div", 28);
+    \u0275\u0275template(1, P_div_2_ng_container_1_Template, 6, 5, "ng-container", 29);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44150,7 +44160,7 @@ function P_div_2_Template(rf, ctx) {
 function P_ng_template_3_li_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "li", 47);
+    \u0275\u0275elementStart(0, "li", 49);
     \u0275\u0275listener("mousedown", function P_ng_template_3_li_1_Template_li_mousedown_0_listener($event) {
       \u0275\u0275restoreView(_r11);
       return \u0275\u0275resetView($event.preventDefault());
@@ -44178,8 +44188,8 @@ function P_ng_template_3_li_1_Template(rf, ctx) {
 }
 function P_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "ul", 45);
-    \u0275\u0275template(1, P_ng_template_3_li_1_Template, 2, 4, "li", 46);
+    \u0275\u0275elementStart(0, "ul", 47);
+    \u0275\u0275template(1, P_ng_template_3_li_1_Template, 2, 4, "li", 48);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44200,7 +44210,7 @@ function P_col_8_Template(rf, ctx) {
 }
 function P_col_9_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "col", 48);
+    \u0275\u0275element(0, "col", 50);
   }
   if (rf & 2) {
     const x_r16 = ctx.index;
@@ -44211,7 +44221,7 @@ function P_col_9_Template(rf, ctx) {
 }
 function P_thead_10_tr_1_td_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "td", 55);
+    \u0275\u0275element(0, "td", 56);
   }
   if (rf & 2) {
     const nh_r17 = \u0275\u0275nextContext().index;
@@ -44219,72 +44229,121 @@ function P_thead_10_tr_1_td_1_Template(rf, ctx) {
     \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getNestedHeaderSelectAllStyle(nh_r17));
   }
 }
-function P_thead_10_tr_1_td_2_ng_container_1_ng_container_1_Template(rf, ctx) {
+function P_thead_10_tr_1_ng_container_2_ng_container_1_ng_container_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainer(0);
   }
 }
-function P_thead_10_tr_1_td_2_ng_container_1_Template(rf, ctx) {
+function P_thead_10_tr_1_ng_container_2_ng_container_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_thead_10_tr_1_td_2_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 58);
+    \u0275\u0275template(1, P_thead_10_tr_1_ng_container_2_ng_container_1_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 58);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const ni_r18 = \u0275\u0275nextContext().index;
+    const ni_r18 = \u0275\u0275nextContext(2).index;
+    const nh_r17 = \u0275\u0275nextContext().index;
+    \u0275\u0275nextContext();
+    const mainHeaderCellTpl_r19 = \u0275\u0275reference(7);
+    const ctx_r3 = \u0275\u0275nextContext();
+    \u0275\u0275advance();
+    \u0275\u0275property("ngTemplateOutlet", mainHeaderCellTpl_r19)("ngTemplateOutletContext", \u0275\u0275pureFunction2(2, _c4, ctx_r3.nestedHeaderCellStart(nh_r17, ni_r18), ctx_r3.headerRowSpan));
+  }
+}
+function P_thead_10_tr_1_ng_container_2_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275template(1, P_thead_10_tr_1_ng_container_2_ng_container_1_ng_container_1_Template, 2, 5, "ng-container", 34);
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const nh_r17 = \u0275\u0275nextContext(2).index;
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", nh_r17 === 0);
+  }
+}
+function P_thead_10_tr_1_ng_container_2_ng_template_2_ng_container_1_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainer(0);
+  }
+}
+function P_thead_10_tr_1_ng_container_2_ng_template_2_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275template(1, P_thead_10_tr_1_ng_container_2_ng_template_2_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 60);
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const ni_r18 = \u0275\u0275nextContext(2).index;
     const nh_r17 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
     \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomNestedHeaderComponent(nh_r17, ni_r18))("ngComponentOutletInputs", ctx_r3.customNestedHeaderInputs(nh_r17, ni_r18));
   }
 }
-function P_thead_10_tr_1_td_2_ng_template_2_Template(rf, ctx) {
+function P_thead_10_tr_1_ng_container_2_ng_template_2_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275text(0);
   }
   if (rf & 2) {
-    const nestedCell_r19 = \u0275\u0275nextContext().$implicit;
-    \u0275\u0275textInterpolate(nestedCell_r19.title);
+    const nestedCell_r20 = \u0275\u0275nextContext(2).$implicit;
+    \u0275\u0275textInterpolate(nestedCell_r20.title);
   }
 }
-function P_thead_10_tr_1_td_2_Template(rf, ctx) {
+function P_thead_10_tr_1_ng_container_2_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "td", 56);
-    \u0275\u0275template(1, P_thead_10_tr_1_td_2_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_thead_10_tr_1_td_2_ng_template_2_Template, 1, 1, "ng-template", null, 4, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementStart(0, "td", 59);
+    \u0275\u0275template(1, P_thead_10_tr_1_ng_container_2_ng_template_2_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_thead_10_tr_1_ng_container_2_ng_template_2_ng_template_2_Template, 1, 1, "ng-template", null, 6, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const ni_r18 = ctx.index;
-    const defaultNestedTpl_r20 = \u0275\u0275reference(3);
+    const defaultNestedTpl_r21 = \u0275\u0275reference(3);
+    const ni_r18 = \u0275\u0275nextContext().index;
     const nh_r17 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isNestedHeaderCellFrozen(nh_r17, ni_r18));
     \u0275\u0275property("hidden", ctx_r3.isNestedHeaderCellHidden(nh_r17, ni_r18))("ngStyle", ctx_r3.getNestedHeaderCellStyle(nh_r17, ni_r18));
     \u0275\u0275attribute("colspan", ctx_r3.getNestedHeaderEffectiveColspan(nh_r17, ni_r18) > 1 ? ctx_r3.getNestedHeaderEffectiveColspan(nh_r17, ni_r18) : null);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.hasCustomNestedHeaderComponent(nh_r17, ni_r18))("ngIfElse", defaultNestedTpl_r20);
+    \u0275\u0275property("ngIf", ctx_r3.hasCustomNestedHeaderComponent(nh_r17, ni_r18))("ngIfElse", defaultNestedTpl_r21);
+  }
+}
+function P_thead_10_tr_1_ng_container_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275template(1, P_thead_10_tr_1_ng_container_2_ng_container_1_Template, 2, 1, "ng-container", 57)(2, P_thead_10_tr_1_ng_container_2_ng_template_2_Template, 4, 7, "ng-template", null, 5, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const ni_r18 = ctx.index;
+    const normalNestedCell_r22 = \u0275\u0275reference(3);
+    const nh_r17 = \u0275\u0275nextContext().index;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.isNestedCellStandalone(nh_r17, ni_r18))("ngIfElse", normalNestedCell_r22);
   }
 }
 function P_thead_10_tr_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tr");
-    \u0275\u0275template(1, P_thead_10_tr_1_td_1_Template, 1, 2, "td", 53)(2, P_thead_10_tr_1_td_2_Template, 4, 5, "td", 54);
+    \u0275\u0275template(1, P_thead_10_tr_1_td_1_Template, 1, 2, "td", 55)(2, P_thead_10_tr_1_ng_container_2_Template, 4, 2, "ng-container", 29);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const nestedRow_r21 = ctx.$implicit;
+    const nestedRow_r23 = ctx.$implicit;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.options.rowHeaders !== false);
     \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", nestedRow_r21);
+    \u0275\u0275property("ngForOf", nestedRow_r23);
   }
 }
 function P_thead_10_td_3_Template(rf, ctx) {
   if (rf & 1) {
-    const _r22 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "td", 59);
+    const _r24 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 61);
     \u0275\u0275listener("click", function P_thead_10_td_3_Template_td_click_0_listener() {
-      \u0275\u0275restoreView(_r22);
+      \u0275\u0275restoreView(_r24);
       const ctx_r3 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r3.selectAll());
     });
@@ -44295,231 +44354,44 @@ function P_thead_10_td_3_Template(rf, ctx) {
     \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getMainHeaderSelectAllStyle());
   }
 }
-function P_thead_10_td_4_ng_container_1_ng_container_1_ng_container_1_Template(rf, ctx) {
+function P_thead_10_ng_container_4_ng_container_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainer(0);
   }
 }
-function P_thead_10_td_4_ng_container_1_ng_container_1_Template(rf, ctx) {
+function P_thead_10_ng_container_4_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_container_1_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 58);
+    \u0275\u0275template(1, P_thead_10_ng_container_4_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 58);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r24 = \u0275\u0275nextContext(2).index;
-    const ctx_r3 = \u0275\u0275nextContext(2);
+    const x_r25 = \u0275\u0275nextContext().index;
+    \u0275\u0275nextContext();
+    const mainHeaderCellTpl_r19 = \u0275\u0275reference(7);
     \u0275\u0275advance();
-    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomHeaderComponent(x_r24))("ngComponentOutletInputs", ctx_r3.customHeaderInputs(x_r24));
+    \u0275\u0275property("ngTemplateOutlet", mainHeaderCellTpl_r19)("ngTemplateOutletContext", \u0275\u0275pureFunction1(2, _c5, x_r25));
   }
 }
-function P_thead_10_td_4_ng_container_1_Template(rf, ctx) {
+function P_thead_10_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_container_1_ng_container_1_Template, 2, 2, "ng-container", 61);
+    \u0275\u0275template(1, P_thead_10_ng_container_4_ng_container_1_Template, 2, 4, "ng-container", 34);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r24 = \u0275\u0275nextContext().index;
+    const x_r25 = ctx.index;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", ctx_r3.headerOutletKeys(x_r24))("ngForTrackBy", ctx_r3.trackByHeaderKey);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_1_span_1_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortAsc"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_1_span_2_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortDesc"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_1_span_3_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortNone"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_1_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 67);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_template_2_span_1_span_1_Template, 1, 1, "span", 68)(2, P_thead_10_td_4_ng_template_2_span_1_span_2_Template, 1, 1, "span", 68)(3, P_thead_10_td_4_ng_template_2_span_1_span_3_Template, 1, 1, "span", 68);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    const x_r24 = \u0275\u0275nextContext(2).index;
-    const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === "asc");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === "desc");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === null);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_4_img_1_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "img", 72);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("src", ctx_r3.filterIndicatorUrl(), \u0275\u0275sanitizeUrl);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_4_span_2_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("filterIndicator"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_4_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 70);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_template_2_span_4_img_1_Template, 1, 1, "img", 71)(2, P_thead_10_td_4_ng_template_2_span_4_span_2_Template, 1, 1, "span", 68);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    const x_r24 = \u0275\u0275nextContext(2).index;
-    const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275classProp("jx-col-filter-icon--with-sort", ctx_r3.isSortableColumn(x_r24))("jx-col-filter-icon--active", !!ctx_r3.getColumnFilterValue(x_r24));
-    \u0275\u0275attribute("title", ctx_r3.getColumnFilterValue(x_r24) ? "Filtro: " + ctx_r3.getColumnFilterValue(x_r24) : null);
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.filterIndicatorMode() === "url");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.filterIndicatorMode() === "html");
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_5_span_1_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortAsc"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_5_span_2_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortDesc"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_5_span_3_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
-  }
-  if (rf & 2) {
-    const ctx_r3 = \u0275\u0275nextContext(5);
-    \u0275\u0275property("innerHTML", ctx_r3.icon("sortNone"), \u0275\u0275sanitizeHtml);
-  }
-}
-function P_thead_10_td_4_ng_template_2_span_5_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 73);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_template_2_span_5_span_1_Template, 1, 1, "span", 68)(2, P_thead_10_td_4_ng_template_2_span_5_span_2_Template, 1, 1, "span", 68)(3, P_thead_10_td_4_ng_template_2_span_5_span_3_Template, 1, 1, "span", 68);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    let tmp_10_0;
-    const x_r24 = \u0275\u0275nextContext(2).index;
-    const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275classProp("jx-sort-icon--push-right", ((tmp_10_0 = ctx_r3.options.sortIconPosition) !== null && tmp_10_0 !== void 0 ? tmp_10_0 : "right") === "right");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === "asc");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === "desc");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r24) === null);
-  }
-}
-function P_thead_10_td_4_ng_template_2_Template(rf, ctx) {
-  if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 62);
-    \u0275\u0275template(1, P_thead_10_td_4_ng_template_2_span_1_Template, 4, 3, "span", 63);
-    \u0275\u0275elementStart(2, "span", 64);
-    \u0275\u0275text(3);
-    \u0275\u0275elementEnd();
-    \u0275\u0275template(4, P_thead_10_td_4_ng_template_2_span_4_Template, 3, 7, "span", 65)(5, P_thead_10_td_4_ng_template_2_span_5_Template, 4, 5, "span", 66);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    let tmp_9_0;
-    let tmp_12_0;
-    const ctx_r24 = \u0275\u0275nextContext();
-    const h_r26 = ctx_r24.$implicit;
-    const x_r24 = ctx_r24.index;
-    const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.isSortableColumn(x_r24) && ((tmp_9_0 = ctx_r3.options.sortIconPosition) !== null && tmp_9_0 !== void 0 ? tmp_9_0 : "right") === "left");
-    \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(h_r26);
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.options.columnFilter === true && ctx_r3.isFilterableColumn(x_r24) && ctx_r3.filterIndicatorMode() !== "none");
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.isSortableColumn(x_r24) && ((tmp_12_0 = ctx_r3.options.sortIconPosition) !== null && tmp_12_0 !== void 0 ? tmp_12_0 : "right") !== "left");
-  }
-}
-function P_thead_10_td_4_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r23 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "td", 60);
-    \u0275\u0275listener("mousedown", function P_thead_10_td_4_Template_td_mousedown_0_listener($event) {
-      const x_r24 = \u0275\u0275restoreView(_r23).index;
-      const ctx_r3 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r3.onHeaderMouseDown(x_r24, $event));
-    })("mousemove", function P_thead_10_td_4_Template_td_mousemove_0_listener($event) {
-      const x_r24 = \u0275\u0275restoreView(_r23).index;
-      const ctx_r3 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r3.onHeaderMouseMove(x_r24, $event));
-    })("mouseenter", function P_thead_10_td_4_Template_td_mouseenter_0_listener($event) {
-      const x_r24 = \u0275\u0275restoreView(_r23).index;
-      const ctx_r3 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r3.onHeaderMouseEnter(x_r24, $event));
-    })("click", function P_thead_10_td_4_Template_td_click_0_listener($event) {
-      const x_r24 = \u0275\u0275restoreView(_r23).index;
-      const ctx_r3 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r3.selectColumn(x_r24, $event));
-    });
-    \u0275\u0275template(1, P_thead_10_td_4_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_thead_10_td_4_ng_template_2_Template, 6, 4, "ng-template", null, 5, \u0275\u0275templateRefExtractor);
-    \u0275\u0275elementEnd();
-  }
-  if (rf & 2) {
-    let tmp_18_0;
-    const x_r24 = ctx.index;
-    const defaultHeaderTpl_r27 = \u0275\u0275reference(3);
-    const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFrozenColumn(x_r24))("jx-col-draggable", ctx_r3.canDragColumnHeader(x_r24))("jx-col-resizable", ctx_r3.canResizeColumnHeader(x_r24))("jx-col-dragging", ctx_r3.isHeaderDragging(x_r24))("jx-col-resizing", ctx_r3.isHeaderResizing(x_r24))("jx-col-drag-left", ctx_r3.isHeaderDropLeft(x_r24))("jx-col-drag-right", ctx_r3.isHeaderDropRight(x_r24))("jx-col-sortable", ctx_r3.isSortableColumn(x_r24))("jx-col-sort-asc", ctx_r3.getSortDirection(x_r24) === "asc")("jx-col-sort-desc", ctx_r3.getSortDirection(x_r24) === "desc")("selected", ctx_r3.options.highlightSelectedColumnHeader !== false && ((tmp_18_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_18_0.x1) === x_r24 && ((tmp_18_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_18_0.x2) === x_r24);
-    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r24))("ngStyle", ctx_r3.getMainHeaderCellStyle(x_r24))("ngClass", ctx_r3.getHeaderClassList(x_r24));
-    \u0275\u0275attribute("data-x", x_r24)("data-col-key", ctx_r3.getColKey(x_r24) || null);
-    \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.hasCustomHeaderComponent(x_r24))("ngIfElse", defaultHeaderTpl_r27);
+    \u0275\u0275property("ngIf", !ctx_r3.isStandaloneHeaderColumn(x_r25));
   }
 }
 function P_thead_10_td_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r28 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "td", 74);
+    const _r26 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 62);
     \u0275\u0275listener("click", function P_thead_10_td_5_Template_td_click_0_listener() {
-      \u0275\u0275restoreView(_r28);
+      \u0275\u0275restoreView(_r26);
       const ctx_r3 = \u0275\u0275nextContext(2);
       return \u0275\u0275resetView(ctx_r3.workbook.insertColumn());
     });
@@ -44530,57 +44402,276 @@ function P_thead_10_td_5_Template(rf, ctx) {
     \u0275\u0275property("innerHTML", ctx_r3.icon("addColumn"), \u0275\u0275sanitizeHtml);
   }
 }
-function P_thead_10_tr_6_td_1_Template(rf, ctx) {
+function P_thead_10_ng_template_6_ng_container_1_ng_container_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "td", 78);
+    \u0275\u0275elementContainer(0);
+  }
+}
+function P_thead_10_ng_template_6_ng_container_1_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_container_1_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 60);
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const x_r28 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomHeaderComponent(x_r28))("ngComponentOutletInputs", ctx_r3.customHeaderInputs(x_r28));
+  }
+}
+function P_thead_10_ng_template_6_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementContainerStart(0);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_container_1_ng_container_1_Template, 2, 2, "ng-container", 52);
+    \u0275\u0275elementContainerEnd();
+  }
+  if (rf & 2) {
+    const x_r28 = \u0275\u0275nextContext().$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngForOf", ctx_r3.headerOutletKeys(x_r28))("ngForTrackBy", ctx_r3.trackByHeaderKey);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_1_span_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortAsc"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_1_span_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortDesc"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_1_span_3_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortNone"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 69);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_template_2_span_1_span_1_Template, 1, 1, "span", 70)(2, P_thead_10_ng_template_6_ng_template_2_span_1_span_2_Template, 1, 1, "span", 70)(3, P_thead_10_ng_template_6_ng_template_2_span_1_span_3_Template, 1, 1, "span", 70);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const x_r28 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === "asc");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === "desc");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === null);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_4_img_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "img", 74);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("src", ctx_r3.filterIndicatorUrl(), \u0275\u0275sanitizeUrl);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_4_span_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("filterIndicator"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_4_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 72);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_template_2_span_4_img_1_Template, 1, 1, "img", 73)(2, P_thead_10_ng_template_6_ng_template_2_span_4_span_2_Template, 1, 1, "span", 70);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    const x_r28 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275classProp("jx-col-filter-icon--with-sort", ctx_r3.isSortableColumn(x_r28))("jx-col-filter-icon--active", !!ctx_r3.getColumnFilterValue(x_r28));
+    \u0275\u0275attribute("title", ctx_r3.getColumnFilterValue(x_r28) ? "Filtro: " + ctx_r3.getColumnFilterValue(x_r28) : null);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.filterIndicatorMode() === "url");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.filterIndicatorMode() === "html");
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_5_span_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortAsc"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_5_span_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortDesc"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_5_span_3_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "span", 71);
+  }
+  if (rf & 2) {
+    const ctx_r3 = \u0275\u0275nextContext(5);
+    \u0275\u0275property("innerHTML", ctx_r3.icon("sortNone"), \u0275\u0275sanitizeHtml);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_span_5_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 75);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_template_2_span_5_span_1_Template, 1, 1, "span", 70)(2, P_thead_10_ng_template_6_ng_template_2_span_5_span_2_Template, 1, 1, "span", 70)(3, P_thead_10_ng_template_6_ng_template_2_span_5_span_3_Template, 1, 1, "span", 70);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    let tmp_12_0;
+    const x_r28 = \u0275\u0275nextContext(2).$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275classProp("jx-sort-icon--push-right", ((tmp_12_0 = ctx_r3.options.sortIconPosition) !== null && tmp_12_0 !== void 0 ? tmp_12_0 : "right") === "right");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === "asc");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === "desc");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.getSortDirection(x_r28) === null);
+  }
+}
+function P_thead_10_ng_template_6_ng_template_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 64);
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_template_2_span_1_Template, 4, 3, "span", 65);
+    \u0275\u0275elementStart(2, "span", 66);
+    \u0275\u0275text(3);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(4, P_thead_10_ng_template_6_ng_template_2_span_4_Template, 3, 7, "span", 67)(5, P_thead_10_ng_template_6_ng_template_2_span_5_Template, 4, 5, "span", 68);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    let tmp_11_0;
+    let tmp_14_0;
+    const x_r28 = \u0275\u0275nextContext().$implicit;
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.isSortableColumn(x_r28) && ((tmp_11_0 = ctx_r3.options.sortIconPosition) !== null && tmp_11_0 !== void 0 ? tmp_11_0 : "right") === "left");
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate(ctx_r3.headers[x_r28]);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.options.columnFilter === true && ctx_r3.isFilterableColumn(x_r28) && ctx_r3.filterIndicatorMode() !== "none");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.isSortableColumn(x_r28) && ((tmp_14_0 = ctx_r3.options.sortIconPosition) !== null && tmp_14_0 !== void 0 ? tmp_14_0 : "right") !== "left");
+  }
+}
+function P_thead_10_ng_template_6_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r27 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 63);
+    \u0275\u0275listener("mousedown", function P_thead_10_ng_template_6_Template_td_mousedown_0_listener($event) {
+      const x_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const ctx_r3 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r3.onHeaderMouseDown(x_r28, $event));
+    })("mousemove", function P_thead_10_ng_template_6_Template_td_mousemove_0_listener($event) {
+      const x_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const ctx_r3 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r3.onHeaderMouseMove(x_r28, $event));
+    })("mouseenter", function P_thead_10_ng_template_6_Template_td_mouseenter_0_listener($event) {
+      const x_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const ctx_r3 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r3.onHeaderMouseEnter(x_r28, $event));
+    })("click", function P_thead_10_ng_template_6_Template_td_click_0_listener($event) {
+      const x_r28 = \u0275\u0275restoreView(_r27).$implicit;
+      const ctx_r3 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r3.selectColumn(x_r28, $event));
+    });
+    \u0275\u0275template(1, P_thead_10_ng_template_6_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_thead_10_ng_template_6_ng_template_2_Template, 6, 4, "ng-template", null, 7, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementEnd();
+  }
+  if (rf & 2) {
+    let tmp_22_0;
+    const x_r28 = ctx.$implicit;
+    const rowspan_r29 = ctx.rowspan;
+    const spanned_r30 = ctx.spanned;
+    const defaultHeaderTpl_r31 = \u0275\u0275reference(3);
+    const ctx_r3 = \u0275\u0275nextContext(2);
+    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFrozenColumn(x_r28))("jx-frozen-col-right", ctx_r3.isFrozenColumnRight(x_r28))("jx-frozen-col-right-first", ctx_r3.isFrozenColumnRightFirst(x_r28))("jx-col-draggable", ctx_r3.canDragColumnHeader(x_r28))("jx-col-resizable", ctx_r3.canResizeColumnHeader(x_r28))("jx-col-dragging", ctx_r3.isHeaderDragging(x_r28))("jx-col-resizing", ctx_r3.isHeaderResizing(x_r28))("jx-col-drag-left", ctx_r3.isHeaderDropLeft(x_r28))("jx-col-drag-right", ctx_r3.isHeaderDropRight(x_r28))("jx-col-sortable", ctx_r3.isSortableColumn(x_r28))("jx-col-sort-asc", ctx_r3.getSortDirection(x_r28) === "asc")("jx-col-sort-desc", ctx_r3.getSortDirection(x_r28) === "desc")("selected", ctx_r3.options.highlightSelectedColumnHeader !== false && ((tmp_22_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_22_0.x1) === x_r28 && ((tmp_22_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_22_0.x2) === x_r28);
+    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r28))("ngStyle", ctx_r3.getMainHeaderCellStyle(x_r28, spanned_r30))("ngClass", ctx_r3.getHeaderClassList(x_r28));
+    \u0275\u0275attribute("data-x", x_r28)("rowspan", rowspan_r29 > 1 ? rowspan_r29 : null)("data-col-key", ctx_r3.getColKey(x_r28) || null);
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r3.hasCustomHeaderComponent(x_r28))("ngIfElse", defaultHeaderTpl_r31);
+  }
+}
+function P_thead_10_tr_8_td_1_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "td", 79);
   }
   if (rf & 2) {
     const ctx_r3 = \u0275\u0275nextContext(3);
     \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getFilterRowHeaderStyle());
   }
 }
-function P_thead_10_tr_6_td_2_input_1_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_input_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r29 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 83);
-    \u0275\u0275listener("input", function P_thead_10_tr_6_td_2_input_1_Template_input_input_0_listener($event) {
-      \u0275\u0275restoreView(_r29);
-      const x_r30 = \u0275\u0275nextContext().index;
+    const _r32 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 84);
+    \u0275\u0275listener("input", function P_thead_10_tr_8_td_2_input_1_Template_input_input_0_listener($event) {
+      \u0275\u0275restoreView(_r32);
+      const x_r33 = \u0275\u0275nextContext().index;
       const ctx_r3 = \u0275\u0275nextContext(3);
-      return \u0275\u0275resetView(ctx_r3.onColumnFilterInput(x_r30, $event.target.value));
+      return \u0275\u0275resetView(ctx_r3.onColumnFilterInput(x_r33, $event.target.value));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r30 = \u0275\u0275nextContext().index;
+    const x_r33 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(3);
     \u0275\u0275classProp("jx-filter-input--has-icon", ctx_r3.filterIconMode() !== "text");
-    \u0275\u0275property("value", ctx_r3.getColumnFilterValue(x_r30));
+    \u0275\u0275property("value", ctx_r3.getColumnFilterValue(x_r33));
     \u0275\u0275attribute("placeholder", ctx_r3.filterIconMode() === "text" ? ctx_r3.iconRaw("filterPlaceholder") : null);
   }
 }
-function P_thead_10_tr_6_td_2_span_2_img_1_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_span_2_img_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "img", 86);
+    \u0275\u0275element(0, "img", 87);
   }
   if (rf & 2) {
     const ctx_r3 = \u0275\u0275nextContext(5);
     \u0275\u0275property("src", ctx_r3.filterIconUrl(), \u0275\u0275sanitizeUrl);
   }
 }
-function P_thead_10_tr_6_td_2_span_2_span_2_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_span_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
+    \u0275\u0275element(0, "span", 71);
   }
   if (rf & 2) {
     const ctx_r3 = \u0275\u0275nextContext(5);
     \u0275\u0275property("innerHTML", ctx_r3.icon("filterPlaceholder"), \u0275\u0275sanitizeHtml);
   }
 }
-function P_thead_10_tr_6_td_2_span_2_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 84);
-    \u0275\u0275template(1, P_thead_10_tr_6_td_2_span_2_img_1_Template, 1, 1, "img", 85)(2, P_thead_10_tr_6_td_2_span_2_span_2_Template, 1, 1, "span", 68);
+    \u0275\u0275elementStart(0, "span", 85);
+    \u0275\u0275template(1, P_thead_10_tr_8_td_2_span_2_img_1_Template, 1, 1, "img", 86)(2, P_thead_10_tr_8_td_2_span_2_span_2_Template, 1, 1, "span", 70);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44591,33 +44682,33 @@ function P_thead_10_tr_6_td_2_span_2_Template(rf, ctx) {
     \u0275\u0275property("ngIf", ctx_r3.filterIconMode() === "html");
   }
 }
-function P_thead_10_tr_6_td_2_span_3_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_span_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "span", 87);
+    \u0275\u0275element(0, "span", 88);
   }
 }
-function P_thead_10_tr_6_td_2_Template(rf, ctx) {
+function P_thead_10_tr_8_td_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "td", 79);
-    \u0275\u0275template(1, P_thead_10_tr_6_td_2_input_1_Template, 1, 4, "input", 80)(2, P_thead_10_tr_6_td_2_span_2_Template, 3, 2, "span", 81)(3, P_thead_10_tr_6_td_2_span_3_Template, 1, 0, "span", 82);
+    \u0275\u0275elementStart(0, "td", 80);
+    \u0275\u0275template(1, P_thead_10_tr_8_td_2_input_1_Template, 1, 4, "input", 81)(2, P_thead_10_tr_8_td_2_span_2_Template, 3, 2, "span", 82)(3, P_thead_10_tr_8_td_2_span_3_Template, 1, 0, "span", 83);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r30 = ctx.index;
+    const x_r33 = ctx.index;
     const ctx_r3 = \u0275\u0275nextContext(3);
-    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r30))("ngStyle", ctx_r3.getFilterRowCellStyle(x_r30));
+    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r33))("ngStyle", ctx_r3.getFilterRowCellStyle(x_r33));
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.isFilterableColumn(x_r30));
+    \u0275\u0275property("ngIf", ctx_r3.isFilterableColumn(x_r33));
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.isFilterableColumn(x_r30) && ctx_r3.filterIconMode() !== "text" && !ctx_r3.getColumnFilterValue(x_r30));
+    \u0275\u0275property("ngIf", ctx_r3.isFilterableColumn(x_r33) && ctx_r3.filterIconMode() !== "text" && !ctx_r3.getColumnFilterValue(x_r33));
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", !ctx_r3.isFilterableColumn(x_r30));
+    \u0275\u0275property("ngIf", !ctx_r3.isFilterableColumn(x_r33));
   }
 }
-function P_thead_10_tr_6_Template(rf, ctx) {
+function P_thead_10_tr_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 75);
-    \u0275\u0275template(1, P_thead_10_tr_6_td_1_Template, 1, 2, "td", 76)(2, P_thead_10_tr_6_td_2_Template, 4, 5, "td", 77);
+    \u0275\u0275elementStart(0, "tr", 76);
+    \u0275\u0275template(1, P_thead_10_tr_8_td_1_Template, 1, 2, "td", 77)(2, P_thead_10_tr_8_td_2_Template, 4, 5, "td", 78);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44631,11 +44722,11 @@ function P_thead_10_tr_6_Template(rf, ctx) {
 function P_thead_10_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "thead");
-    \u0275\u0275template(1, P_thead_10_tr_1_Template, 3, 2, "tr", 27);
+    \u0275\u0275template(1, P_thead_10_tr_1_Template, 3, 2, "tr", 29);
     \u0275\u0275elementStart(2, "tr");
-    \u0275\u0275template(3, P_thead_10_td_3_Template, 1, 2, "td", 49)(4, P_thead_10_td_4_Template, 4, 29, "td", 50)(5, P_thead_10_td_5_Template, 1, 1, "td", 51);
+    \u0275\u0275template(3, P_thead_10_td_3_Template, 1, 2, "td", 51)(4, P_thead_10_ng_container_4_Template, 2, 1, "ng-container", 52)(5, P_thead_10_td_5_Template, 1, 1, "td", 53);
     \u0275\u0275elementEnd();
-    \u0275\u0275template(6, P_thead_10_tr_6_Template, 3, 3, "tr", 52);
+    \u0275\u0275template(6, P_thead_10_ng_template_6_Template, 4, 34, "ng-template", null, 4, \u0275\u0275templateRefExtractor)(8, P_thead_10_tr_8_Template, 3, 3, "tr", 54);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -44649,13 +44740,13 @@ function P_thead_10_Template(rf, ctx) {
     \u0275\u0275property("ngForOf", ctx_r3.headers)("ngForTrackBy", ctx_r3.trackByColumn);
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.options.allowManualInsertColumn);
-    \u0275\u0275advance();
+    \u0275\u0275advance(3);
     \u0275\u0275property("ngIf", ctx_r3.options.columnFilter === true);
   }
 }
 function P_Conditional_12_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 18);
+    \u0275\u0275elementStart(0, "tr", 20);
     \u0275\u0275element(1, "td");
     \u0275\u0275elementEnd();
   }
@@ -44668,56 +44759,56 @@ function P_Conditional_12_Template(rf, ctx) {
 }
 function P_For_14_td_3_Template(rf, ctx) {
   if (rf & 1) {
-    const _r31 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "td", 89);
+    const _r34 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 90);
     \u0275\u0275listener("mousedown", function P_For_14_td_3_Template_td_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r34);
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseDown(y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseDown(y_r35, $event));
     })("mousemove", function P_For_14_td_3_Template_td_mousemove_0_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r34);
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseMove(y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseMove(y_r35, $event));
     })("mouseenter", function P_For_14_td_3_Template_td_mouseenter_0_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r34);
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseEnter(y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.onRowHeaderMouseEnter(y_r35, $event));
     })("click", function P_For_14_td_3_Template_td_click_0_listener($event) {
-      \u0275\u0275restoreView(_r31);
+      \u0275\u0275restoreView(_r34);
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.selectRow(y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.selectRow(y_r35, $event));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     let tmp_16_0;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("selected", ctx_r3.options.highlightSelectedRowHeader !== false && ((tmp_16_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_16_0.y1) === y_r32 && ((tmp_16_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_16_0.y2) === y_r32)("jx-frozen-row", ctx_r3.isFrozenRow(y_r32))("jx-row-draggable", ctx_r3.canDragRowHeader(y_r32))("jx-row-dragging", ctx_r3.isRowDragging(y_r32))("jx-row-drop-top", ctx_r3.isRowDropTop(y_r32))("jx-row-drop-bottom", ctx_r3.isRowDropBottom(y_r32))("jx-row-resizable", ctx_r3.canResizeRows())("jx-row-resizing", ctx_r3.isRowResizing(y_r32));
-    \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getRowHeaderCellStyle(y_r32))("innerHTML", ctx_r3.getRowHeaderContent(y_r32), \u0275\u0275sanitizeHtml);
-    \u0275\u0275attribute("data-rowheader", y_r32);
+    \u0275\u0275classProp("selected", ctx_r3.options.highlightSelectedRowHeader !== false && ((tmp_16_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_16_0.y1) === y_r35 && ((tmp_16_0 = ctx_r3.workbook.getSelection()) == null ? null : tmp_16_0.y2) === y_r35)("jx-frozen-row", ctx_r3.isFrozenRow(y_r35))("jx-row-draggable", ctx_r3.canDragRowHeader(y_r35))("jx-row-dragging", ctx_r3.isRowDragging(y_r35))("jx-row-drop-top", ctx_r3.isRowDropTop(y_r35))("jx-row-drop-bottom", ctx_r3.isRowDropBottom(y_r35))("jx-row-resizable", ctx_r3.canResizeRows())("jx-row-resizing", ctx_r3.isRowResizing(y_r35));
+    \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getRowHeaderCellStyle(y_r35))("innerHTML", ctx_r3.getRowHeaderContent(y_r35), \u0275\u0275sanitizeHtml);
+    \u0275\u0275attribute("data-rowheader", y_r35);
   }
 }
 function P_For_14_ng_container_4_td_4_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r35 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "span", 94);
+    const _r38 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "span", 95);
     \u0275\u0275listener("click", function P_For_14_ng_container_4_td_4_span_1_Template_span_click_0_listener($event) {
-      \u0275\u0275restoreView(_r35);
-      const x_r34 = \u0275\u0275nextContext(2).index;
+      \u0275\u0275restoreView(_r38);
+      const x_r37 = \u0275\u0275nextContext(2).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onCommentIndicatorClick($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onCommentIndicatorClick($event, x_r37, y_r35));
     });
     \u0275\u0275elementEnd();
   }
@@ -44730,394 +44821,394 @@ function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container_2_ng_container_1_Template, 1, 0, "ng-container", 58);
+    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container_2_ng_container_1_Template, 1, 0, "ng-container", 60);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomAngularComponent(x_r34))("ngComponentOutletInputs", ctx_r3.customCellInputs(x_r34, y_r32));
+    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomAngularComponent(x_r37))("ngComponentOutletInputs", ctx_r3.customCellInputs(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r36 = \u0275\u0275getCurrentView();
+    const _r39 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "span", 95);
+    \u0275\u0275elementStart(1, "span", 96);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_mousedown_1_listener($event) {
-      \u0275\u0275restoreView(_r36);
-      const x_r34 = \u0275\u0275nextContext(3).index;
+      \u0275\u0275restoreView(_r39);
+      const x_r37 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentMouseDown($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentMouseDown($event, x_r37, y_r35));
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_mouseup_1_listener($event) {
-      \u0275\u0275restoreView(_r36);
+      \u0275\u0275restoreView(_r39);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_click_1_listener($event) {
-      \u0275\u0275restoreView(_r36);
+      \u0275\u0275restoreView(_r39);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_focusout_1_listener($event) {
-      \u0275\u0275restoreView(_r36);
-      const x_r34 = \u0275\u0275nextContext(3).index;
+      \u0275\u0275restoreView(_r39);
+      const x_r37 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_keydown_1_listener($event) {
-      \u0275\u0275restoreView(_r36);
-      const x_r34 = \u0275\u0275nextContext(3).index;
+      \u0275\u0275restoreView(_r39);
+      const x_r37 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     });
-    \u0275\u0275template(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container_2_Template, 2, 2, "ng-container", 61);
+    \u0275\u0275template(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_ng_container_2_Template, 2, 2, "ng-container", 52);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(3).index;
+    const x_r37 = \u0275\u0275nextContext(3).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance(2);
-    \u0275\u0275property("ngForOf", ctx_r3.customCellOutletKeys(x_r34, y_r32))("ngForTrackBy", ctx_r3.trackByCellEpoch);
+    \u0275\u0275property("ngForOf", ctx_r3.customCellOutletKeys(x_r37, y_r35))("ngForTrackBy", ctx_r3.trackByCellEpoch);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r37 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 106);
+    const _r40 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 107);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
+      \u0275\u0275restoreView(_r40);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
+      \u0275\u0275restoreView(_r40);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
+      \u0275\u0275restoreView(_r40);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r40);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r40);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     })("change", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template_input_change_0_listener($event) {
-      \u0275\u0275restoreView(_r37);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r40);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.changeCheckbox(x_r34, y_r32, $event.target.checked));
+      return \u0275\u0275resetView(ctx_r3.changeCheckbox(x_r37, y_r35, $event.target.checked));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("checked", !!ctx_r3.rawValue(x_r34, y_r32))("disabled", !ctx_r3.isEditable(x_r34, y_r32));
+    \u0275\u0275property("checked", !!ctx_r3.rawValue(x_r37, y_r35))("disabled", !ctx_r3.isEditable(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_option_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 109);
+    \u0275\u0275elementStart(0, "option", 110);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
     let tmp_29_0;
     let tmp_30_0;
-    const item_r39 = ctx.$implicit;
-    \u0275\u0275property("ngValue", (tmp_29_0 = item_r39 == null ? null : item_r39.id) !== null && tmp_29_0 !== void 0 ? tmp_29_0 : item_r39);
+    const item_r42 = ctx.$implicit;
+    \u0275\u0275property("ngValue", (tmp_29_0 = item_r42 == null ? null : item_r42.id) !== null && tmp_29_0 !== void 0 ? tmp_29_0 : item_r42);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate((tmp_30_0 = (tmp_30_0 = item_r39 == null ? null : item_r39.description) !== null && tmp_30_0 !== void 0 ? tmp_30_0 : item_r39 == null ? null : item_r39.name) !== null && tmp_30_0 !== void 0 ? tmp_30_0 : item_r39);
+    \u0275\u0275textInterpolate((tmp_30_0 = (tmp_30_0 = item_r42 == null ? null : item_r42.description) !== null && tmp_30_0 !== void 0 ? tmp_30_0 : item_r42 == null ? null : item_r42.name) !== null && tmp_30_0 !== void 0 ? tmp_30_0 : item_r42);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template(rf, ctx) {
   if (rf & 1) {
-    const _r38 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "select", 107);
+    const _r41 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "select", 108);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
+      \u0275\u0275restoreView(_r41);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
+      \u0275\u0275restoreView(_r41);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_click_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
+      \u0275\u0275restoreView(_r41);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r41);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r41);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     })("ngModelChange", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template_select_ngModelChange_0_listener($event) {
-      \u0275\u0275restoreView(_r38);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r41);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r34, y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r37, y_r35, $event));
     });
-    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_option_1_Template, 2, 2, "option", 108);
+    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_option_1_Template, 2, 2, "option", 109);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r34, y_r32))("disabled", !ctx_r3.isEditable(x_r34, y_r32));
+    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r37, y_r35))("disabled", !ctx_r3.isEditable(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", ctx_r3.getFilteredSource(x_r34, y_r32));
+    \u0275\u0275property("ngForOf", ctx_r3.getFilteredSource(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 110);
+    \u0275\u0275elementStart(0, "span", 111);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r34, y_r32));
+    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template(rf, ctx) {
   if (rf & 1) {
-    const _r40 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 111);
+    const _r43 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 112);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
+      \u0275\u0275restoreView(_r43);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
+      \u0275\u0275restoreView(_r43);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
+      \u0275\u0275restoreView(_r43);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r43);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r43);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     })("change", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template_input_change_0_listener($event) {
-      \u0275\u0275restoreView(_r40);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r43);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r34, y_r32, $event.target.value));
+      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r37, y_r35, $event.target.value));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r34, y_r32))("disabled", !ctx_r3.isEditable(x_r34, y_r32));
+    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r37, y_r35))("disabled", !ctx_r3.isEditable(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r41 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 111);
+    const _r44 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 112);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
+      \u0275\u0275restoreView(_r44);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
+      \u0275\u0275restoreView(_r44);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
+      \u0275\u0275restoreView(_r44);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r44);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r44);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     })("change", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template_input_change_0_listener($event) {
-      \u0275\u0275restoreView(_r41);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r44);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r34, y_r32, $event.target.value));
+      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r37, y_r35, $event.target.value));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r34, y_r32))("disabled", !ctx_r3.isEditable(x_r34, y_r32));
+    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r37, y_r35))("disabled", !ctx_r3.isEditable(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template(rf, ctx) {
   if (rf & 1) {
-    const _r42 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 112);
+    const _r45 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 113);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
+      \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
+      \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
+      \u0275\u0275restoreView(_r45);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r45);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r45);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     })("change", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template_input_change_0_listener($event) {
-      \u0275\u0275restoreView(_r42);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r45);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r34, y_r32, $event.target.value));
+      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r37, y_r35, $event.target.value));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r34, y_r32))("disabled", !ctx_r3.isEditable(x_r34, y_r32));
+    \u0275\u0275property("ngModel", ctx_r3.rawValue(x_r37, y_r35))("disabled", !ctx_r3.isEditable(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template(rf, ctx) {
   if (rf & 1) {
-    const _r43 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 113);
+    const _r46 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 114);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template_button_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r43);
+      \u0275\u0275restoreView(_r46);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template_button_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r43);
+      \u0275\u0275restoreView(_r46);
       return \u0275\u0275resetView($event.stopPropagation());
     })("click", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template_button_click_0_listener($event) {
-      \u0275\u0275restoreView(_r43);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r46);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
       $event.stopPropagation();
-      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r34, y_r32, "clicked " + ctx_r3.cellName(x_r34, y_r32)));
+      return \u0275\u0275resetView(ctx_r3.updateInlineValue(x_r37, y_r35, "clicked " + ctx_r3.cellName(x_r37, y_r35)));
     })("focusout", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template_button_focusout_0_listener($event) {
-      \u0275\u0275restoreView(_r43);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r46);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentBlur($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template_button_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r43);
-      const x_r34 = \u0275\u0275nextContext(4).index;
+      \u0275\u0275restoreView(_r46);
+      const x_r37 = \u0275\u0275nextContext(4).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentKey($event, x_r37, y_r35));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.rawValue(x_r34, y_r32) || "Azione");
+    \u0275\u0275textInterpolate(ctx_r3.rawValue(x_r37, y_r35) || "Azione");
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "span", 69);
+    \u0275\u0275element(0, "span", 71);
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("innerHTML", ctx_r3.rawValue(x_r34, y_r32), \u0275\u0275sanitizeHtml);
+    \u0275\u0275property("innerHTML", ctx_r3.rawValue(x_r37, y_r35), \u0275\u0275sanitizeHtml);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_9_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 110);
+    \u0275\u0275elementStart(0, "span", 111);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r34, y_r32));
+    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_10_Template(rf, ctx) {
@@ -45127,12 +45218,12 @@ function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_10_Templ
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_11_Template(rf, ctx) {
@@ -45142,41 +45233,41 @@ function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_11_Templ
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_12_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 110);
+    \u0275\u0275elementStart(0, "span", 111);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("formula", ctx_r3.isFormula(x_r34, y_r32));
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r34, y_r32));
+    \u0275\u0275classProp("formula", ctx_r3.isFormula(x_r37, y_r35));
+    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.displayValue(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementContainerStart(0, 96);
-    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template, 1, 2, "input", 97)(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template, 2, 3, "select", 98)(3, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_3_Template, 2, 2, "span", 99)(4, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template, 1, 2, "input", 100)(5, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template, 1, 2, "input", 100)(6, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template, 1, 2, "input", 101)(7, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template, 2, 1, "button", 102)(8, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_8_Template, 1, 1, "span", 103)(9, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_9_Template, 2, 2, "span", 99)(10, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_10_Template, 2, 1, "span", 104)(11, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_11_Template, 2, 1, "span", 104)(12, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_12_Template, 2, 4, "span", 105);
+    \u0275\u0275elementContainerStart(0, 97);
+    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_1_Template, 1, 2, "input", 98)(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_select_2_Template, 2, 3, "select", 99)(3, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_3_Template, 2, 2, "span", 100)(4, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_4_Template, 1, 2, "input", 101)(5, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_5_Template, 1, 2, "input", 101)(6, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_input_6_Template, 1, 2, "input", 102)(7, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_button_7_Template, 2, 1, "button", 103)(8, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_8_Template, 1, 1, "span", 104)(9, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_9_Template, 2, 2, "span", 100)(10, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_10_Template, 2, 1, "span", 105)(11, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_11_Template, 2, 1, "span", 105)(12, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_12_Template, 2, 4, "span", 106);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(3).index;
+    const x_r37 = \u0275\u0275nextContext(3).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("ngSwitch", ctx_r3.columnType(x_r34));
+    \u0275\u0275property("ngSwitch", ctx_r3.columnType(x_r37));
     \u0275\u0275advance();
     \u0275\u0275property("ngSwitchCase", "checkbox");
     \u0275\u0275advance();
@@ -45204,52 +45295,52 @@ function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_Template(rf, 
 function P_For_14_ng_container_4_td_4_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template, 3, 2, "ng-container", 57)(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_Template, 13, 12, "ng-template", null, 7, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template, 3, 2, "ng-container", 57)(2, P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_Template, 13, 12, "ng-template", null, 9, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const standardCellTpl_r44 = \u0275\u0275reference(3);
-    const x_r34 = \u0275\u0275nextContext(2).index;
+    const standardCellTpl_r47 = \u0275\u0275reference(3);
+    const x_r37 = \u0275\u0275nextContext(2).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.hasCustomAngularComponent(x_r34))("ngIfElse", standardCellTpl_r44);
+    \u0275\u0275property("ngIf", ctx_r3.hasCustomAngularComponent(x_r37))("ngIfElse", standardCellTpl_r47);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
-    const _r45 = \u0275\u0275getCurrentView();
+    const _r48 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "span", 114);
+    \u0275\u0275elementStart(1, "span", 115);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "input", 115, 9);
+    \u0275\u0275elementStart(3, "input", 116, 11);
     \u0275\u0275listener("click", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_click_3_listener($event) {
-      \u0275\u0275restoreView(_r45);
+      \u0275\u0275restoreView(_r48);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mousedown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_mousedown_3_listener($event) {
-      \u0275\u0275restoreView(_r45);
+      \u0275\u0275restoreView(_r48);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_mouseup_3_listener($event) {
-      \u0275\u0275restoreView(_r45);
+      \u0275\u0275restoreView(_r48);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focus", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_focus_3_listener($event) {
-      \u0275\u0275restoreView(_r45);
-      const x_r34 = \u0275\u0275nextContext(3).index;
+      \u0275\u0275restoreView(_r48);
+      const x_r37 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
       ctx_r3.onEditorFocus($event);
-      ctx_r3.acFetch(x_r34, y_r32, "");
+      ctx_r3.acFetch(x_r37, y_r35, "");
       return \u0275\u0275resetView(ctx_r3.scheduleAcFilterFocus());
     })("keydown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_keydown_3_listener($event) {
-      \u0275\u0275restoreView(_r45);
-      const x_r34 = \u0275\u0275nextContext(3).index;
+      \u0275\u0275restoreView(_r48);
+      const x_r37 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onAcEditorKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onAcEditorKey($event, x_r37, y_r35));
     })("blur", function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template_input_blur_3_listener() {
-      \u0275\u0275restoreView(_r45);
+      \u0275\u0275restoreView(_r48);
       const ctx_r3 = \u0275\u0275nextContext(5);
       return \u0275\u0275resetView(ctx_r3.onAcEditorBlur());
     });
@@ -45258,47 +45349,47 @@ function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template(rf, 
   }
   if (rf & 2) {
     let tmp_29_0;
-    const x_r34 = \u0275\u0275nextContext(3).index;
+    const x_r37 = \u0275\u0275nextContext(3).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r34, y_r32));
+    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r34, y_r32));
+    \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r37, y_r35));
     \u0275\u0275advance();
     \u0275\u0275property("value", (tmp_29_0 = ctx_r3.editing.value) !== null && tmp_29_0 !== void 0 ? tmp_29_0 : "");
   }
 }
 function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    const _r46 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 118, 9);
+    const _r49 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 119, 11);
     \u0275\u0275twoWayListener("ngModelChange", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_ngModelChange_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       const ctx_r3 = \u0275\u0275nextContext(6);
       \u0275\u0275twoWayBindingSet(ctx_r3.editing.value, $event) || (ctx_r3.editing.value = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275listener("click", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mousedown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focus", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_focus_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorFocus($event));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorKey($event));
     })("blur", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template_input_blur_0_listener($event) {
-      \u0275\u0275restoreView(_r46);
+      \u0275\u0275restoreView(_r49);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorBlur($event));
     });
@@ -45308,214 +45399,214 @@ function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_
     let tmp_32_0;
     let tmp_33_0;
     let tmp_34_0;
-    const mc_r47 = ctx;
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const mc_r50 = ctx;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("type", ctx_r3.columnType(x_r34) === "numeric" || ctx_r3.columnType(x_r34) === "number" ? "number" : "text");
+    \u0275\u0275property("type", ctx_r3.columnType(x_r37) === "numeric" || ctx_r3.columnType(x_r37) === "number" ? "number" : "text");
     \u0275\u0275twoWayProperty("ngModel", ctx_r3.editing.value);
-    \u0275\u0275property("mask", mc_r47.pattern)("maskAllowedRegex", (tmp_32_0 = mc_r47.allowedRegex) !== null && tmp_32_0 !== void 0 ? tmp_32_0 : "[0-9]")("maskToken", (tmp_33_0 = mc_r47.token) !== null && tmp_33_0 !== void 0 ? tmp_33_0 : "#")("maskAllowEmpty", (tmp_34_0 = mc_r47.allowEmpty) !== null && tmp_34_0 !== void 0 ? tmp_34_0 : true);
+    \u0275\u0275property("mask", mc_r50.pattern)("maskAllowedRegex", (tmp_32_0 = mc_r50.allowedRegex) !== null && tmp_32_0 !== void 0 ? tmp_32_0 : "[0-9]")("maskToken", (tmp_33_0 = mc_r50.token) !== null && tmp_33_0 !== void 0 ? tmp_33_0 : "#")("maskAllowEmpty", (tmp_34_0 = mc_r50.allowEmpty) !== null && tmp_34_0 !== void 0 ? tmp_34_0 : true);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r48 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "input", 119, 9);
+    const _r51 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "input", 120, 11);
     \u0275\u0275twoWayListener("ngModelChange", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_ngModelChange_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       const ctx_r3 = \u0275\u0275nextContext(6);
       \u0275\u0275twoWayBindingSet(ctx_r3.editing.value, $event) || (ctx_r3.editing.value = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275listener("click", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_click_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mousedown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       return \u0275\u0275resetView($event.stopPropagation());
     })("mouseup", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_mouseup_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       return \u0275\u0275resetView($event.stopPropagation());
     })("focus", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_focus_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorFocus($event));
     })("keydown", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorKey($event));
     })("blur", function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template_input_blur_0_listener($event) {
-      \u0275\u0275restoreView(_r48);
+      \u0275\u0275restoreView(_r51);
       const ctx_r3 = \u0275\u0275nextContext(6);
       return \u0275\u0275resetView(ctx_r3.onEditorBlur($event));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(4).index;
+    const x_r37 = \u0275\u0275nextContext(4).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("type", ctx_r3.columnType(x_r34) === "numeric" || ctx_r3.columnType(x_r34) === "number" ? "number" : "text");
+    \u0275\u0275property("type", ctx_r3.columnType(x_r37) === "numeric" || ctx_r3.columnType(x_r37) === "number" ? "number" : "text");
     \u0275\u0275twoWayProperty("ngModel", ctx_r3.editing.value);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275template(0, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template, 2, 6, "input", 116)(1, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template, 2, 2, "input", 117);
+    \u0275\u0275template(0, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_0_Template, 2, 6, "input", 117)(1, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Conditional_1_Template, 2, 2, "input", 118);
   }
   if (rf & 2) {
     let tmp_26_0;
-    const x_r34 = \u0275\u0275nextContext(3).index;
+    const x_r37 = \u0275\u0275nextContext(3).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275conditional((tmp_26_0 = ctx_r3.getColMaskConfig(x_r34)) ? 0 : 1, tmp_26_0);
+    \u0275\u0275conditional((tmp_26_0 = ctx_r3.getColMaskConfig(x_r37)) ? 0 : 1, tmp_26_0);
   }
 }
 function P_For_14_ng_container_4_td_4_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275template(0, P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template, 5, 3, "ng-container", 57)(1, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Template, 2, 1, "ng-template", null, 8, \u0275\u0275templateRefExtractor);
+    \u0275\u0275template(0, P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template, 5, 3, "ng-container", 57)(1, P_For_14_ng_container_4_td_4_ng_template_3_ng_template_1_Template, 2, 1, "ng-template", null, 10, \u0275\u0275templateRefExtractor);
   }
   if (rf & 2) {
-    const standardEditTpl_r49 = \u0275\u0275reference(2);
-    const x_r34 = \u0275\u0275nextContext(2).index;
+    const standardEditTpl_r52 = \u0275\u0275reference(2);
+    const x_r37 = \u0275\u0275nextContext(2).index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("ngIf", ctx_r3.columnType(x_r34) === "autocomplete")("ngIfElse", standardEditTpl_r49);
+    \u0275\u0275property("ngIf", ctx_r3.columnType(x_r37) === "autocomplete")("ngIfElse", standardEditTpl_r52);
   }
 }
 function P_For_14_ng_container_4_td_4_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r50 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 120);
+    const _r53 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 121);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_div_5_Template_div_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r50);
+      \u0275\u0275restoreView(_r53);
       const ctx_r3 = \u0275\u0275nextContext(4);
       return \u0275\u0275resetView(ctx_r3.onFillHandleMouseDown($event));
     });
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const x_r34 = \u0275\u0275nextContext(2).index;
+    const x_r37 = \u0275\u0275nextContext(2).index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("jx-fill-handle--preview-destination", ctx_r3.isFillDestinationHandleCell(x_r34, y_r32));
+    \u0275\u0275classProp("jx-fill-handle--preview-destination", ctx_r3.isFillDestinationHandleCell(x_r37, y_r35));
   }
 }
 function P_For_14_ng_container_4_td_4_Template(rf, ctx) {
   if (rf & 1) {
-    const _r33 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "td", 91);
+    const _r36 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "td", 92);
     \u0275\u0275listener("mousedown", function P_For_14_ng_container_4_td_4_Template_td_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.startMouseSelection(x_r34, y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.startMouseSelection(x_r37, y_r35, $event));
     })("mouseenter", function P_For_14_ng_container_4_td_4_Template_td_mouseenter_0_listener() {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.updateMouseSelection(x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.updateMouseSelection(x_r37, y_r35));
     })("click", function P_For_14_ng_container_4_td_4_Template_td_click_0_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onCellClick($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onCellClick($event, x_r37, y_r35));
     })("focus", function P_For_14_ng_container_4_td_4_Template_td_focus_0_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onCellFocus(x_r34, y_r32, $event));
+      return \u0275\u0275resetView(ctx_r3.onCellFocus(x_r37, y_r35, $event));
     })("dblclick", function P_For_14_ng_container_4_td_4_Template_td_dblclick_0_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onCellDoubleClick($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onCellDoubleClick($event, x_r37, y_r35));
     })("keydown", function P_For_14_ng_container_4_td_4_Template_td_keydown_0_listener($event) {
-      \u0275\u0275restoreView(_r33);
-      const x_r34 = \u0275\u0275nextContext().index;
+      \u0275\u0275restoreView(_r36);
+      const x_r37 = \u0275\u0275nextContext().index;
       \u0275\u0275nextContext();
-      const y_r32 = \u0275\u0275readContextLet(0);
+      const y_r35 = \u0275\u0275readContextLet(0);
       const ctx_r3 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r3.onCellKey($event, x_r34, y_r32));
+      return \u0275\u0275resetView(ctx_r3.onCellKey($event, x_r37, y_r35));
     });
-    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_span_1_Template, 1, 0, "span", 92)(2, P_For_14_ng_container_4_td_4_ng_container_2_Template, 4, 2, "ng-container", 57)(3, P_For_14_ng_container_4_td_4_ng_template_3_Template, 3, 2, "ng-template", null, 6, \u0275\u0275templateRefExtractor)(5, P_For_14_ng_container_4_td_4_div_5_Template, 1, 2, "div", 93);
+    \u0275\u0275template(1, P_For_14_ng_container_4_td_4_span_1_Template, 1, 0, "span", 93)(2, P_For_14_ng_container_4_td_4_ng_container_2_Template, 4, 2, "ng-container", 57)(3, P_For_14_ng_container_4_td_4_ng_template_3_Template, 3, 2, "ng-template", null, 8, \u0275\u0275templateRefExtractor)(5, P_For_14_ng_container_4_td_4_div_5_Template, 1, 2, "div", 94);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    let tmp_46_0;
-    let tmp_57_0;
-    const editTpl_r51 = \u0275\u0275reference(4);
-    const x_r34 = \u0275\u0275nextContext().index;
-    const cellSel_r52 = \u0275\u0275readContextLet(1);
-    const cellFill_r53 = \u0275\u0275readContextLet(2);
-    const cellComment_r54 = \u0275\u0275readContextLet(3);
+    let tmp_48_0;
+    let tmp_59_0;
+    const editTpl_r54 = \u0275\u0275reference(4);
+    const x_r37 = \u0275\u0275nextContext().index;
+    const cellSel_r55 = \u0275\u0275readContextLet(1);
+    const cellFill_r56 = \u0275\u0275readContextLet(2);
+    const cellComment_r57 = \u0275\u0275readContextLet(3);
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFrozenColumn(x_r34))("jx-frozen-row", ctx_r3.isFrozenRow(y_r32))("highlight", cellSel_r52.selected)("highlight-selected", cellSel_r52.selected)("jx-sel-top", cellSel_r52.top)("jx-sel-bottom", cellSel_r52.bottom)("jx-sel-left", cellSel_r52.left)("jx-sel-right", cellSel_r52.right)("jx-fill-preview", cellFill_r53.selected)("jx-fill-preview-top", cellFill_r53.top)("jx-fill-preview-bottom", cellFill_r53.bottom)("jx-fill-preview-left", cellFill_r53.left)("jx-fill-preview-right", cellFill_r53.right)("readonly", ctx_r3.isColumnReadonly(x_r34))("editor", ctx_r3.editing && ctx_r3.editing.x === x_r34 && ctx_r3.editing.y === y_r32)("jx-cell-copying", ctx_r3.isCellCopied(x_r34, y_r32))("jx-has-comment", !!cellComment_r54);
-    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r34))("ngStyle", ctx_r3.getCellComputedStyle(x_r34, y_r32))("ngClass", ctx_r3.getCellExtraClasses(x_r34, y_r32))("contextMenu", ctx_r3.getContextMenuTemplate())("contextMenuData", ctx_r3.buildContextMenuData(x_r34, y_r32))("contextMenuDisabled", ctx_r3.isContextMenuDisabled(x_r34, y_r32))("contextMenuClass", (tmp_46_0 = ctx_r3.options.contextMenu == null ? null : ctx_r3.options.contextMenu.menuClass) !== null && tmp_46_0 !== void 0 ? tmp_46_0 : "jx-context-menu");
-    \u0275\u0275attribute("data-x", x_r34)("data-y", y_r32)("colspan", ctx_r3.getCellColspan(x_r34, y_r32))("rowspan", ctx_r3.getCellRowspan(x_r34, y_r32))("data-merged", ctx_r3.getCellDataMerged(x_r34, y_r32))("data-col-key", ctx_r3.getColKey(x_r34) || null)("tabindex", ctx_r3.isActiveCell(x_r34, y_r32) ? 0 : -1);
+    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFrozenColumn(x_r37))("jx-frozen-col-right", ctx_r3.isFrozenColumnRight(x_r37))("jx-frozen-col-right-first", ctx_r3.isFrozenColumnRightFirst(x_r37))("jx-frozen-row", ctx_r3.isFrozenRow(y_r35))("highlight", cellSel_r55.selected)("highlight-selected", cellSel_r55.selected)("jx-sel-top", cellSel_r55.top)("jx-sel-bottom", cellSel_r55.bottom)("jx-sel-left", cellSel_r55.left)("jx-sel-right", cellSel_r55.right)("jx-fill-preview", cellFill_r56.selected)("jx-fill-preview-top", cellFill_r56.top)("jx-fill-preview-bottom", cellFill_r56.bottom)("jx-fill-preview-left", cellFill_r56.left)("jx-fill-preview-right", cellFill_r56.right)("readonly", ctx_r3.isColumnReadonly(x_r37))("editor", ctx_r3.editing && ctx_r3.editing.x === x_r37 && ctx_r3.editing.y === y_r35)("jx-cell-copying", ctx_r3.isCellCopied(x_r37, y_r35))("jx-has-comment", !!cellComment_r57);
+    \u0275\u0275property("hidden", ctx_r3.isHiddenColumn(x_r37))("ngStyle", ctx_r3.getCellComputedStyle(x_r37, y_r35))("ngClass", ctx_r3.getCellExtraClasses(x_r37, y_r35))("contextMenu", ctx_r3.getContextMenuTemplate())("contextMenuData", ctx_r3.buildContextMenuData(x_r37, y_r35))("contextMenuDisabled", ctx_r3.isContextMenuDisabled(x_r37, y_r35))("contextMenuClass", (tmp_48_0 = ctx_r3.options.contextMenu == null ? null : ctx_r3.options.contextMenu.menuClass) !== null && tmp_48_0 !== void 0 ? tmp_48_0 : "jx-context-menu");
+    \u0275\u0275attribute("data-x", x_r37)("data-y", y_r35)("colspan", ctx_r3.getCellColspan(x_r37, y_r35))("rowspan", ctx_r3.getCellRowspan(x_r37, y_r35))("data-merged", ctx_r3.getCellDataMerged(x_r37, y_r35))("data-col-key", ctx_r3.getColKey(x_r37) || null)("tabindex", ctx_r3.isActiveCell(x_r37, y_r35) ? 0 : -1);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", cellComment_r54);
+    \u0275\u0275property("ngIf", cellComment_r57);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", !(ctx_r3.editing && ctx_r3.editing.x === x_r34 && ctx_r3.editing.y === y_r32))("ngIfElse", editTpl_r51);
+    \u0275\u0275property("ngIf", !(ctx_r3.editing && ctx_r3.editing.x === x_r37 && ctx_r3.editing.y === y_r35))("ngIfElse", editTpl_r54);
     \u0275\u0275advance(3);
-    \u0275\u0275property("ngIf", ((tmp_57_0 = ctx_r3.options.enableFillHandle) !== null && tmp_57_0 !== void 0 ? tmp_57_0 : true) && !ctx_r3.editing && (ctx_r3.isFillHandleSourceCell(x_r34, y_r32) && !ctx_r3.fillHandleDragPreviewActive() || ctx_r3.isFillDestinationHandleCell(x_r34, y_r32)));
+    \u0275\u0275property("ngIf", ((tmp_59_0 = ctx_r3.options.enableFillHandle) !== null && tmp_59_0 !== void 0 ? tmp_59_0 : true) && !ctx_r3.editing && (ctx_r3.isFillHandleSourceCell(x_r37, y_r35) && !ctx_r3.fillHandleDragPreviewActive() || ctx_r3.isFillDestinationHandleCell(x_r37, y_r35)));
   }
 }
 function P_For_14_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
     \u0275\u0275declareLet(1)(2)(3);
-    \u0275\u0275template(4, P_For_14_ng_container_4_td_4_Template, 6, 52, "td", 90);
+    \u0275\u0275template(4, P_For_14_ng_container_4_td_4_Template, 6, 56, "td", 91);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const x_r34 = ctx.index;
+    const x_r37 = ctx.index;
     \u0275\u0275nextContext();
-    const y_r32 = \u0275\u0275readContextLet(0);
+    const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275storeLet(ctx_r3.cellSelectionState(x_r34, y_r32));
+    \u0275\u0275storeLet(ctx_r3.cellSelectionState(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275storeLet(ctx_r3.cellFillPreviewState(x_r34, y_r32));
+    \u0275\u0275storeLet(ctx_r3.cellFillPreviewState(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275storeLet(ctx_r3.getCellComment(x_r34, y_r32));
+    \u0275\u0275storeLet(ctx_r3.getCellComment(x_r37, y_r35));
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", !ctx_r3.isCoveredCell(x_r34, y_r32));
+    \u0275\u0275property("ngIf", !ctx_r3.isCoveredCell(x_r37, y_r35));
   }
 }
 function P_For_14_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275declareLet(0)(1);
-    \u0275\u0275elementStart(2, "tr", 48);
-    \u0275\u0275template(3, P_For_14_td_3_Template, 1, 20, "td", 88)(4, P_For_14_ng_container_4_Template, 5, 4, "ng-container", 61);
+    \u0275\u0275elementStart(2, "tr", 50);
+    \u0275\u0275template(3, P_For_14_td_3_Template, 1, 20, "td", 89)(4, P_For_14_ng_container_4_Template, 5, 4, "ng-container", 52);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const vr_r55 = ctx.$implicit;
+    const vr_r58 = ctx.$implicit;
     const ctx_r3 = \u0275\u0275nextContext();
-    const y_r56 = \u0275\u0275storeLet(vr_r55.y);
-    const row_r57 = vr_r55.row;
+    const y_r59 = \u0275\u0275storeLet(vr_r58.y);
+    const row_r60 = vr_r58.row;
     \u0275\u0275advance(2);
-    \u0275\u0275styleProp("height", ctx_r3.getRowHeight(y_r56), "px")("opacity", !ctx_r3.isHiddenRow(y_r56) && (ctx_r3.hiddenBySearch.has(y_r56) || ctx_r3.filteredByColumn.has(y_r56)) && ctx_r3.searchMode === "dim" ? ctx_r3.searchDimOpacity : null);
-    \u0275\u0275property("hidden", ctx_r3.isHiddenRow(y_r56) || (ctx_r3.hiddenBySearch.has(y_r56) || ctx_r3.filteredByColumn.has(y_r56)) && ctx_r3.searchMode === "hide");
+    \u0275\u0275styleProp("height", ctx_r3.getRowHeight(y_r59), "px")("opacity", !ctx_r3.isHiddenRow(y_r59) && (ctx_r3.hiddenBySearch.has(y_r59) || ctx_r3.filteredByColumn.has(y_r59)) && ctx_r3.searchMode === "dim" ? ctx_r3.searchDimOpacity : null);
+    \u0275\u0275property("hidden", ctx_r3.isHiddenRow(y_r59) || (ctx_r3.hiddenBySearch.has(y_r59) || ctx_r3.filteredByColumn.has(y_r59)) && ctx_r3.searchMode === "hide");
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.options.rowHeaders !== false);
     \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", row_r57)("ngForTrackBy", ctx_r3.trackByColumn);
+    \u0275\u0275property("ngForOf", row_r60)("ngForTrackBy", ctx_r3.trackByColumn);
   }
 }
 function P_Conditional_15_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 18);
+    \u0275\u0275elementStart(0, "tr", 20);
     \u0275\u0275element(1, "td");
     \u0275\u0275elementEnd();
   }
@@ -45528,12 +45619,12 @@ function P_Conditional_15_Template(rf, ctx) {
 }
 function P_tfoot_16_tr_1_td_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "td", 124);
+    \u0275\u0275element(0, "td", 125);
   }
   if (rf & 2) {
-    const fy_r58 = \u0275\u0275nextContext().index;
+    const fy_r61 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getFooterRowHeaderStyle(fy_r58));
+    \u0275\u0275property("ngClass", ctx_r3.options.rowHeaderClass || "")("ngStyle", ctx_r3.getFooterRowHeaderStyle(fy_r61));
   }
 }
 function P_tfoot_16_tr_1_td_2_ng_container_1_ng_container_1_Template(rf, ctx) {
@@ -45544,15 +45635,15 @@ function P_tfoot_16_tr_1_td_2_ng_container_1_ng_container_1_Template(rf, ctx) {
 function P_tfoot_16_tr_1_td_2_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275template(1, P_tfoot_16_tr_1_td_2_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 58);
+    \u0275\u0275template(1, P_tfoot_16_tr_1_td_2_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 60);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const fx_r59 = \u0275\u0275nextContext().index;
-    const fy_r58 = \u0275\u0275nextContext().index;
+    const fx_r62 = \u0275\u0275nextContext().index;
+    const fy_r61 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
-    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomFooterComponent(fx_r59, fy_r58))("ngComponentOutletInputs", ctx_r3.customFooterInputs(fx_r59, fy_r58));
+    \u0275\u0275property("ngComponentOutlet", ctx_r3.getCustomFooterComponent(fx_r62, fy_r61))("ngComponentOutletInputs", ctx_r3.customFooterInputs(fx_r62, fy_r61));
   }
 }
 function P_tfoot_16_tr_1_td_2_ng_template_2_Template(rf, ctx) {
@@ -45560,51 +45651,51 @@ function P_tfoot_16_tr_1_td_2_ng_template_2_Template(rf, ctx) {
     \u0275\u0275text(0);
   }
   if (rf & 2) {
-    const fx_r59 = \u0275\u0275nextContext().index;
-    const fy_r58 = \u0275\u0275nextContext().index;
+    const fx_r62 = \u0275\u0275nextContext().index;
+    const fy_r61 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275textInterpolate(ctx_r3.getFooterItemDisplayValue(fx_r59, fy_r58));
+    \u0275\u0275textInterpolate(ctx_r3.getFooterItemDisplayValue(fx_r62, fy_r61));
   }
 }
 function P_tfoot_16_tr_1_td_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "td", 125);
-    \u0275\u0275template(1, P_tfoot_16_tr_1_td_2_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_tfoot_16_tr_1_td_2_ng_template_2_Template, 1, 1, "ng-template", null, 10, \u0275\u0275templateRefExtractor);
+    \u0275\u0275elementStart(0, "td", 126);
+    \u0275\u0275template(1, P_tfoot_16_tr_1_td_2_ng_container_1_Template, 2, 2, "ng-container", 57)(2, P_tfoot_16_tr_1_td_2_ng_template_2_Template, 1, 1, "ng-template", null, 12, \u0275\u0275templateRefExtractor);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const fx_r59 = ctx.index;
-    const defaultFooterTpl_r60 = \u0275\u0275reference(3);
-    const fy_r58 = \u0275\u0275nextContext().index;
+    const fx_r62 = ctx.index;
+    const defaultFooterTpl_r63 = \u0275\u0275reference(3);
+    const fy_r61 = \u0275\u0275nextContext().index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFooterCellFrozen(fx_r59, fy_r58));
-    \u0275\u0275property("hidden", ctx_r3.isFooterCellHidden(fx_r59, fy_r58))("ngClass", ctx_r3.getFooterItemClassList(fx_r59, fy_r58))("ngStyle", ctx_r3.getFooterCellStyle(fx_r59, fy_r58));
-    \u0275\u0275attribute("data-x", fx_r59)("data-y", "footer-" + fy_r58)("colspan", ctx_r3.getFooterItemColspan(fx_r59, fy_r58) > 1 ? ctx_r3.getFooterItemColspan(fx_r59, fy_r58) : null);
+    \u0275\u0275classProp("jx-frozen-col", ctx_r3.isFooterCellFrozen(fx_r62, fy_r61))("jx-frozen-col-right", ctx_r3.isFrozenColumnRight(ctx_r3.getFooterLogicalColumn(fy_r61, fx_r62)))("jx-frozen-col-right-first", ctx_r3.isFrozenColumnRightFirst(ctx_r3.getFooterLogicalColumn(fy_r61, fx_r62)));
+    \u0275\u0275property("hidden", ctx_r3.isFooterCellHidden(fx_r62, fy_r61))("ngClass", ctx_r3.getFooterItemClassList(fx_r62, fy_r61))("ngStyle", ctx_r3.getFooterCellStyle(fx_r62, fy_r61));
+    \u0275\u0275attribute("data-x", fx_r62)("data-y", "footer-" + fy_r61)("colspan", ctx_r3.getFooterItemColspan(fx_r62, fy_r61) > 1 ? ctx_r3.getFooterItemColspan(fx_r62, fy_r61) : null);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r3.hasCustomFooterComponent(fx_r59, fy_r58))("ngIfElse", defaultFooterTpl_r60);
+    \u0275\u0275property("ngIf", ctx_r3.hasCustomFooterComponent(fx_r62, fy_r61))("ngIfElse", defaultFooterTpl_r63);
   }
 }
 function P_tfoot_16_tr_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 48);
-    \u0275\u0275template(1, P_tfoot_16_tr_1_td_1_Template, 1, 2, "td", 122)(2, P_tfoot_16_tr_1_td_2_Template, 4, 10, "td", 123);
+    \u0275\u0275elementStart(0, "tr", 50);
+    \u0275\u0275template(1, P_tfoot_16_tr_1_td_1_Template, 1, 2, "td", 123)(2, P_tfoot_16_tr_1_td_2_Template, 4, 14, "td", 124);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const footerRow_r61 = ctx.$implicit;
-    const fy_r58 = ctx.index;
+    const footerRow_r64 = ctx.$implicit;
+    const fy_r61 = ctx.index;
     const ctx_r3 = \u0275\u0275nextContext(2);
-    \u0275\u0275property("hidden", ctx_r3.workbook.isFooterRowHidden(fy_r58));
+    \u0275\u0275property("hidden", ctx_r3.workbook.isFooterRowHidden(fy_r61));
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r3.options.rowHeaders !== false);
     \u0275\u0275advance();
-    \u0275\u0275property("ngForOf", footerRow_r61)("ngForTrackBy", ctx_r3.trackByColumn);
+    \u0275\u0275property("ngForOf", footerRow_r64)("ngForTrackBy", ctx_r3.trackByColumn);
   }
 }
 function P_tfoot_16_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "tfoot");
-    \u0275\u0275template(1, P_tfoot_16_tr_1_Template, 3, 4, "tr", 121);
+    \u0275\u0275template(1, P_tfoot_16_tr_1_Template, 3, 4, "tr", 122);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45616,10 +45707,10 @@ function P_tfoot_16_Template(rf, ctx) {
 }
 function P_div_17_Template(rf, ctx) {
   if (rf & 1) {
-    const _r62 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 126);
+    const _r65 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 127);
     \u0275\u0275listener("click", function P_div_17_Template_div_click_0_listener() {
-      \u0275\u0275restoreView(_r62);
+      \u0275\u0275restoreView(_r65);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.workbook.insertRow());
     });
@@ -45629,36 +45720,36 @@ function P_div_17_Template(rf, ctx) {
 }
 function P_div_18_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 127);
-    \u0275\u0275element(1, "div", 128);
+    \u0275\u0275elementStart(0, "div", 128);
+    \u0275\u0275element(1, "div", 129);
     \u0275\u0275elementEnd();
   }
 }
 function P_div_19_Template(rf, ctx) {
   if (rf & 1) {
-    const _r63 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 129);
+    const _r66 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 130);
     \u0275\u0275listener("click", function P_div_19_Template_div_click_0_listener($event) {
-      \u0275\u0275restoreView(_r63);
+      \u0275\u0275restoreView(_r66);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(1, "div", 130)(2, "span", 131);
+    \u0275\u0275elementStart(1, "div", 131)(2, "span", 132);
     \u0275\u0275text(3, "Commento");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "button", 132);
+    \u0275\u0275elementStart(4, "button", 133);
     \u0275\u0275listener("click", function P_div_19_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r63);
+      \u0275\u0275restoreView(_r66);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.closeComment());
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(5, "div", 133);
+    \u0275\u0275elementStart(5, "div", 134);
     \u0275\u0275text(6);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngStyle", \u0275\u0275pureFunction2(3, _c4, ctx_r3.activeComment.top + "px", ctx_r3.activeComment.left + "px"));
+    \u0275\u0275property("ngStyle", \u0275\u0275pureFunction2(3, _c6, ctx_r3.activeComment.top + "px", ctx_r3.activeComment.left + "px"));
     \u0275\u0275advance(4);
     \u0275\u0275property("innerHTML", ctx_r3.icon("commentClose"), \u0275\u0275sanitizeHtml);
     \u0275\u0275advance(2);
@@ -45667,48 +45758,48 @@ function P_div_19_Template(rf, ctx) {
 }
 function P_div_20_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 139);
-    \u0275\u0275element(1, "span", 140);
+    \u0275\u0275elementStart(0, "div", 140);
+    \u0275\u0275element(1, "span", 141);
     \u0275\u0275text(2, " Caricamento\u2026 ");
     \u0275\u0275elementEnd();
   }
 }
 function P_div_20_ul_4_li_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "li", 144);
+    \u0275\u0275elementStart(0, "li", 145);
     \u0275\u0275text(1, "Nessun risultato");
     \u0275\u0275elementEnd();
   }
 }
 function P_div_20_ul_4_li_2_Template(rf, ctx) {
   if (rf & 1) {
-    const _r65 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "li", 145);
+    const _r68 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "li", 146);
     \u0275\u0275listener("mousedown", function P_div_20_ul_4_li_2_Template_li_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r65);
+      \u0275\u0275restoreView(_r68);
       return \u0275\u0275resetView($event.preventDefault());
     })("click", function P_div_20_ul_4_li_2_Template_li_click_0_listener() {
-      const i_r66 = \u0275\u0275restoreView(_r65).index;
+      const i_r69 = \u0275\u0275restoreView(_r68).index;
       const ctx_r3 = \u0275\u0275nextContext(3);
-      return \u0275\u0275resetView(ctx_r3.acSelect(i_r66));
+      return \u0275\u0275resetView(ctx_r3.acSelect(i_r69));
     });
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const item_r67 = ctx.$implicit;
-    const i_r66 = ctx.index;
+    const item_r70 = ctx.$implicit;
+    const i_r69 = ctx.index;
     const ctx_r3 = \u0275\u0275nextContext(3);
-    \u0275\u0275classProp("jx-ac-item--active", ctx_r3.acState.activeIndex === i_r66);
-    \u0275\u0275attribute("aria-selected", ctx_r3.acState.activeIndex === i_r66);
+    \u0275\u0275classProp("jx-ac-item--active", ctx_r3.acState.activeIndex === i_r69);
+    \u0275\u0275attribute("aria-selected", ctx_r3.acState.activeIndex === i_r69);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(item_r67.label);
+    \u0275\u0275textInterpolate(item_r70.label);
   }
 }
 function P_div_20_ul_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "ul", 141);
-    \u0275\u0275template(1, P_div_20_ul_4_li_1_Template, 2, 0, "li", 142)(2, P_div_20_ul_4_li_2_Template, 2, 4, "li", 143);
+    \u0275\u0275elementStart(0, "ul", 142);
+    \u0275\u0275template(1, P_div_20_ul_4_li_1_Template, 2, 0, "li", 143)(2, P_div_20_ul_4_li_2_Template, 2, 4, "li", 144);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45721,33 +45812,33 @@ function P_div_20_ul_4_Template(rf, ctx) {
 }
 function P_div_20_Template(rf, ctx) {
   if (rf & 1) {
-    const _r64 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 134);
+    const _r67 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 135);
     \u0275\u0275listener("mousedown", function P_div_20_Template_div_mousedown_0_listener($event) {
-      \u0275\u0275restoreView(_r64);
+      \u0275\u0275restoreView(_r67);
       return \u0275\u0275resetView($event.preventDefault());
     });
-    \u0275\u0275elementStart(1, "div", 135);
+    \u0275\u0275elementStart(1, "div", 136);
     \u0275\u0275listener("mousedown", function P_div_20_Template_div_mousedown_1_listener($event) {
-      \u0275\u0275restoreView(_r64);
+      \u0275\u0275restoreView(_r67);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(2, "input", 136);
+    \u0275\u0275elementStart(2, "input", 137);
     \u0275\u0275listener("input", function P_div_20_Template_input_input_2_listener($event) {
-      \u0275\u0275restoreView(_r64);
+      \u0275\u0275restoreView(_r67);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.acFetch(ctx_r3.acState.x, ctx_r3.acState.y, $event.target.value));
     })("keydown", function P_div_20_Template_input_keydown_2_listener($event) {
-      \u0275\u0275restoreView(_r64);
+      \u0275\u0275restoreView(_r67);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.onAcFilterKey($event));
     })("blur", function P_div_20_Template_input_blur_2_listener() {
-      \u0275\u0275restoreView(_r64);
+      \u0275\u0275restoreView(_r67);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.onAcFilterBlur());
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(3, P_div_20_div_3_Template, 3, 0, "div", 137)(4, P_div_20_ul_4_Template, 3, 2, "ul", 138);
+    \u0275\u0275template(3, P_div_20_div_3_Template, 3, 0, "div", 138)(4, P_div_20_ul_4_Template, 3, 2, "ul", 139);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -45764,18 +45855,18 @@ function P_div_20_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_8_Template(rf, ctx) {
   if (rf & 1) {
-    const _r70 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 146);
+    const _r73 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_8_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r70);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r73);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.insertRow(ctx_ir72.y);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.insertRow(ctx_ir75.y);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45789,18 +45880,18 @@ function P_ng_template_21_ng_container_1_button_8_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_9_Template(rf, ctx) {
   if (rf & 1) {
-    const _r73 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 146);
+    const _r76 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_9_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r73);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r76);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.insertRow(ctx_ir72.y + 1);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.insertRow(ctx_ir75.y + 1);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45814,18 +45905,18 @@ function P_ng_template_21_ng_container_1_button_9_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_10_Template(rf, ctx) {
   if (rf & 1) {
-    const _r74 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 151);
+    const _r77 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 152);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_10_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r74);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r77);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.deleteRow(ctx_ir72.y);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.deleteRow(ctx_ir75.y);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45839,18 +45930,18 @@ function P_ng_template_21_ng_container_1_button_10_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_12_Template(rf, ctx) {
   if (rf & 1) {
-    const _r75 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 146);
+    const _r78 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_12_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r75);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r78);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.insertColumn(ctx_ir72.x);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.insertColumn(ctx_ir75.x);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45864,18 +45955,18 @@ function P_ng_template_21_ng_container_1_button_12_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_13_Template(rf, ctx) {
   if (rf & 1) {
-    const _r76 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 146);
+    const _r79 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_13_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r76);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r79);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.insertColumn(ctx_ir72.x + 1);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.insertColumn(ctx_ir75.x + 1);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45889,18 +45980,18 @@ function P_ng_template_21_ng_container_1_button_13_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_button_14_Template(rf, ctx) {
   if (rf & 1) {
-    const _r77 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "button", 151);
+    const _r80 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 152);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_button_14_Template_button_click_0_listener() {
-      \u0275\u0275restoreView(_r77);
-      const ctx_r70 = \u0275\u0275nextContext(2);
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r80);
+      const ctx_r73 = \u0275\u0275nextContext(2);
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.deleteColumn(ctx_ir72.x);
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.deleteColumn(ctx_ir75.x);
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(1, "span", 147);
+    \u0275\u0275element(1, "span", 148);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
   }
@@ -45914,59 +46005,59 @@ function P_ng_template_21_ng_container_1_button_14_Template(rf, ctx) {
 }
 function P_ng_template_21_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r68 = \u0275\u0275getCurrentView();
+    const _r71 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "button", 146);
+    \u0275\u0275elementStart(1, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_Template_button_click_1_listener() {
-      \u0275\u0275restoreView(_r68);
-      const close_r69 = \u0275\u0275nextContext().close;
+      \u0275\u0275restoreView(_r71);
+      const close_r72 = \u0275\u0275nextContext().close;
       const ctx_r3 = \u0275\u0275nextContext();
       ctx_r3.copyCells();
-      return \u0275\u0275resetView(close_r69());
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(2, "span", 147);
+    \u0275\u0275element(2, "span", 148);
     \u0275\u0275text(3);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "button", 146);
+    \u0275\u0275elementStart(4, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r68);
-      const close_r69 = \u0275\u0275nextContext().close;
+      \u0275\u0275restoreView(_r71);
+      const close_r72 = \u0275\u0275nextContext().close;
       const ctx_r3 = \u0275\u0275nextContext();
       ctx_r3.pasteCells();
-      return \u0275\u0275resetView(close_r69());
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(5, "span", 147);
+    \u0275\u0275element(5, "span", 148);
     \u0275\u0275text(6);
     \u0275\u0275elementEnd();
-    \u0275\u0275element(7, "div", 148);
-    \u0275\u0275template(8, P_ng_template_21_ng_container_1_button_8_Template, 3, 2, "button", 149)(9, P_ng_template_21_ng_container_1_button_9_Template, 3, 2, "button", 149)(10, P_ng_template_21_ng_container_1_button_10_Template, 3, 2, "button", 150);
-    \u0275\u0275element(11, "div", 148);
-    \u0275\u0275template(12, P_ng_template_21_ng_container_1_button_12_Template, 3, 2, "button", 149)(13, P_ng_template_21_ng_container_1_button_13_Template, 3, 2, "button", 149)(14, P_ng_template_21_ng_container_1_button_14_Template, 3, 2, "button", 150);
-    \u0275\u0275element(15, "div", 148);
-    \u0275\u0275elementStart(16, "button", 146);
+    \u0275\u0275element(7, "div", 149);
+    \u0275\u0275template(8, P_ng_template_21_ng_container_1_button_8_Template, 3, 2, "button", 150)(9, P_ng_template_21_ng_container_1_button_9_Template, 3, 2, "button", 150)(10, P_ng_template_21_ng_container_1_button_10_Template, 3, 2, "button", 151);
+    \u0275\u0275element(11, "div", 149);
+    \u0275\u0275template(12, P_ng_template_21_ng_container_1_button_12_Template, 3, 2, "button", 150)(13, P_ng_template_21_ng_container_1_button_13_Template, 3, 2, "button", 150)(14, P_ng_template_21_ng_container_1_button_14_Template, 3, 2, "button", 151);
+    \u0275\u0275element(15, "div", 149);
+    \u0275\u0275elementStart(16, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_Template_button_click_16_listener() {
-      \u0275\u0275restoreView(_r68);
-      const ctx_r70 = \u0275\u0275nextContext();
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r71);
+      const ctx_r73 = \u0275\u0275nextContext();
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.sort(ctx_ir72.x, "asc");
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.sort(ctx_ir75.x, "asc");
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(17, "span", 147);
+    \u0275\u0275element(17, "span", 148);
     \u0275\u0275text(18);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(19, "button", 146);
+    \u0275\u0275elementStart(19, "button", 147);
     \u0275\u0275listener("click", function P_ng_template_21_ng_container_1_Template_button_click_19_listener() {
-      \u0275\u0275restoreView(_r68);
-      const ctx_r70 = \u0275\u0275nextContext();
-      const ctx_ir72 = ctx_r70.$implicit;
-      const close_r69 = ctx_r70.close;
+      \u0275\u0275restoreView(_r71);
+      const ctx_r73 = \u0275\u0275nextContext();
+      const ctx_ir75 = ctx_r73.$implicit;
+      const close_r72 = ctx_r73.close;
       const ctx_r3 = \u0275\u0275nextContext();
-      ctx_r3.workbook.sort(ctx_ir72.x, "desc");
-      return \u0275\u0275resetView(close_r69());
+      ctx_r3.workbook.sort(ctx_ir75.x, "desc");
+      return \u0275\u0275resetView(close_r72());
     });
-    \u0275\u0275element(20, "span", 147);
+    \u0275\u0275element(20, "span", 148);
     \u0275\u0275text(21);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
@@ -46006,7 +46097,7 @@ function P_ng_template_21_ng_container_1_Template(rf, ctx) {
 function P_ng_template_21_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div");
-    \u0275\u0275template(1, P_ng_template_21_ng_container_1_Template, 22, 14, "ng-container", 32);
+    \u0275\u0275template(1, P_ng_template_21_ng_container_1_Template, 22, 14, "ng-container", 34);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -46017,60 +46108,60 @@ function P_ng_template_21_Template(rf, ctx) {
 }
 function P_div_23_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
-    const _r79 = \u0275\u0275getCurrentView();
+    const _r82 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
-    \u0275\u0275elementStart(1, "button", 158);
+    \u0275\u0275elementStart(1, "button", 159);
     \u0275\u0275listener("click", function P_div_23_ng_container_3_Template_button_click_1_listener() {
-      const p_r80 = \u0275\u0275restoreView(_r79).$implicit;
+      const p_r83 = \u0275\u0275restoreView(_r82).$implicit;
       const ctx_r3 = \u0275\u0275nextContext(2);
-      return \u0275\u0275resetView(ctx_r3.workbook.page(p_r80));
+      return \u0275\u0275resetView(ctx_r3.workbook.page(p_r83));
     });
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
-    const p_r80 = ctx.$implicit;
+    const p_r83 = ctx.$implicit;
     const ctx_r3 = \u0275\u0275nextContext(2);
     \u0275\u0275advance();
-    \u0275\u0275classProp("jx-page-btn--active", p_r80 === ctx_r3.workbook.whichPage());
+    \u0275\u0275classProp("jx-page-btn--active", p_r83 === ctx_r3.workbook.whichPage());
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate(p_r80 + 1);
+    \u0275\u0275textInterpolate(p_r83 + 1);
   }
 }
 function P_div_23_Template(rf, ctx) {
   if (rf & 1) {
-    const _r78 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 152)(1, "button", 153);
+    const _r81 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 153)(1, "button", 154);
     \u0275\u0275listener("click", function P_div_23_Template_button_click_1_listener() {
-      \u0275\u0275restoreView(_r78);
+      \u0275\u0275restoreView(_r81);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.workbook.page(0));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "button", 154);
+    \u0275\u0275elementStart(2, "button", 155);
     \u0275\u0275listener("click", function P_div_23_Template_button_click_2_listener() {
-      \u0275\u0275restoreView(_r78);
+      \u0275\u0275restoreView(_r81);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.workbook.loadUp());
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275template(3, P_div_23_ng_container_3_Template, 3, 3, "ng-container", 27);
-    \u0275\u0275elementStart(4, "button", 155);
+    \u0275\u0275template(3, P_div_23_ng_container_3_Template, 3, 3, "ng-container", 29);
+    \u0275\u0275elementStart(4, "button", 156);
     \u0275\u0275listener("click", function P_div_23_Template_button_click_4_listener() {
-      \u0275\u0275restoreView(_r78);
+      \u0275\u0275restoreView(_r81);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.workbook.loadDown());
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "button", 156);
+    \u0275\u0275elementStart(5, "button", 157);
     \u0275\u0275listener("click", function P_div_23_Template_button_click_5_listener() {
-      \u0275\u0275restoreView(_r78);
+      \u0275\u0275restoreView(_r81);
       const ctx_r3 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r3.workbook.page(ctx_r3.workbook.getPageCount() - 1));
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "span", 157);
+    \u0275\u0275elementStart(6, "span", 158);
     \u0275\u0275text(7);
     \u0275\u0275elementEnd()();
   }
@@ -46090,11 +46181,11 @@ function P_div_23_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r3.paginationLabel(), " ");
   }
 }
-var _c5 = ["container"];
+var _c7 = ["container"];
 function O_ng_template_0_Template(rf, ctx) {
 }
-var _c6 = ["scrollContainer"];
-var _c7 = (a0, a1, a2, a3, a4, a5, a6) => ({
+var _c8 = ["scrollContainer"];
+var _c9 = (a0, a1, a2, a3, a4, a5, a6) => ({
   row: a0,
   rowIndex: a1,
   column: a2,
@@ -46162,7 +46253,7 @@ function B_tr_8_td_1_Template(rf, ctx) {
     \u0275\u0275styleProp("width", ctx_r2.getColumnWidth(column_r10));
     \u0275\u0275property("ngClass", ctx_r2.getCellClass(column_r10))("jxCellEditable", ctx_r2.isEditable(column_r10));
     \u0275\u0275advance();
-    \u0275\u0275property("context", \u0275\u0275pureFunction7(5, _c7, row_r6, ctx_r2.getActualRowIndex(rowIndex_r7), column_r10, columnIndex_r11, ctx_r2.getValue(row_r6, column_r10), ctx_r2.isEditable(column_r10), column_r10.config));
+    \u0275\u0275property("context", \u0275\u0275pureFunction7(5, _c9, row_r6, ctx_r2.getActualRowIndex(rowIndex_r7), column_r10, columnIndex_r11, ctx_r2.getValue(row_r6, column_r10), ctx_r2.isEditable(column_r10), column_r10.config));
   }
 }
 function B_tr_8_Template(rf, ctx) {
@@ -48775,7 +48866,7 @@ var T = class _T {
     }]
   }], null, null);
 })();
-var E = {
+var N = {
   "jx-table": {
     sortAsc: "\u25B2",
     sortDesc: "\u25BC",
@@ -48801,8 +48892,8 @@ var E = {
     commentClose: "\u2715"
   }
 };
-var _ = new InjectionToken("JX_ICONS");
-var N = class _N {
+var E = new InjectionToken("JX_ICONS");
+var _ = class __ {
   sanitizer;
   overrides;
   cache = /* @__PURE__ */ new Map();
@@ -48811,7 +48902,7 @@ var N = class _N {
   }
   getRaw(e, t) {
     const o = this.overrides[e]?.[t];
-    return null != o && "" !== o.trim() ? o : E[e]?.[t] ?? "";
+    return null != o && "" !== o.trim() ? o : N[e]?.[t] ?? "";
   }
   get(e, t) {
     const o = `${e}::${t}`;
@@ -48822,17 +48913,17 @@ var N = class _N {
     }
     return n;
   }
-  static \u0275fac = function N_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _N)(\u0275\u0275inject(DomSanitizer), \u0275\u0275inject(_, 8));
+  static \u0275fac = function __Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || __)(\u0275\u0275inject(DomSanitizer), \u0275\u0275inject(E, 8));
   };
   static \u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({
-    token: _N,
-    factory: _N.\u0275fac,
+    token: __,
+    factory: __.\u0275fac,
     providedIn: "root"
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(N, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(_, [{
     type: Injectable,
     args: [{
       providedIn: "root"
@@ -48845,7 +48936,7 @@ var N = class _N {
       type: Optional
     }, {
       type: Inject,
-      args: [_]
+      args: [E]
     }]
   }], null);
 })();
@@ -49156,7 +49247,7 @@ var P = class _P {
   buildRenderedColWidthsFromDom() {
     if (null !== this.acState) return;
     if (!this.host?.nativeElement) return;
-    const e = this.freezeColumnsCount > 0 || this.freezeRowsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0;
+    const e = this.freezeActive;
     if (e && false !== this.options.rowHeaders) {
       const e2 = this.host.nativeElement.querySelector("thead tr:last-child .jexcel_selectall");
       e2?.offsetWidth && (this._renderedRowHeaderWidth = e2.offsetWidth);
@@ -49241,17 +49332,17 @@ var P = class _P {
   }
   getFooterCellStyle(e, t) {
     const o = this.getFooterLogicalColumn(t, e), n = {};
-    this.options.stickyFooter && (n.backgroundColor = "var(--jx-footer-bg, #f1f3f9)"), this.isFrozenColumn(o) && (n.position = "sticky", n.left = `${this.getFrozenColumnLeft(o)}px`, n.zIndex = "3", n.backgroundColor || (n.backgroundColor = "var(--jx-footer-bg, #f1f3f9)"));
+    this.options.stickyFooter && (n.backgroundColor = "var(--jx-footer-bg, #f1f3f9)"), this.isFrozenColumn(o) ? (n.position = "sticky", n.left = `${this.getFrozenColumnLeft(o)}px`, n.zIndex = "3", n.backgroundColor || (n.backgroundColor = "var(--jx-footer-bg, #f1f3f9)")) : this.isFrozenColumnRight(o) && (n.position = "sticky", n.right = `${this.getFrozenColumnRight(o)}px`, n.zIndex = "3", n.backgroundColor || (n.backgroundColor = "var(--jx-footer-bg, #f1f3f9)"));
     const r = this.options.defaultFooterStyle;
     if (r) {
       for (const [e2, t2] of Object.entries(r)) null != t2 && (n[e2] = t2);
-      this.isFrozenColumn(o) && (n.position = "sticky");
+      (this.isFrozenColumn(o) || this.isFrozenColumnRight(o)) && (n.position = "sticky");
     }
     const i = this.workbook.getFooterCellStyleData(e, t);
     if (i) {
       const e2 = __spreadValues({}, i);
       for (const t2 of Object.keys(e2)) null == e2[t2] && delete e2[t2];
-      Object.assign(n, e2), this.isFrozenColumn(o) && (n.position = "sticky");
+      Object.assign(n, e2), (this.isFrozenColumn(o) || this.isFrozenColumnRight(o)) && (n.position = "sticky");
     }
     return Object.keys(n).length ? n : null;
   }
@@ -49324,6 +49415,32 @@ var P = class _P {
   isNestedHeaderCellHidden(e, t) {
     return 0 === this.getNestedHeaderEffectiveColspan(e, t);
   }
+  nestedCellCoveringColumn(e, t) {
+    const o = this.nestedHeaderRows[e] ?? [];
+    let n = 0;
+    for (const e2 of o) {
+      const o2 = Math.max(1, e2.colspan);
+      if (t >= n && t < n + o2) return e2;
+      n += o2;
+    }
+    return null;
+  }
+  isStandaloneHeaderColumn(e) {
+    const t = this.nestedHeaderRows;
+    if (0 === t.length) return false;
+    for (let o = 0; o < t.length; o++) {
+      const t2 = this.nestedCellCoveringColumn(o, e);
+      if (!t2 || 1 !== t2.colspan || "" !== String(t2.title ?? "").trim()) return false;
+    }
+    return true;
+  }
+  isNestedCellStandalone(e, t) {
+    const o = this.nestedHeaderRows[e]?.[t];
+    return !(!o || 1 !== o.colspan) && this.isStandaloneHeaderColumn(this.nestedHeaderCellStart(e, t));
+  }
+  get headerRowSpan() {
+    return this.nestedHeaderRows.length + 1;
+  }
   isCoveredCell(e, t) {
     return this.workbook.isCoveredByMerge(e, t);
   }
@@ -49357,6 +49474,12 @@ var P = class _P {
   get freezeColumnsCount() {
     return Math.max(0, Math.min(Number(this.options.freezeColumns ?? 0), this.columnCount));
   }
+  get freezeColumnsRightCount() {
+    return Math.max(0, Math.min(Number(this.options.freezeColumnsRight ?? 0), this.columnCount));
+  }
+  get freezeActive() {
+    return this.freezeRowsCount > 0 || this.freezeColumnsCount > 0 || this.freezeColumnsRightCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0 || (this.options.frozenColumnIndexesRight?.length ?? 0) > 0;
+  }
   get contentStyle() {
     const e = this.options.tableHeight, t = this.workbook.getPageSize(), o = {};
     if (this.hasDimensions ? (o.flex = "1", o.minHeight = "0", o.overflow = "auto") : e && "fill" !== e && (o.maxHeight = "number" == typeof e ? `${e}px` : e, o.overflowY = "auto"), t > 0) {
@@ -49376,7 +49499,7 @@ var P = class _P {
       flex: "1",
       minHeight: "0"
     } : {};
-    return this.freezeRowsCount > 0 || this.freezeColumnsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0 ? __spreadProps(__spreadValues({}, e), {
+    return this.freezeActive ? __spreadProps(__spreadValues({}, e), {
       overflow: "hidden"
     }) : true === this.options.stickyHeader || true === this.options.stickyFooter || this.hasDimensions ? __spreadProps(__spreadValues({}, e), {
       overflow: "clip"
@@ -49461,6 +49584,38 @@ var P = class _P {
     const t = this.options.frozenColumnIndexes;
     return Array.isArray(t) && t.includes(e);
   }
+  isFrozenColumnRight(e) {
+    if (this.isFrozenColumn(e)) return false;
+    const t = this.freezeColumnsRightCount;
+    if (t > 0 && e >= this.columnCount - t) return true;
+    const o = this.options.frozenColumnIndexesRight;
+    return Array.isArray(o) && o.includes(e);
+  }
+  isFrozenColumnRightFirst(e) {
+    if (!this.isFrozenColumnRight(e)) return false;
+    for (let t = e - 1; t >= 0; t--) if (!this.isHiddenColumn(t)) return !this.isFrozenColumnRight(t);
+    return true;
+  }
+  rangeAllFrozenLeft(e, t) {
+    let o = false;
+    for (let n = e; n <= t; n++) if (!this.isHiddenColumn(n)) {
+      if (!this.isFrozenColumn(n)) return false;
+      o = true;
+    }
+    return o;
+  }
+  rangeAllFrozenRight(e, t) {
+    let o = false;
+    for (let n = e; n <= t; n++) if (!this.isHiddenColumn(n)) {
+      if (!this.isFrozenColumnRight(n)) return false;
+      o = true;
+    }
+    return o;
+  }
+  isNestedHeaderCellFrozen(e, t) {
+    const o = this.nestedHeaderCellStart(e, t), n = o + Math.max(1, this.nestedHeaderRows[e]?.[t]?.colspan ?? 1) - 1;
+    return this.rangeAllFrozenLeft(o, n) || this.rangeAllFrozenRight(o, n);
+  }
   isHiddenColumn(e) {
     if (this.workbook.isColHidden(e)) return true;
     const t = this.options.columns?.[e];
@@ -49493,14 +49648,16 @@ var P = class _P {
       backgroundColor: "var(--jx-header-bg, #f1f3f9)"
     };
     true === this.options.stickyHeader && (o.top = e * this.headerRowHeight + "px");
-    const n = this.options.defaultNestedHeaderStyle;
-    if (n) {
-      for (const [e2, t2] of Object.entries(n)) null != t2 && (o[e2] = t2);
+    const n = this.nestedHeaderCellStart(e, t), r = n + Math.max(1, this.nestedHeaderRows[e]?.[t]?.colspan ?? 1) - 1;
+    this.rangeAllFrozenLeft(n, r) ? (o.left = `${this.getFrozenColumnLeft(n)}px`, o.zIndex = "85") : this.rangeAllFrozenRight(n, r) && (o.right = `${this.getFrozenColumnRight(r)}px`, o.zIndex = "85");
+    const i = this.options.defaultNestedHeaderStyle;
+    if (i) {
+      for (const [e2, t2] of Object.entries(i)) null != t2 && (o[e2] = t2);
       o.position = "sticky";
     }
-    const r = this.workbook.getNestedHeaderCellStyleData(e, t);
-    if (r) {
-      const e2 = __spreadValues({}, r);
+    const s = this.workbook.getNestedHeaderCellStyleData(e, t);
+    if (s) {
+      const e2 = __spreadValues({}, s);
       for (const t2 of Object.keys(e2)) null == e2[t2] && delete e2[t2];
       Object.assign(o, e2), o.position = "sticky";
     }
@@ -49515,25 +49672,25 @@ var P = class _P {
     };
     return true === this.options.stickyHeader && (e.top = this.nestedHeaderRows.length * this.headerRowHeight + "px"), this.decorateRowHeaderStyle(e);
   }
-  getMainHeaderCellStyle(e) {
-    const t = {
+  getMainHeaderCellStyle(e, t = false) {
+    const o = {
       position: "sticky",
       zIndex: "70",
       backgroundColor: "var(--jx-header-bg, #f1f3f9)"
     };
-    true === this.options.stickyHeader && (t.top = this.nestedHeaderRows.length * this.headerRowHeight + "px"), this.isFrozenColumn(e) && (t.left = `${this.getFrozenColumnLeft(e)}px`, t.zIndex = "95");
-    const o = this.options.defaultHeaderStyle;
-    if (o) {
-      for (const [e2, n2] of Object.entries(o)) null != n2 && (t[e2] = n2);
-      t.position = "sticky";
-    }
-    const n = this.workbook.getHeaderColumnStyle(e);
+    true === this.options.stickyHeader && (o.top = t ? "0px" : this.nestedHeaderRows.length * this.headerRowHeight + "px"), this.isFrozenColumn(e) ? (o.left = `${this.getFrozenColumnLeft(e)}px`, o.zIndex = "95") : this.isFrozenColumnRight(e) && (o.right = `${this.getFrozenColumnRight(e)}px`, o.zIndex = "95");
+    const n = this.options.defaultHeaderStyle;
     if (n) {
-      const e2 = __spreadValues({}, n);
-      for (const t2 of Object.keys(e2)) null == e2[t2] && delete e2[t2];
-      Object.assign(t, e2), t.position = "sticky";
+      for (const [e2, t2] of Object.entries(n)) null != t2 && (o[e2] = t2);
+      o.position = "sticky";
     }
-    return t;
+    const r = this.workbook.getHeaderColumnStyle(e);
+    if (r) {
+      const e2 = __spreadValues({}, r);
+      for (const t2 of Object.keys(e2)) null == e2[t2] && delete e2[t2];
+      Object.assign(o, e2), o.position = "sticky";
+    }
+    return o;
   }
   getRowHeaderCellStyle(e) {
     const t = {
@@ -49645,7 +49802,7 @@ var P = class _P {
       const t2 = this.column(e)?.align ?? this.options.defaultColAlign;
       t2 && (r["text-align"] = t2, i = true);
     }
-    (this.freezeColumnsCount > 0 || this.freezeRowsCount > 0 || (this.options.frozenColumnIndexes?.length ?? 0) > 0 || true === this.options.stickyFooter || true === this.options.stickyHeader) && !r.position && (r.position = "relative", r.zIndex = "1", i = true), this.isFrozenColumn(e) && (r.position = "sticky", r.left = `${this.getFrozenColumnLeft(e)}px`, r.zIndex = this.isFrozenRow(t) ? "88" : "52", i = true), this.isFrozenRow(t) && (r.position = "sticky", r.top = `${this.getFrozenRowTop(t)}px`, this.isFrozenColumn(e) || (r.zIndex = "60"), i = true);
+    (this.freezeActive || true === this.options.stickyFooter || true === this.options.stickyHeader) && !r.position && (r.position = "relative", r.zIndex = "1", i = true), this.isFrozenColumn(e) ? (r.position = "sticky", r.left = `${this.getFrozenColumnLeft(e)}px`, r.zIndex = this.isFrozenRow(t) ? "88" : "52", i = true) : this.isFrozenColumnRight(e) && (r.position = "sticky", r.right = `${this.getFrozenColumnRight(e)}px`, r.zIndex = this.isFrozenRow(t) ? "88" : "52", i = true), this.isFrozenRow(t) && (r.position = "sticky", r.top = `${this.getFrozenRowTop(t)}px`, this.isFrozenColumn(e) || this.isFrozenColumnRight(e) || (r.zIndex = "60"), i = true);
     const s = i ? r : null;
     return this._cellStyleCache.set(o, s), s;
   }
@@ -49660,6 +49817,11 @@ var P = class _P {
   getFrozenColumnLeft(e) {
     let t = false !== this.options.rowHeaders ? this._renderedRowHeaderWidth || this.rowHeaderWidth : 0;
     for (let o = 0; o < e; o++) this.isFrozenColumn(o) && (t += this.getColumnWidth(o));
+    return t;
+  }
+  getFrozenColumnRight(e) {
+    let t = 0;
+    for (let o = e + 1; o < this.columnCount; o++) this.isHiddenColumn(o) || this.isFrozenColumnRight(o) && (t += this.getColumnWidth(o));
     return t;
   }
   isCellCopied(e, t) {
@@ -51504,7 +51666,7 @@ var P = class _P {
     this.performPaste();
   }
   static \u0275fac = function P_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _P)(\u0275\u0275directiveInject(z), \u0275\u0275directiveInject($), \u0275\u0275directiveInject(T), \u0275\u0275directiveInject(ChangeDetectorRef), \u0275\u0275directiveInject(NgZone), \u0275\u0275directiveInject(N));
+    return new (__ngFactoryType__ || _P)(\u0275\u0275directiveInject(z), \u0275\u0275directiveInject($), \u0275\u0275directiveInject(T), \u0275\u0275directiveInject(ChangeDetectorRef), \u0275\u0275directiveInject(NgZone), \u0275\u0275directiveInject(_));
   };
   static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({
     type: _P,
@@ -51548,11 +51710,11 @@ var P = class _P {
     features: [\u0275\u0275ProvidersFeature([z]), \u0275\u0275NgOnChangesFeature],
     decls: 24,
     vars: 37,
-    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "scroll", "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], ["aria-hidden", "true", 1, "jx-vscroll-spacer"], [3, "height", "hidden", "opacity"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow", 3, "innerHTML"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", "click", 4, "ngIf"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-col-draggable", "jx-col-resizable", "jx-col-dragging", "jx-col-resizing", "jx-col-drag-left", "jx-col-drag-right", "jx-col-sortable", "jx-col-sort-asc", "jx-col-sort-desc", "selected", "ngClass", "mousedown", "mousemove", "mouseenter", "click", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "innerHTML", "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", 4, "ngIf"], [3, "hidden", "ngStyle", 4, "ngFor", "ngForOf"], [1, "jexcel_selectall", 3, "ngClass", "ngStyle"], [3, "hidden", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngClass", "ngStyle"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle", "ngClass"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-col-filter-icon", 3, "jx-col-filter-icon--with-sort", "jx-col-filter-icon--active", 4, "ngIf"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [3, "innerHTML", 4, "ngIf"], [3, "innerHTML"], [1, "jx-col-filter-icon"], ["class", "jx-col-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-col-filter-icon-img", 3, "src"], [1, "jx-sort-icon"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click", "innerHTML"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngClass", "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "jx-filter-input--has-icon", "value", "input", 4, "ngIf"], ["class", "jx-filter-icon-overlay", "aria-hidden", "true", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], ["aria-hidden", "true", 1, "jx-filter-icon-overlay"], ["class", "jx-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-filter-icon-img", 3, "src"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "innerHTML", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngClass", "ngStyle", "innerHTML"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-row", "highlight", "highlight-selected", "jx-sel-top", "jx-sel-bottom", "jx-sel-left", "jx-sel-right", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [1, "jx-ac-editing-label", 3, "title"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngClass", "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click", "innerHTML"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon", 3, "innerHTML"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
+    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["mainHeaderCellTpl", ""], ["normalNestedCell", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "scroll", "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], ["aria-hidden", "true", 1, "jx-vscroll-spacer"], [3, "height", "hidden", "opacity"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow", 3, "innerHTML"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", "click", 4, "ngIf"], [4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "innerHTML", "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", 4, "ngIf"], [1, "jexcel_selectall", 3, "ngClass", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "hidden", "ngStyle"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngClass", "ngStyle"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click", "innerHTML"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle", "ngClass"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-col-filter-icon", 3, "jx-col-filter-icon--with-sort", "jx-col-filter-icon--active", 4, "ngIf"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [3, "innerHTML", 4, "ngIf"], [3, "innerHTML"], [1, "jx-col-filter-icon"], ["class", "jx-col-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-col-filter-icon-img", 3, "src"], [1, "jx-sort-icon"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngClass", "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "jx-filter-input--has-icon", "value", "input", 4, "ngIf"], ["class", "jx-filter-icon-overlay", "aria-hidden", "true", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], ["aria-hidden", "true", 1, "jx-filter-icon-overlay"], ["class", "jx-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-filter-icon-img", 3, "src"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "innerHTML", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngClass", "ngStyle", "innerHTML"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "jx-frozen-row", "highlight", "highlight-selected", "jx-sel-top", "jx-sel-bottom", "jx-sel-left", "jx-sel-right", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [1, "jx-ac-editing-label", 3, "title"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "ngClass", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jexcel_row", 3, "ngClass", "ngStyle"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click", "innerHTML"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon", 3, "innerHTML"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
     template: function P_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = \u0275\u0275getCurrentView();
-        \u0275\u0275elementStart(0, "div", 11, 0);
+        \u0275\u0275elementStart(0, "div", 13, 0);
         \u0275\u0275listener("mouseup", function P_Template_div_mouseup_0_listener() {
           \u0275\u0275restoreView(_r1);
           return \u0275\u0275resetView(ctx.stopSelecting());
@@ -51560,41 +51722,38 @@ var P = class _P {
           \u0275\u0275restoreView(_r1);
           return \u0275\u0275resetView(ctx.stopSelecting());
         });
-        \u0275\u0275template(2, P_div_2_Template, 2, 1, "div", 12)(3, P_ng_template_3_Template, 2, 2, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
-        \u0275\u0275elementStart(5, "div", 13);
+        \u0275\u0275template(2, P_div_2_Template, 2, 1, "div", 14)(3, P_ng_template_3_Template, 2, 2, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+        \u0275\u0275elementStart(5, "div", 15);
         \u0275\u0275listener("scroll", function P_Template_div_scroll_5_listener() {
           \u0275\u0275restoreView(_r1);
           return \u0275\u0275resetView(ctx.onContentScroll());
         });
-        \u0275\u0275elementStart(6, "table", 14)(7, "colgroup");
-        \u0275\u0275template(8, P_col_8_Template, 1, 2, "col", 15)(9, P_col_9_Template, 1, 3, "col", 16);
+        \u0275\u0275elementStart(6, "table", 16)(7, "colgroup");
+        \u0275\u0275template(8, P_col_8_Template, 1, 2, "col", 17)(9, P_col_9_Template, 1, 3, "col", 18);
         \u0275\u0275elementEnd();
-        \u0275\u0275template(10, P_thead_10_Template, 7, 8, "thead", 17);
+        \u0275\u0275template(10, P_thead_10_Template, 9, 8, "thead", 19);
         \u0275\u0275elementStart(11, "tbody");
-        \u0275\u0275template(12, P_Conditional_12_Template, 2, 7, "tr", 18);
-        \u0275\u0275repeaterCreate(13, P_For_14_Template, 5, 9, "tr", 19, _forTrack0);
-        \u0275\u0275template(15, P_Conditional_15_Template, 2, 7, "tr", 18);
+        \u0275\u0275template(12, P_Conditional_12_Template, 2, 7, "tr", 20);
+        \u0275\u0275repeaterCreate(13, P_For_14_Template, 5, 9, "tr", 21, _forTrack0);
+        \u0275\u0275template(15, P_Conditional_15_Template, 2, 7, "tr", 20);
         \u0275\u0275elementEnd();
-        \u0275\u0275template(16, P_tfoot_16_Template, 2, 4, "tfoot", 20);
+        \u0275\u0275template(16, P_tfoot_16_Template, 2, 4, "tfoot", 22);
         \u0275\u0275elementEnd()();
-        \u0275\u0275template(17, P_div_17_Template, 2, 0, "div", 21)(18, P_div_18_Template, 2, 0, "div", 22)(19, P_div_19_Template, 7, 6, "div", 23)(20, P_div_20_Template, 5, 6, "div", 24);
+        \u0275\u0275template(17, P_div_17_Template, 2, 0, "div", 23)(18, P_div_18_Template, 2, 0, "div", 24)(19, P_div_19_Template, 7, 6, "div", 25)(20, P_div_20_Template, 5, 6, "div", 26);
         \u0275\u0275elementEnd();
-        \u0275\u0275template(21, P_ng_template_21_Template, 2, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor)(23, P_div_23_Template, 8, 10, "div", 25);
+        \u0275\u0275template(21, P_ng_template_21_Template, 2, 1, "ng-template", null, 2, \u0275\u0275templateRefExtractor)(23, P_div_23_Template, 8, 10, "div", 27);
       }
       if (rf & 2) {
-        let tmp_3_0;
-        let tmp_10_0;
-        let tmp_15_0;
-        \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_3_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_3_0 !== void 0 ? tmp_3_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-word-wrap", ctx.options.wordWrap)("jx-text-overflow-ellipsis", ctx.options.textOverflow === "ellipsis")("with-toolbar", ctx.allToolbarItems.length > 0);
+        \u0275\u0275classProp("jx-freeze-active", ctx.freezeActive)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-word-wrap", ctx.options.wordWrap)("jx-text-overflow-ellipsis", ctx.options.textOverflow === "ellipsis")("with-toolbar", ctx.allToolbarItems.length > 0);
         \u0275\u0275property("ngStyle", ctx.containerStyle);
         \u0275\u0275advance(2);
         \u0275\u0275property("ngIf", ctx.allToolbarItems.length > 0);
         \u0275\u0275advance(3);
-        \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_10_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_10_0 !== void 0 ? tmp_10_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-sticky-rows", ctx.options.stickyHeader || ctx.options.stickyFooter);
+        \u0275\u0275classProp("jx-freeze-active", ctx.freezeActive)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true)("jx-sticky-rows", ctx.options.stickyHeader || ctx.options.stickyFooter);
         \u0275\u0275property("ngStyle", ctx.contentStyle);
         \u0275\u0275advance();
         \u0275\u0275styleProp("width", ctx.tablePixelWidth, "px");
-        \u0275\u0275classProp("jx-freeze-active", ctx.freezeRowsCount > 0 || ctx.freezeColumnsCount > 0 || ((tmp_15_0 = ctx.options.frozenColumnIndexes == null ? null : ctx.options.frozenColumnIndexes.length) !== null && tmp_15_0 !== void 0 ? tmp_15_0 : 0) > 0)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true);
+        \u0275\u0275classProp("jx-freeze-active", ctx.freezeActive)("jx-sticky-active", ctx.options.stickyHeader === true || ctx.options.stickyFooter === true);
         \u0275\u0275advance(2);
         \u0275\u0275property("ngIf", ctx.options.rowHeaders !== false);
         \u0275\u0275advance();
@@ -51621,8 +51780,8 @@ var P = class _P {
         \u0275\u0275property("ngIf", ctx.workbook.getPageSize() > 0);
       }
     },
-    dependencies: [NgClass, NgComponentOutlet, NgForOf, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, MaskDirective, ContextMenuDirective],
-    styles: ['[_nghost-%COMP%]{display:block;box-sizing:border-box}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   tr.jx-filter-row[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell[_ngcontent-%COMP%]{vertical-align:middle;position:relative}.jx-filter-spacer[_ngcontent-%COMP%]{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input[_ngcontent-%COMP%]{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input[_ngcontent-%COMP%]::placeholder{opacity:.4}.jx-filter-input--has-icon[_ngcontent-%COMP%]{padding-left:22px}.jx-filter-icon-overlay[_ngcontent-%COMP%]{position:absolute;left:5px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;opacity:var(--jx-filter-icon-opacity, .4)}.jx-filter-icon-overlay[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%], .jx-filter-icon-overlay[_ngcontent-%COMP%]   .jx-filter-icon-img[_ngcontent-%COMP%]{width:13px;height:13px}.jx-filter-empty[_ngcontent-%COMP%]{display:block;height:20px}.jexcel_container[_ngcontent-%COMP%]{position:relative}.jexcel_container.jx-sticky-active[_ngcontent-%COMP%]{overflow:clip}.jexcel_container.jx-freeze-active[_ngcontent-%COMP%]{overflow:hidden}.jexcel_content[_ngcontent-%COMP%]{overflow-x:auto}.jexcel_content.jx-freeze-active[_ngcontent-%COMP%]{overflow:auto}table.jexcel.jx-freeze-active[_ngcontent-%COMP%]{border-collapse:separate;border-spacing:0}.jexcel[_ngcontent-%COMP%]   td.jexcel_selectall[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-clip:padding-box}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-col[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.highlight-selected[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.highlight-selected[_ngcontent-%COMP%]{background-color:var(--jx-frozen-selection-bg)!important}.jexcel_content.jx-sticky-rows[_ngcontent-%COMP%]{overflow-y:auto}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%]:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable.jx-col-dragging[_ngcontent-%COMP%]:after{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-left[_ngcontent-%COMP%]{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-right[_ngcontent-%COMP%]{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizing[_ngcontent-%COMP%]{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable.jx-row-dragging[_ngcontent-%COMP%]:before{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizing[_ngcontent-%COMP%]{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-top[_ngcontent-%COMP%]{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-cell-copying[_ngcontent-%COMP%]{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{position:relative;overflow:visible!important}.jx-fill-handle[_ngcontent-%COMP%]{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview[_ngcontent-%COMP%]{background-color:transparent}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-top[_ngcontent-%COMP%]{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-left[_ngcontent-%COMP%]{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-right[_ngcontent-%COMP%]{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay[_ngcontent-%COMP%]{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes _ngcontent-%COMP%_jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner[_ngcontent-%COMP%]{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn[_ngcontent-%COMP%]{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown[_ngcontent-%COMP%]{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar[_ngcontent-%COMP%]{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list[_ngcontent-%COMP%]{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item[_ngcontent-%COMP%]{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item[_ngcontent-%COMP%]:hover, .jx-ac-item.jx-ac-item--active[_ngcontent-%COMP%]{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes _ngcontent-%COMP%_jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner[_ngcontent-%COMP%]{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-ac-spin .6s linear infinite}.jx-ac-input--anchor[_ngcontent-%COMP%]{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box}.jx-comment-indicator[_ngcontent-%COMP%]{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup[_ngcontent-%COMP%]{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label[_ngcontent-%COMP%]{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close[_ngcontent-%COMP%]{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close[_ngcontent-%COMP%]:hover{opacity:1}.jx-comment-popup__body[_ngcontent-%COMP%]{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}body[_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], body   [_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], .jx-context-menu[_ngcontent-%COMP%]{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu[_ngcontent-%COMP%]{padding:4px 0}.jx-ctx-menu__header[_ngcontent-%COMP%]{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value[_ngcontent-%COMP%]{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item[_ngcontent-%COMP%]:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon[_ngcontent-%COMP%]{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator[_ngcontent-%COMP%]{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar[_ngcontent-%COMP%]{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item[_ngcontent-%COMP%]:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item[_ngcontent-%COMP%]{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor[_ngcontent-%COMP%]{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color[_ngcontent-%COMP%]{position:relative;overflow:hidden}.jx-toolbar-color[_ngcontent-%COMP%]   .jx-toolbar-color-input[_ngcontent-%COMP%]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination[_ngcontent-%COMP%]{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn[_ngcontent-%COMP%]:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn[_ngcontent-%COMP%]:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active[_ngcontent-%COMP%]{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info[_ngcontent-%COMP%]{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-inner[_ngcontent-%COMP%]{display:block;position:relative;width:100%;overflow:hidden}.jx-col-header-label[_ngcontent-%COMP%]{display:inline}.jx-sort-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon[_ngcontent-%COMP%]:hover{opacity:1}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-asc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-desc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;line-height:1;color:var(--jx-text-muted, #64748b);opacity:var(--jx-filter-indicator-opacity, .3);pointer-events:none;transition:opacity var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-col-filter-icon--with-sort[_ngcontent-%COMP%]{right:20px}.jx-col-filter-icon--active[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%], .jx-col-filter-icon[_ngcontent-%COMP%]   img[_ngcontent-%COMP%]{width:10px;height:10px;display:block}'],
+    dependencies: [NgClass, NgComponentOutlet, NgForOf, NgIf, NgTemplateOutlet, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgModel, MaskDirective, ContextMenuDirective],
+    styles: ['[_nghost-%COMP%]{display:block;box-sizing:border-box}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   tr.jx-filter-row[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell[_ngcontent-%COMP%]{vertical-align:middle;position:relative}.jx-filter-spacer[_ngcontent-%COMP%]{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input[_ngcontent-%COMP%]{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input[_ngcontent-%COMP%]::placeholder{opacity:.4}.jx-filter-input--has-icon[_ngcontent-%COMP%]{padding-left:22px}.jx-filter-icon-overlay[_ngcontent-%COMP%]{position:absolute;left:5px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;opacity:var(--jx-filter-icon-opacity, .4)}.jx-filter-icon-overlay[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%], .jx-filter-icon-overlay[_ngcontent-%COMP%]   .jx-filter-icon-img[_ngcontent-%COMP%]{width:13px;height:13px}.jx-filter-empty[_ngcontent-%COMP%]{display:block;height:20px}.jexcel_container[_ngcontent-%COMP%]{position:relative}.jexcel_container.jx-sticky-active[_ngcontent-%COMP%]{overflow:clip}.jexcel_container.jx-freeze-active[_ngcontent-%COMP%]{overflow:hidden}.jexcel_content[_ngcontent-%COMP%]{overflow-x:auto}.jexcel_content.jx-freeze-active[_ngcontent-%COMP%]{overflow:auto}table.jexcel.jx-freeze-active[_ngcontent-%COMP%]{border-collapse:separate;border-spacing:0}.jexcel[_ngcontent-%COMP%]   td.jexcel_selectall[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jexcel_row[_ngcontent-%COMP%]{background-clip:padding-box}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-row[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col-right[_ngcontent-%COMP%]{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-col[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   tr[_ngcontent-%COMP%]:nth-child(2n)   td.jx-frozen-col-right[_ngcontent-%COMP%]{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.readonly[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col-right.readonly[_ngcontent-%COMP%]{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td.jx-frozen-col-right[_ngcontent-%COMP%]{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jx-frozen-col[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tfoot[_ngcontent-%COMP%]   td.jx-frozen-col-right[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   td.jx-frozen-col-right-first[_ngcontent-%COMP%]{border-left:1px solid var(--jx-border-color, #cbd5e1)}.jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col.highlight-selected[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-col-right.highlight-selected[_ngcontent-%COMP%], .jexcel.jx-freeze-active[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-frozen-row.highlight-selected[_ngcontent-%COMP%]{background-color:var(--jx-frozen-selection-bg)!important}.jexcel_content.jx-sticky-rows[_ngcontent-%COMP%]{overflow-y:auto}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel[_ngcontent-%COMP%]   tfoot.jx-sticky-footer[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizable[_ngcontent-%COMP%]:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable[_ngcontent-%COMP%]:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-draggable.jx-col-dragging[_ngcontent-%COMP%]:after{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-left[_ngcontent-%COMP%]{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-drag-right[_ngcontent-%COMP%]{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-resizing[_ngcontent-%COMP%]{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]{position:relative}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable[_ngcontent-%COMP%]:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-draggable.jx-row-dragging[_ngcontent-%COMP%]:before{cursor:grabbing}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizable[_ngcontent-%COMP%]:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-resizing[_ngcontent-%COMP%]{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-top[_ngcontent-%COMP%]{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   td.jexcel_row.jx-row-drop-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-cell-copying[_ngcontent-%COMP%]{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{position:relative;overflow:visible!important}.jx-fill-handle[_ngcontent-%COMP%]{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview[_ngcontent-%COMP%]{background-color:transparent}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-top[_ngcontent-%COMP%]{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-bottom[_ngcontent-%COMP%]{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-left[_ngcontent-%COMP%]{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td.jx-fill-preview.jx-fill-preview-right[_ngcontent-%COMP%]{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay[_ngcontent-%COMP%]{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes _ngcontent-%COMP%_jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner[_ngcontent-%COMP%]{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis[_ngcontent-%COMP%]   table.jexcel[_ngcontent-%COMP%]   tbody[_ngcontent-%COMP%]   td[_ngcontent-%COMP%]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn[_ngcontent-%COMP%]{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn[_ngcontent-%COMP%]:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown[_ngcontent-%COMP%]{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar[_ngcontent-%COMP%]{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input[_ngcontent-%COMP%]:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list[_ngcontent-%COMP%]{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item[_ngcontent-%COMP%]{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item[_ngcontent-%COMP%]:hover, .jx-ac-item.jx-ac-item--active[_ngcontent-%COMP%]{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty[_ngcontent-%COMP%]:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes _ngcontent-%COMP%_jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner[_ngcontent-%COMP%]{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:_ngcontent-%COMP%_jx-ac-spin .6s linear infinite}.jx-ac-input--anchor[_ngcontent-%COMP%]{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input[_ngcontent-%COMP%]{width:100%;box-sizing:border-box}.jx-comment-indicator[_ngcontent-%COMP%]{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup[_ngcontent-%COMP%]{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header[_ngcontent-%COMP%]{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label[_ngcontent-%COMP%]{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close[_ngcontent-%COMP%]{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close[_ngcontent-%COMP%]:hover{opacity:1}.jx-comment-popup__body[_ngcontent-%COMP%]{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}body[_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], body   [_nghost-%COMP%]   .jx-context-menu[_ngcontent-%COMP%], .jx-context-menu[_ngcontent-%COMP%]{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu[_ngcontent-%COMP%]{padding:4px 0}.jx-ctx-menu__header[_ngcontent-%COMP%]{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value[_ngcontent-%COMP%]{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item[_ngcontent-%COMP%]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item[_ngcontent-%COMP%]:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger[_ngcontent-%COMP%]:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon[_ngcontent-%COMP%]{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator[_ngcontent-%COMP%]{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar[_ngcontent-%COMP%]{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item[_ngcontent-%COMP%]:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item[_ngcontent-%COMP%]{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor[_ngcontent-%COMP%]{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color[_ngcontent-%COMP%]{position:relative;overflow:hidden}.jx-toolbar-color[_ngcontent-%COMP%]   .jx-toolbar-color-input[_ngcontent-%COMP%]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination[_ngcontent-%COMP%]{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn[_ngcontent-%COMP%]{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn[_ngcontent-%COMP%]:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn[_ngcontent-%COMP%]:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active[_ngcontent-%COMP%]{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info[_ngcontent-%COMP%]{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-inner[_ngcontent-%COMP%]{display:block;position:relative;width:100%;overflow:hidden}.jx-col-header-label[_ngcontent-%COMP%]{display:inline}.jx-sort-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon[_ngcontent-%COMP%]:hover{opacity:1}.jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-asc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%], .jexcel[_ngcontent-%COMP%]   thead[_ngcontent-%COMP%]   td[data-x].jx-col-sort-desc[_ngcontent-%COMP%]   .jx-sort-icon[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon[_ngcontent-%COMP%]{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;line-height:1;color:var(--jx-text-muted, #64748b);opacity:var(--jx-filter-indicator-opacity, .3);pointer-events:none;transition:opacity var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-col-filter-icon--with-sort[_ngcontent-%COMP%]{right:20px}.jx-col-filter-icon--active[_ngcontent-%COMP%]{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%], .jx-col-filter-icon[_ngcontent-%COMP%]   img[_ngcontent-%COMP%]{width:10px;height:10px;display:block}'],
     changeDetection: 0
   });
 };
@@ -51635,7 +51794,7 @@ var P = class _P {
       changeDetection: ChangeDetectionStrategy.OnPush,
       providers: [z],
       template: `<div #host class="jexcel_container"\r
-  [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0"\r
+  [class.jx-freeze-active]="freezeActive"\r
   [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true"\r
   [class.jx-word-wrap]="options.wordWrap"\r
   [class.jx-text-overflow-ellipsis]="options.textOverflow === 'ellipsis'"\r
@@ -51713,8 +51872,8 @@ var P = class _P {
     </ul>\r
   </ng-template>\r
 \r
-  <div class="jexcel_content" [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" [class.jx-sticky-rows]="options.stickyHeader || options.stickyFooter" [ngStyle]="contentStyle" (scroll)="onContentScroll()">\r
-    <table class="jexcel" [class.jx-freeze-active]="freezeRowsCount > 0 || freezeColumnsCount > 0 || (options.frozenColumnIndexes?.length ?? 0) > 0" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" tabindex="-1" [style.width.px]="tablePixelWidth">\r
+  <div class="jexcel_content" [class.jx-freeze-active]="freezeActive" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" [class.jx-sticky-rows]="options.stickyHeader || options.stickyFooter" [ngStyle]="contentStyle" (scroll)="onContentScroll()">\r
+    <table class="jexcel" [class.jx-freeze-active]="freezeActive" [class.jx-sticky-active]="options.stickyHeader === true || options.stickyFooter === true" tabindex="-1" [style.width.px]="tablePixelWidth">\r
       <colgroup>\r
         <col *ngIf="options.rowHeaders !== false" [style.width.px]="rowHeaderWidth" />\r
         <col *ngFor="let h of headers; let x = index; trackBy: trackByColumn" [style.width.px]="getColumnWidth(x)" [hidden]="isHiddenColumn(x)" />\r
@@ -51723,24 +51882,50 @@ var P = class _P {
       <thead *ngIf="options.columnHeaders !== false" [class.jx-sticky-header]="options.stickyHeader">\r
         <tr *ngFor="let nestedRow of nestedHeaderRows; let nh = index">\r
           <td *ngIf="options.rowHeaders !== false" class="jexcel_selectall" [ngClass]="options.rowHeaderClass || ''" [ngStyle]="getNestedHeaderSelectAllStyle(nh)"></td>\r
-          <td\r
-            *ngFor="let nestedCell of nestedRow; let ni = index"\r
-            [hidden]="isNestedHeaderCellHidden(nh, ni)"\r
-            [attr.colspan]="getNestedHeaderEffectiveColspan(nh, ni) > 1 ? getNestedHeaderEffectiveColspan(nh, ni) : null"\r
-            [ngStyle]="getNestedHeaderCellStyle(nh, ni)"\r
-          ><ng-container *ngIf="hasCustomNestedHeaderComponent(nh, ni); else defaultNestedTpl">\r
-              <ng-container *ngComponentOutlet="getCustomNestedHeaderComponent(nh, ni); inputs: customNestedHeaderInputs(nh, ni)"></ng-container>\r
+          <ng-container *ngFor="let nestedCell of nestedRow; let ni = index">\r
+            <!-- Standalone column (no group): render the main header cell with a\r
+                 full-height rowspan in the FIRST nested row; skip it in the others,\r
+                 so no empty nested cell scrolls independently above the column. -->\r
+            <ng-container *ngIf="isNestedCellStandalone(nh, ni); else normalNestedCell">\r
+              <ng-container *ngIf="nh === 0">\r
+                <ng-container *ngTemplateOutlet="mainHeaderCellTpl; context: { $implicit: nestedHeaderCellStart(nh, ni), rowspan: headerRowSpan, spanned: true }"></ng-container>\r
+              </ng-container>\r
             </ng-container>\r
-            <ng-template #defaultNestedTpl>{{ nestedCell.title }}</ng-template></td>\r
+            <ng-template #normalNestedCell>\r
+              <td\r
+                [hidden]="isNestedHeaderCellHidden(nh, ni)"\r
+                [attr.colspan]="getNestedHeaderEffectiveColspan(nh, ni) > 1 ? getNestedHeaderEffectiveColspan(nh, ni) : null"\r
+                [ngStyle]="getNestedHeaderCellStyle(nh, ni)"\r
+                [class.jx-frozen-col]="isNestedHeaderCellFrozen(nh, ni)"\r
+              ><ng-container *ngIf="hasCustomNestedHeaderComponent(nh, ni); else defaultNestedTpl">\r
+                  <ng-container *ngComponentOutlet="getCustomNestedHeaderComponent(nh, ni); inputs: customNestedHeaderInputs(nh, ni)"></ng-container>\r
+                </ng-container>\r
+                <ng-template #defaultNestedTpl>{{ nestedCell.title }}</ng-template></td>\r
+            </ng-template>\r
+          </ng-container>\r
         </tr>\r
         <tr>\r
           <td *ngIf="options.rowHeaders !== false" class="jexcel_selectall" [ngClass]="options.rowHeaderClass || ''" [ngStyle]="getMainHeaderSelectAllStyle()" (click)="selectAll()"></td>\r
+          <ng-container *ngFor="let h of headers; let x = index; trackBy: trackByColumn">\r
+            <ng-container *ngIf="!isStandaloneHeaderColumn(x)">\r
+              <ng-container *ngTemplateOutlet="mainHeaderCellTpl; context: { $implicit: x, rowspan: 1, spanned: false }"></ng-container>\r
+            </ng-container>\r
+          </ng-container>\r
+          <!-- + add column button -->\r
+          <td *ngIf="options.allowManualInsertColumn" class="jx-add-col-btn" title="Aggiungi colonna" (click)="workbook.insertColumn()" [innerHTML]="icon('addColumn')"></td>\r
+        </tr>\r
+\r
+        <!-- Reusable main-header cell: rendered in the main header row and, for\r
+             standalone columns, in the first nested row with a full-height rowspan. -->\r
+        <ng-template #mainHeaderCellTpl let-x let-rowspan="rowspan" let-spanned="spanned">\r
           <td\r
-            *ngFor="let h of headers; let x = index; trackBy: trackByColumn"\r
             [hidden]="isHiddenColumn(x)"\r
             [attr.data-x]="x"\r
-            [ngStyle]="getMainHeaderCellStyle(x)"\r
+            [attr.rowspan]="rowspan > 1 ? rowspan : null"\r
+            [ngStyle]="getMainHeaderCellStyle(x, spanned)"\r
             [class.jx-frozen-col]="isFrozenColumn(x)"\r
+            [class.jx-frozen-col-right]="isFrozenColumnRight(x)"\r
+            [class.jx-frozen-col-right-first]="isFrozenColumnRightFirst(x)"\r
             [class.jx-col-draggable]="canDragColumnHeader(x)"\r
             [class.jx-col-resizable]="canResizeColumnHeader(x)"\r
             [class.jx-col-dragging]="isHeaderDragging(x)"\r
@@ -51770,7 +51955,7 @@ var P = class _P {
                   <span *ngIf="getSortDirection(x) === 'desc'" [innerHTML]="icon('sortDesc')"></span>\r
                   <span *ngIf="getSortDirection(x) === null" [innerHTML]="icon('sortNone')"></span>\r
                 </span>\r
-                <span class="jx-col-header-label">{{ h }}</span>\r
+                <span class="jx-col-header-label">{{ headers[x] }}</span>\r
                 <span *ngIf="options.columnFilter === true && isFilterableColumn(x) && filterIndicatorMode() !== 'none'"\r
                       class="jx-col-filter-icon"\r
                       [class.jx-col-filter-icon--with-sort]="isSortableColumn(x)"\r
@@ -51792,9 +51977,8 @@ var P = class _P {
                 </span>\r
               </span>\r
             </ng-template></td>\r
-          <!-- + add column button -->\r
-          <td *ngIf="options.allowManualInsertColumn" class="jx-add-col-btn" title="Aggiungi colonna" (click)="workbook.insertColumn()" [innerHTML]="icon('addColumn')"></td>\r
-        </tr>\r
+        </ng-template>\r
+\r
         <!-- Filter row: displayed under the main header when columnFilter is enabled -->\r
         <tr *ngIf="options.columnFilter === true" class="jx-filter-row">\r
           <td *ngIf="options.rowHeaders !== false" class="jx-filter-spacer" [ngClass]="options.rowHeaderClass || ''" [ngStyle]="getFilterRowHeaderStyle()"></td>\r
@@ -51876,6 +52060,8 @@ var P = class _P {
             [attr.data-merged]="getCellDataMerged(x,y)"\r
             [ngStyle]="getCellComputedStyle(x,y)"\r
             [class.jx-frozen-col]="isFrozenColumn(x)"\r
+            [class.jx-frozen-col-right]="isFrozenColumnRight(x)"\r
+            [class.jx-frozen-col-right-first]="isFrozenColumnRightFirst(x)"\r
             [class.jx-frozen-row]="isFrozenRow(y)"\r
             [class.highlight]="cellSel.selected"\r
             [class.highlight-selected]="cellSel.selected"\r
@@ -52117,6 +52303,8 @@ var P = class _P {
             [attr.colspan]="getFooterItemColspan(fx, fy) > 1 ? getFooterItemColspan(fx, fy) : null"\r
             class="jx-footer-cell"\r
             [class.jx-frozen-col]="isFooterCellFrozen(fx, fy)"\r
+            [class.jx-frozen-col-right]="isFrozenColumnRight(getFooterLogicalColumn(fy, fx))"\r
+            [class.jx-frozen-col-right-first]="isFrozenColumnRightFirst(getFooterLogicalColumn(fy, fx))"\r
             [ngClass]="getFooterItemClassList(fx, fy)"\r
             [ngStyle]="getFooterCellStyle(fx, fy)"\r
           >\r
@@ -52281,7 +52469,7 @@ var P = class _P {
   </span>\r
 </div>\r
 `,
-      styles: [':host{display:block;box-sizing:border-box}.jexcel thead tr.jx-filter-row td{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell{vertical-align:middle;position:relative}.jx-filter-spacer{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input::placeholder{opacity:.4}.jx-filter-input--has-icon{padding-left:22px}.jx-filter-icon-overlay{position:absolute;left:5px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;opacity:var(--jx-filter-icon-opacity, .4)}.jx-filter-icon-overlay svg,.jx-filter-icon-overlay .jx-filter-icon-img{width:13px;height:13px}.jx-filter-empty{display:block;height:20px}.jexcel_container{position:relative}.jexcel_container.jx-sticky-active{overflow:clip}.jexcel_container.jx-freeze-active{overflow:hidden}.jexcel_content{overflow-x:auto}.jexcel_content.jx-freeze-active{overflow:auto}table.jexcel.jx-freeze-active{border-collapse:separate;border-spacing:0}.jexcel td.jexcel_selectall,.jexcel thead td.jexcel_row,.jexcel tbody td.jexcel_row{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel tfoot td.jexcel_row{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel thead td{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel tfoot td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active thead td,.jexcel.jx-freeze-active tbody td.jexcel_row,.jexcel.jx-freeze-active tfoot td.jexcel_row{background-clip:padding-box}.jexcel.jx-freeze-active tbody td.jx-frozen-row{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-row{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-row.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active tbody td.jx-frozen-col{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-col{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.highlight-selected,.jexcel.jx-freeze-active tbody td.jx-frozen-row.highlight-selected{background-color:var(--jx-frozen-selection-bg)!important}.jexcel_content.jx-sticky-rows{overflow-y:auto}.jexcel tfoot.jx-sticky-footer{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel tfoot.jx-sticky-footer td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel thead td[data-x].jx-col-draggable,.jexcel thead td[data-x].jx-col-resizable{position:relative}.jexcel thead td[data-x].jx-col-resizable:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel thead td[data-x].jx-col-draggable:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel thead td[data-x].jx-col-draggable.jx-col-dragging:after{cursor:grabbing}.jexcel thead td[data-x].jx-col-drag-left{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-drag-right{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-resizing{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-resizable,.jexcel td.jexcel_row.jx-row-draggable{position:relative}.jexcel td.jexcel_row.jx-row-draggable:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel td.jexcel_row.jx-row-draggable.jx-row-dragging:before{cursor:grabbing}.jexcel td.jexcel_row.jx-row-resizable:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel td.jexcel_row.jx-row-resizing{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-top{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-bottom{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel tbody td.jx-cell-copying{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel tbody td{position:relative;overflow:visible!important}.jx-fill-handle{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel tbody td.jx-fill-preview{background-color:transparent}.jexcel tbody td.jx-fill-preview.jx-fill-preview-top{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-left{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-right{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap table.jexcel tbody td{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis table.jexcel tbody td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item:hover,.jx-ac-item.jx-ac-item--active{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-ac-spin .6s linear infinite}.jx-ac-input--anchor{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input{width:100%;box-sizing:border-box}.jx-comment-indicator{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close:hover{opacity:1}.jx-comment-popup__body{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}:host-context(body) .jx-context-menu,.jx-context-menu{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu{padding:4px 0}.jx-ctx-menu__header{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header strong{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color{position:relative;overflow:hidden}.jx-toolbar-color .jx-toolbar-color-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-inner{display:block;position:relative;width:100%;overflow:hidden}.jx-col-header-label{display:inline}.jx-sort-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon:hover{opacity:1}.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;line-height:1;color:var(--jx-text-muted, #64748b);opacity:var(--jx-filter-indicator-opacity, .3);pointer-events:none;transition:opacity var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-col-filter-icon--with-sort{right:20px}.jx-col-filter-icon--active{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon svg,.jx-col-filter-icon img{width:10px;height:10px;display:block}\n']
+      styles: [':host{display:block;box-sizing:border-box}.jexcel thead tr.jx-filter-row td{padding:2px 3px;background-color:var(--jx-filter-bg, #f1f5f9);border-bottom:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0))}.jx-filter-cell{vertical-align:middle;position:relative}.jx-filter-spacer{background-color:var(--jx-filter-bg, #f1f5f9)}.jx-filter-input{display:block;width:100%;box-sizing:border-box;border:1px solid var(--jx-filter-border, var(--jx-border, #e2e8f0));border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-xs, 11px);padding:2px 5px;background:var(--jx-filter-input-bg, var(--jx-cell-bg, #fff));color:var(--jx-filter-input-color, var(--jx-text, inherit));line-height:1.4;outline:none;transition:border-color var(--jx-transition, .12s ease)}.jx-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px var(--jx-primary-bg, rgba(37, 99, 235, .15))}.jx-filter-input::placeholder{opacity:.4}.jx-filter-input--has-icon{padding-left:22px}.jx-filter-icon-overlay{position:absolute;left:5px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;opacity:var(--jx-filter-icon-opacity, .4)}.jx-filter-icon-overlay svg,.jx-filter-icon-overlay .jx-filter-icon-img{width:13px;height:13px}.jx-filter-empty{display:block;height:20px}.jexcel_container{position:relative}.jexcel_container.jx-sticky-active{overflow:clip}.jexcel_container.jx-freeze-active{overflow:hidden}.jexcel_content{overflow-x:auto}.jexcel_content.jx-freeze-active{overflow:auto}table.jexcel.jx-freeze-active{border-collapse:separate;border-spacing:0}.jexcel td.jexcel_selectall,.jexcel thead td.jexcel_row,.jexcel tbody td.jexcel_row{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel tfoot td.jexcel_row{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel thead td{background-color:var(--jx-header-bg, #f1f5f9)}.jexcel tfoot td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel.jx-freeze-active thead td,.jexcel.jx-freeze-active tbody td.jexcel_row,.jexcel.jx-freeze-active tfoot td.jexcel_row{background-clip:padding-box}.jexcel.jx-freeze-active tbody td.jx-frozen-row{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-row{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-row.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active tbody td.jx-frozen-col,.jexcel.jx-freeze-active tbody td.jx-frozen-col-right{background-color:var(--jx-cell-bg, #fff)}.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-col,.jexcel.jx-freeze-active tbody tr:nth-child(2n) td.jx-frozen-col-right{background-color:var(--jx-cell-alt-bg, #f8fafc)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.readonly,.jexcel.jx-freeze-active tbody td.jx-frozen-col-right.readonly{background-color:var(--jx-cell-soft-bg, #f1f5f9)}.jexcel.jx-freeze-active thead td.jx-frozen-col,.jexcel.jx-freeze-active thead td.jx-frozen-col-right{background-color:var(--jx-header-bg, #f1f5f9)!important}.jexcel.jx-freeze-active tfoot td.jx-frozen-col,.jexcel.jx-freeze-active tfoot td.jx-frozen-col-right{background-color:var(--jx-footer-bg, #f1f5f9)!important}.jexcel.jx-freeze-active td.jx-frozen-col-right-first{border-left:1px solid var(--jx-border-color, #cbd5e1)}.jexcel.jx-freeze-active tbody td.jx-frozen-col.highlight-selected,.jexcel.jx-freeze-active tbody td.jx-frozen-col-right.highlight-selected,.jexcel.jx-freeze-active tbody td.jx-frozen-row.highlight-selected{background-color:var(--jx-frozen-selection-bg)!important}.jexcel_content.jx-sticky-rows{overflow-y:auto}.jexcel tfoot.jx-sticky-footer{position:sticky;bottom:0;z-index:60;will-change:transform}.jexcel tfoot.jx-sticky-footer td{background-color:var(--jx-footer-bg, #f1f5f9)}.jexcel thead td[data-x].jx-col-draggable,.jexcel thead td[data-x].jx-col-resizable{position:relative}.jexcel thead td[data-x].jx-col-resizable:before{content:"";position:absolute;top:0;right:0;bottom:0;width:6px;cursor:col-resize}.jexcel thead td[data-x].jx-col-draggable:after{content:"";position:absolute;inset:0 6px 0 0;cursor:grab}.jexcel thead td[data-x].jx-col-draggable.jx-col-dragging:after{cursor:grabbing}.jexcel thead td[data-x].jx-col-drag-left{box-shadow:inset 3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-drag-right{box-shadow:inset -3px 0 0 var(--jx-accent, #3b82f6)}.jexcel thead td[data-x].jx-col-resizing{box-shadow:inset -2px 0 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-resizable,.jexcel td.jexcel_row.jx-row-draggable{position:relative}.jexcel td.jexcel_row.jx-row-draggable:before{content:"";position:absolute;inset:0 0 6px;cursor:grab}.jexcel td.jexcel_row.jx-row-draggable.jx-row-dragging:before{cursor:grabbing}.jexcel td.jexcel_row.jx-row-resizable:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;cursor:row-resize}.jexcel td.jexcel_row.jx-row-resizing{box-shadow:inset 0 -2px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-top{box-shadow:inset 0 3px 0 var(--jx-accent, #3b82f6)}.jexcel td.jexcel_row.jx-row-drop-bottom{box-shadow:inset 0 -3px 0 var(--jx-accent, #3b82f6)}.jexcel tbody td.jx-cell-copying{border:1px dashed var(--jx-accent, #3b82f6)}.jexcel tbody td{position:relative;overflow:visible!important}.jx-fill-handle{position:absolute;width:6px;height:6px;right:-3px;bottom:-3px;background:var(--jx-fill-handle, #217346);border:1px solid var(--jx-fill-handle, #217346);border-radius:1px;cursor:crosshair;z-index:10000;-webkit-user-select:none;user-select:none;pointer-events:auto}.jexcel tbody td.jx-fill-preview{background-color:transparent}.jexcel tbody td.jx-fill-preview.jx-fill-preview-top{box-shadow:inset 0 1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom{box-shadow:inset 0 -1px 0 var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-left{border-left:1px solid var(--jx-fill-handle, #217346)}.jexcel tbody td.jx-fill-preview.jx-fill-preview-right{border-right:1px solid var(--jx-fill-handle, #217346)}.jx-loading-overlay{position:absolute;inset:0;background:var(--jx-overlay-bg, rgba(255, 255, 255, .75));display:flex;align-items:center;justify-content:center;z-index:1000;pointer-events:none}@keyframes jx-spin{to{transform:rotate(360deg)}}.jx-loading-spinner{width:30px;height:30px;border:3px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-spin .65s linear infinite}.jexcel_container.jx-word-wrap table.jexcel tbody td{white-space:pre-wrap;overflow:hidden;word-break:break-word}.jexcel_container.jx-text-overflow-ellipsis table.jexcel tbody td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-add-row-bar{display:flex;align-items:center;justify-content:center;height:26px;cursor:pointer;color:var(--jx-add-btn-color, #94a3b8);font-size:16px;border:1px dashed var(--jx-add-btn-border, #e2e8f0);border-top:none;background:var(--jx-add-btn-bg, #f8fafc);-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-row-bar:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-add-col-btn{cursor:pointer;text-align:center;font-size:14px;color:var(--jx-add-btn-color, #94a3b8);background:var(--jx-add-btn-bg, #f8fafc);border:1px dashed var(--jx-add-btn-border, #e2e8f0);min-width:28px;-webkit-user-select:none;user-select:none;transition:background var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-add-col-btn:hover{background:var(--jx-add-btn-hover-bg, #f1f5f9);color:var(--jx-add-btn-hover-color, #475569)}.jx-ac-dropdown{position:fixed;z-index:2000;background:var(--jx-ac-bg, #fff);border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));min-width:180px;overflow:hidden;pointer-events:auto}.jx-ac-filter-bar{padding:6px 8px;border-bottom:1px solid var(--jx-ac-border, #e2e8f0);background:var(--jx-ac-bg, #fff)}.jx-ac-filter-input{width:100%;box-sizing:border-box;padding:4px 8px;border:1px solid var(--jx-ac-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);font-size:var(--jx-font-size-md, 13px);line-height:1.4;outline:none}.jx-ac-filter-input:focus{border-color:var(--jx-primary, #2563eb);box-shadow:0 0 0 2px #2563eb26}.jx-ac-list{list-style:none;margin:0;padding:4px 0;max-height:200px;overflow-y:auto}.jx-ac-item{padding:6px 12px;cursor:pointer;font-size:var(--jx-font-size-md, 13px);line-height:1.4;color:var(--jx-ac-text, #1e293b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background var(--jx-transition, .12s)}.jx-ac-item:hover,.jx-ac-item.jx-ac-item--active{background:var(--jx-ac-hover-bg, #eff6ff);color:var(--jx-ac-hover-text, #1d4ed8)}.jx-ac-item.jx-ac-item--empty{color:var(--jx-text-muted, #64748b);font-style:italic;cursor:default}.jx-ac-item.jx-ac-item--empty:hover{background:none;color:var(--jx-text-muted, #64748b)}.jx-ac-loading{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b)}@keyframes jx-ac-spin{to{transform:rotate(360deg)}}.jx-ac-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--jx-border, #e2e8f0);border-top-color:var(--jx-primary, #2563eb);border-radius:50%;animation:jx-ac-spin .6s linear infinite}.jx-ac-input--anchor{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.jx-ac-input{width:100%;box-sizing:border-box}.jx-comment-indicator{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--jx-indicator-danger, #dc2626) transparent transparent;cursor:pointer;z-index:10;pointer-events:auto}.jx-comment-popup{position:absolute;z-index:300;min-width:180px;max-width:280px;background:var(--jx-comment-bg, #fffde7);border:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));font-size:var(--jx-font-size-sm, 12px);pointer-events:auto}.jx-comment-popup__header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;background:var(--jx-comment-header-bg, #fef08a);border-bottom:1px solid var(--jx-comment-border, #fde047);border-radius:var(--jx-radius-sm, 3px) var(--jx-radius-sm, 3px) 0 0;font-weight:600;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-comment-header-text, #713f12)}.jx-comment-popup__label{text-transform:uppercase;letter-spacing:.03em}.jx-comment-popup__close{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:var(--jx-comment-header-text, #713f12);padding:0 2px;opacity:.65}.jx-comment-popup__close:hover{opacity:1}.jx-comment-popup__body{padding:8px 10px;white-space:pre-wrap;word-break:break-word;color:var(--jx-comment-text, #374151);line-height:1.5}:host-context(body) .jx-context-menu,.jx-context-menu{background:var(--jx-ctx-bg, #fff);border:1px solid var(--jx-ctx-border, #e2e8f0);border-radius:var(--jx-radius-md, 6px);box-shadow:var(--jx-shadow-overlay, 0 4px 20px rgba(0, 0, 0, .12));padding:4px 0;min-width:188px}.jx-ctx-menu{padding:4px 0}.jx-ctx-menu__header{display:flex;align-items:baseline;gap:8px;padding:6px 12px 4px;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);border-bottom:1px solid var(--jx-ctx-separator, #f1f5f9);margin-bottom:4px}.jx-ctx-menu__header strong{font-weight:600;color:var(--jx-ctx-text, #1e293b)}.jx-ctx-menu__value{font-style:italic;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.jx-ctx-item{display:flex;align-items:center;gap:8px;width:100%;padding:6px 14px;background:none;border:none;cursor:pointer;font-size:var(--jx-font-size-md, 13px);color:var(--jx-ctx-text, #1e293b);text-align:left;white-space:nowrap;transition:background var(--jx-transition, .12s)}.jx-ctx-item:hover{background:var(--jx-ctx-hover-bg, #f1f5f9)}.jx-ctx-item:disabled{opacity:.4;cursor:not-allowed}.jx-ctx-item.jx-ctx-item--danger{color:var(--jx-ctx-danger, #dc2626)}.jx-ctx-item.jx-ctx-item--danger:hover{background:var(--jx-ctx-danger-hover, #fef2f2)}.jx-ctx-icon{font-size:14px;opacity:.7;flex-shrink:0}.jx-ctx-separator{height:1px;background:var(--jx-ctx-separator, #f1f5f9);margin:4px 0}.jexcel_toolbar{display:flex;align-items:center;gap:2px;padding:4px 8px;height:var(--jx-toolbar-height, 36px);border-bottom:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none;box-sizing:border-box}.jexcel_toolbar_item{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;border:1px solid transparent;border-radius:var(--jx-radius-sm, 3px);background:transparent;color:var(--jx-text-muted, #64748b);font-size:18px;line-height:1;cursor:pointer;vertical-align:middle;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s);font-family:Material Icons,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;text-transform:none;white-space:nowrap;font-feature-settings:"liga";-webkit-font-smoothing:antialiased}.jexcel_toolbar_item:hover{background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}select.jexcel_toolbar_item{height:28px;font-size:var(--jx-font-size-sm, 12px);padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);cursor:pointer;min-width:64px;outline:none}.jx-toolbar-divisor{display:inline-block;width:1px;height:20px;background:var(--jx-border, #e2e8f0);margin:0 4px;flex-shrink:0}.jx-toolbar-color{position:relative;overflow:hidden}.jx-toolbar-color .jx-toolbar-color-input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:none}.jx-pagination{display:flex;align-items:center;gap:3px;padding:5px 8px;border-top:1px solid var(--jx-border, #e2e8f0);background:var(--jx-header-bg, #f1f5f9);flex-wrap:wrap;-webkit-user-select:none;user-select:none}.jx-page-btn{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 6px;border:1px solid var(--jx-border, #e2e8f0);border-radius:var(--jx-radius-sm, 3px);background:var(--jx-cell-bg, #fff);color:var(--jx-text, #1e293b);font-size:var(--jx-font-size-sm, 12px);cursor:pointer;transition:background var(--jx-transition, .12s),border-color var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-page-btn:hover:not(:disabled){background:var(--jx-primary-bg-mid, rgba(37, 99, 235, .14));border-color:var(--jx-primary, #2563eb);color:var(--jx-primary, #2563eb)}.jx-page-btn:disabled{opacity:.35;cursor:not-allowed}.jx-page-btn--active{background:var(--jx-primary, #2563eb);border-color:var(--jx-primary, #2563eb);color:#fff;font-weight:600}.jx-page-info{margin-left:auto;font-size:var(--jx-font-size-xs, 11px);color:var(--jx-text-muted, #64748b);white-space:nowrap;padding:0 4px}.jx-col-header-inner{display:block;position:relative;width:100%;overflow:hidden}.jx-col-header-label{display:inline}.jx-sort-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;line-height:1;cursor:pointer;pointer-events:auto;opacity:.25;transition:opacity var(--jx-transition, .12s)}.jx-sort-icon:hover{opacity:1}.jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,.jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;line-height:1;color:var(--jx-text-muted, #64748b);opacity:var(--jx-filter-indicator-opacity, .3);pointer-events:none;transition:opacity var(--jx-transition, .12s),color var(--jx-transition, .12s)}.jx-col-filter-icon--with-sort{right:20px}.jx-col-filter-icon--active{opacity:1;color:var(--jx-primary, #2563eb)}.jx-col-filter-icon svg,.jx-col-filter-icon img{width:10px;height:10px;display:block}\n']
     }]
   }], () => [{
     type: z
@@ -52294,7 +52482,7 @@ var P = class _P {
   }, {
     type: NgZone
   }, {
-    type: N
+    type: _
   }], {
     options: [{
       type: Input
@@ -52427,7 +52615,7 @@ var O = class _O {
     selectors: [["jx-cell-host"]],
     viewQuery: function O_Query(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275viewQuery(_c5, 7, ViewContainerRef);
+        \u0275\u0275viewQuery(_c7, 7, ViewContainerRef);
       }
       if (rf & 2) {
         let _t;
@@ -52617,7 +52805,7 @@ var B = class _B {
     selectors: [["jx-grid"]],
     viewQuery: function B_Query(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275viewQuery(_c6, 5);
+        \u0275\u0275viewQuery(_c8, 5);
       }
       if (rf & 2) {
         let _t;
@@ -63793,280 +63981,294 @@ function AppComponent_div_125_Template(rf, ctx) {
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(76, "div", 87)(77, "span", 88);
-    \u0275\u0275text(78, "Table height (px)");
+    \u0275\u0275text(78, "Freeze columns (right)");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(79, "span", 89);
-    \u0275\u0275text(80, 'Altezza massima della griglia con scroll verticale. Lascia 0 per altezza libera. Ignorato se "Righe visibili" \xE8 > 0.');
+    \u0275\u0275text(80, "Ultime N colonne fissate al bordo destro durante lo scroll orizzontale.");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(81, "input", 110);
+    \u0275\u0275elementStart(81, "input", 109);
     \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_81_listener($event) {
+      \u0275\u0275restoreView(_r6);
+      const ctx_r2 = \u0275\u0275nextContext();
+      \u0275\u0275twoWayBindingSet(ctx_r2.cfg.freezeColumnsRight, $event) || (ctx_r2.cfg.freezeColumnsRight = $event);
+      return \u0275\u0275resetView($event);
+    });
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(82, "div", 87)(83, "span", 88);
+    \u0275\u0275text(84, "Table height (px)");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(85, "span", 89);
+    \u0275\u0275text(86, 'Altezza massima della griglia con scroll verticale. Lascia 0 per altezza libera. Ignorato se "Righe visibili" \xE8 > 0.');
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(87, "input", 110);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_87_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.tableHeight, $event) || (ctx_r2.cfg.tableHeight = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(82, "div", 87)(83, "span", 88);
-    \u0275\u0275text(84, "Righe visibili nel viewport");
+    \u0275\u0275elementStart(88, "div", 87)(89, "span", 88);
+    \u0275\u0275text(90, "Righe visibili nel viewport");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(85, "span", 89);
-    \u0275\u0275text(86, `Calcola automaticamente l'altezza della griglia per mostrare esattamente N righe. Sovrascrive "Table height". Lascia 0 per usare Table height. Richiede `);
-    \u0275\u0275elementStart(87, "strong");
-    \u0275\u0275text(88, "Reinizializza");
+    \u0275\u0275elementStart(91, "span", 89);
+    \u0275\u0275text(92, `Calcola automaticamente l'altezza della griglia per mostrare esattamente N righe. Sovrascrive "Table height". Lascia 0 per usare Table height. Richiede `);
+    \u0275\u0275elementStart(93, "strong");
+    \u0275\u0275text(94, "Reinizializza");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(89, ".");
+    \u0275\u0275text(95, ".");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(90, "input", 111);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_90_listener($event) {
+    \u0275\u0275elementStart(96, "input", 111);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_96_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.visibleRowCount, $event) || (ctx_r2.cfg.visibleRowCount = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(91, "div", 87)(92, "span", 88);
-    \u0275\u0275text(93, "Pagination (righe per pagina)");
+    \u0275\u0275elementStart(97, "div", 87)(98, "span", 88);
+    \u0275\u0275text(99, "Pagination (righe per pagina)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(94, "span", 89);
-    \u0275\u0275text(95, "Abilita la paginazione: mostra N righe per volta con barra di navigazione in basso. Lascia 0 per disabilitare.");
+    \u0275\u0275elementStart(100, "span", 89);
+    \u0275\u0275text(101, "Abilita la paginazione: mostra N righe per volta con barra di navigazione in basso. Lascia 0 per disabilitare.");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(96, "input", 112);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_96_listener($event) {
+    \u0275\u0275elementStart(102, "input", 112);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_102_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.pagination, $event) || (ctx_r2.cfg.pagination = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(97, "label", 79)(98, "span", 80)(99, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_99_listener($event) {
+    \u0275\u0275elementStart(103, "label", 79)(104, "span", 80)(105, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_105_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.virtualScroll, $event) || (ctx_r2.cfg.virtualScroll = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(100, "span", 82)(101, "span", 83);
+    \u0275\u0275element(106, "span", 82)(107, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(102, "div", 84)(103, "span", 85);
-    \u0275\u0275text(104, "Virtual scroll (righe)");
+    \u0275\u0275elementStart(108, "div", 84)(109, "span", 85);
+    \u0275\u0275text(110, "Virtual scroll (righe)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(105, "span", 86);
-    \u0275\u0275text(106, "Renderizza solo le righe visibili nel viewport: indispensabile per dataset con molte righe. Richiede un'altezza fissa (Table height). Si auto-disabilita con celle unite verticali. Richiede ");
-    \u0275\u0275elementStart(107, "strong");
-    \u0275\u0275text(108, "Reinizializza");
+    \u0275\u0275elementStart(111, "span", 86);
+    \u0275\u0275text(112, "Renderizza solo le righe visibili nel viewport: indispensabile per dataset con molte righe. Richiede un'altezza fissa (Table height). Si auto-disabilita con celle unite verticali. Richiede ");
+    \u0275\u0275elementStart(113, "strong");
+    \u0275\u0275text(114, "Reinizializza");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(109, ".");
+    \u0275\u0275text(115, ".");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(110, "div", 87)(111, "span", 88);
-    \u0275\u0275text(112, "Overscan (righe base)");
+    \u0275\u0275elementStart(116, "div", 87)(117, "span", 88);
+    \u0275\u0275text(118, "Overscan (righe base)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(113, "span", 89);
-    \u0275\u0275text(114, "Righe extra renderizzate oltre il viewport, sopra e sotto. Buffer fisso anti-flash per scroll lento. Default: ");
-    \u0275\u0275elementStart(115, "code");
-    \u0275\u0275text(116, "8");
+    \u0275\u0275elementStart(119, "span", 89);
+    \u0275\u0275text(120, "Righe extra renderizzate oltre il viewport, sopra e sotto. Buffer fisso anti-flash per scroll lento. Default: ");
+    \u0275\u0275elementStart(121, "code");
+    \u0275\u0275text(122, "8");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(117, ".");
+    \u0275\u0275text(123, ".");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(118, "input", 113);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_118_listener($event) {
+    \u0275\u0275elementStart(124, "input", 113);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_124_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.virtualScrollOverscan, $event) || (ctx_r2.cfg.virtualScrollOverscan = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(119, "div", 87)(120, "span", 88);
-    \u0275\u0275text(121, "Overscan dinamico max (velocit\xE0)");
+    \u0275\u0275elementStart(125, "div", 87)(126, "span", 88);
+    \u0275\u0275text(127, "Overscan dinamico max (velocit\xE0)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(122, "span", 89);
-    \u0275\u0275text(123, "Limite massimo di righe extra aggiunte automaticamente durante scroll veloce (proporzionale alla velocit\xE0). Ridurre se la performance \xE8 prioritaria. Default: ");
-    \u0275\u0275elementStart(124, "code");
-    \u0275\u0275text(125, "40");
+    \u0275\u0275elementStart(128, "span", 89);
+    \u0275\u0275text(129, "Limite massimo di righe extra aggiunte automaticamente durante scroll veloce (proporzionale alla velocit\xE0). Ridurre se la performance \xE8 prioritaria. Default: ");
+    \u0275\u0275elementStart(130, "code");
+    \u0275\u0275text(131, "40");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(126, ".");
+    \u0275\u0275text(132, ".");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(127, "input", 114);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_127_listener($event) {
+    \u0275\u0275elementStart(133, "input", 114);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_133_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.virtualScrollMaxVelocityOverscan, $event) || (ctx_r2.cfg.virtualScrollMaxVelocityOverscan = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(128, "label", 79)(129, "span", 80)(130, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_130_listener($event) {
+    \u0275\u0275elementStart(134, "label", 79)(135, "span", 80)(136, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_136_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.toolbar, $event) || (ctx_r2.cfg.toolbar = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(131, "span", 82)(132, "span", 83);
+    \u0275\u0275element(137, "span", 82)(138, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(133, "div", 84)(134, "span", 85);
-    \u0275\u0275text(135, "Toolbar");
+    \u0275\u0275elementStart(139, "div", 84)(140, "span", 85);
+    \u0275\u0275text(141, "Toolbar");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(136, "span", 86);
-    \u0275\u0275text(137, "Mostra la barra degli strumenti di formattazione sopra la griglia (grassetto, corsivo, allineamento, colori, font size).");
+    \u0275\u0275elementStart(142, "span", 86);
+    \u0275\u0275text(143, "Mostra la barra degli strumenti di formattazione sopra la griglia (grassetto, corsivo, allineamento, colori, font size).");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(138, "div", 87)(139, "span", 88);
-    \u0275\u0275text(140, "Posizione icona ordinamento");
+    \u0275\u0275elementStart(144, "div", 87)(145, "span", 88);
+    \u0275\u0275text(146, "Posizione icona ordinamento");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(141, "span", 89);
-    \u0275\u0275text(142, "Dove appare la freccia di ordinamento nell'intestazione di colonna. L'icona \xE8 sempre visibile. Richiede ");
-    \u0275\u0275elementStart(143, "strong");
-    \u0275\u0275text(144, "Reinizializza");
+    \u0275\u0275elementStart(147, "span", 89);
+    \u0275\u0275text(148, "Dove appare la freccia di ordinamento nell'intestazione di colonna. L'icona \xE8 sempre visibile. Richiede ");
+    \u0275\u0275elementStart(149, "strong");
+    \u0275\u0275text(150, "Reinizializza");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(145, ".");
+    \u0275\u0275text(151, ".");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(146, "select", 115);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_select_ngModelChange_146_listener($event) {
+    \u0275\u0275elementStart(152, "select", 115);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_select_ngModelChange_152_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.sortIconPosition, $event) || (ctx_r2.cfg.sortIconPosition = $event);
       return \u0275\u0275resetView($event);
     });
-    \u0275\u0275elementStart(147, "option", 107);
-    \u0275\u0275text(148, "Destra (default)");
+    \u0275\u0275elementStart(153, "option", 107);
+    \u0275\u0275text(154, "Destra (default)");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(149, "option", 105);
-    \u0275\u0275text(150, "Sinistra");
+    \u0275\u0275elementStart(155, "option", 105);
+    \u0275\u0275text(156, "Sinistra");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(151, "option", 116);
-    \u0275\u0275text(152, "Inline (vicino label)");
+    \u0275\u0275elementStart(157, "option", 116);
+    \u0275\u0275text(158, "Inline (vicino label)");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(153, "div", 87)(154, "span", 88);
-    \u0275\u0275text(155, "Frozen indexes");
+    \u0275\u0275elementStart(159, "div", 87)(160, "span", 88);
+    \u0275\u0275text(161, "Frozen indexes");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(156, "span", 89);
-    \u0275\u0275text(157, "Lista di indici di colonna da congelare individualmente (es: 0,2,4).");
+    \u0275\u0275elementStart(162, "span", 89);
+    \u0275\u0275text(163, "Lista di indici di colonna da congelare individualmente (es: 0,2,4).");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(158, "input", 117);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_158_listener($event) {
+    \u0275\u0275elementStart(164, "input", 117);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_164_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.frozenIndexesInput, $event) || (ctx_r2.cfg.frozenIndexesInput = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(159, "label", 79)(160, "span", 80)(161, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_161_listener($event) {
+    \u0275\u0275elementStart(165, "label", 79)(166, "span", 80)(167, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_167_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.frozenIndexesActive, $event) || (ctx_r2.cfg.frozenIndexesActive = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(162, "span", 82)(163, "span", 83);
+    \u0275\u0275element(168, "span", 82)(169, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(164, "div", 84)(165, "span", 85);
-    \u0275\u0275text(166, "Frozen indexes attivi");
+    \u0275\u0275elementStart(170, "div", 84)(171, "span", 85);
+    \u0275\u0275text(172, "Frozen indexes attivi");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(167, "span", 86);
-    \u0275\u0275text(168, "Abilita o disabilita l'uso degli indici congelati definiti sopra.");
+    \u0275\u0275elementStart(173, "span", 86);
+    \u0275\u0275text(174, "Abilita o disabilita l'uso degli indici congelati definiti sopra.");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(169, "label", 79)(170, "span", 80)(171, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_171_listener($event) {
+    \u0275\u0275elementStart(175, "label", 79)(176, "span", 80)(177, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_177_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.stickyHeader, $event) || (ctx_r2.cfg.stickyHeader = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(172, "span", 82)(173, "span", 83);
+    \u0275\u0275element(178, "span", 82)(179, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(174, "div", 84)(175, "span", 85);
-    \u0275\u0275text(176, "Sticky header");
+    \u0275\u0275elementStart(180, "div", 84)(181, "span", 85);
+    \u0275\u0275text(182, "Sticky header");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(177, "span", 86);
-    \u0275\u0275text(178, "L'intestazione rimane visibile durante lo scroll verticale (richiede un'altezza fissa).");
+    \u0275\u0275elementStart(183, "span", 86);
+    \u0275\u0275text(184, "L'intestazione rimane visibile durante lo scroll verticale (richiede un'altezza fissa).");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(179, "label", 79)(180, "span", 80)(181, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_181_listener($event) {
+    \u0275\u0275elementStart(185, "label", 79)(186, "span", 80)(187, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_187_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.stickyFooter, $event) || (ctx_r2.cfg.stickyFooter = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(182, "span", 82)(183, "span", 83);
+    \u0275\u0275element(188, "span", 82)(189, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(184, "div", 84)(185, "span", 85);
-    \u0275\u0275text(186, "Sticky footer");
+    \u0275\u0275elementStart(190, "div", 84)(191, "span", 85);
+    \u0275\u0275text(192, "Sticky footer");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(187, "span", 86);
-    \u0275\u0275text(188, "Il footer rimane visibile durante lo scroll verticale (richiede un'altezza fissa).");
+    \u0275\u0275elementStart(193, "span", 86);
+    \u0275\u0275text(194, "Il footer rimane visibile durante lo scroll verticale (richiede un'altezza fissa).");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(189, "label", 79)(190, "span", 80)(191, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_191_listener($event) {
+    \u0275\u0275elementStart(195, "label", 79)(196, "span", 80)(197, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_197_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.columnFilter, $event) || (ctx_r2.cfg.columnFilter = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(192, "span", 82)(193, "span", 83);
+    \u0275\u0275element(198, "span", 82)(199, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(194, "div", 84)(195, "span", 85);
-    \u0275\u0275text(196, "Filter row");
+    \u0275\u0275elementStart(200, "div", 84)(201, "span", 85);
+    \u0275\u0275text(202, "Filter row");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(197, "span", 86);
-    \u0275\u0275text(198, "Mostra una riga di input sotto l'intestazione per filtrare per colonna in tempo reale.");
+    \u0275\u0275elementStart(203, "span", 86);
+    \u0275\u0275text(204, "Mostra una riga di input sotto l'intestazione per filtrare per colonna in tempo reale.");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(199, "div", 118)(200, "span", 88);
-    \u0275\u0275text(201, "Colonne filtrabili");
+    \u0275\u0275elementStart(205, "div", 118)(206, "span", 88);
+    \u0275\u0275text(207, "Colonne filtrabili");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(202, "span", 89);
-    \u0275\u0275text(203, "Nomi colonna separati da virgola su cui mostrare l'input filtro, es. ");
-    \u0275\u0275elementStart(204, "code");
-    \u0275\u0275text(205, "text,quantity");
+    \u0275\u0275elementStart(208, "span", 89);
+    \u0275\u0275text(209, "Nomi colonna separati da virgola su cui mostrare l'input filtro, es. ");
+    \u0275\u0275elementStart(210, "code");
+    \u0275\u0275text(211, "text,quantity");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(206, ". Si usa il ");
-    \u0275\u0275elementStart(207, "strong");
-    \u0275\u0275text(208, "nome");
+    \u0275\u0275text(212, ". Si usa il ");
+    \u0275\u0275elementStart(213, "strong");
+    \u0275\u0275text(214, "nome");
     \u0275\u0275elementEnd();
-    \u0275\u0275text(209, " (stabile anche riordinando le colonne), non l'indice. Vuoto = tutte le colonne.");
+    \u0275\u0275text(215, " (stabile anche riordinando le colonne), non l'indice. Vuoto = tutte le colonne.");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(210, "input", 119);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_210_listener($event) {
+    \u0275\u0275elementStart(216, "input", 119);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_216_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.filterableColsInput, $event) || (ctx_r2.cfg.filterableColsInput = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(211, "label", 79)(212, "span", 80)(213, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_213_listener($event) {
+    \u0275\u0275elementStart(217, "label", 79)(218, "span", 80)(219, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_219_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.lockFilteredRows, $event) || (ctx_r2.cfg.lockFilteredRows = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(214, "span", 82)(215, "span", 83);
+    \u0275\u0275element(220, "span", 82)(221, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(216, "div", 84)(217, "span", 85);
-    \u0275\u0275text(218, "Blocca righe filtrate");
+    \u0275\u0275elementStart(222, "div", 84)(223, "span", 85);
+    \u0275\u0275text(224, "Blocca righe filtrate");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(219, "span", 86);
-    \u0275\u0275text(220, "Le righe escluse dai filtri attivi (nascoste o attenuate da ricerca/filtri colonna) diventano non editabili per l'intera riga, finch\xE9 i filtri restano attivi.");
+    \u0275\u0275elementStart(225, "span", 86);
+    \u0275\u0275text(226, "Le righe escluse dai filtri attivi (nascoste o attenuate da ricerca/filtri colonna) diventano non editabili per l'intera riga, finch\xE9 i filtri restano attivi.");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(221, "label", 79)(222, "span", 80)(223, "input", 81);
-    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_223_listener($event) {
+    \u0275\u0275elementStart(227, "label", 79)(228, "span", 80)(229, "input", 81);
+    \u0275\u0275twoWayListener("ngModelChange", function AppComponent_div_125_Template_input_ngModelChange_229_listener($event) {
       \u0275\u0275restoreView(_r6);
       const ctx_r2 = \u0275\u0275nextContext();
       \u0275\u0275twoWayBindingSet(ctx_r2.cfg.footerOnVisibleRows, $event) || (ctx_r2.cfg.footerOnVisibleRows = $event);
       return \u0275\u0275resetView($event);
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275element(224, "span", 82)(225, "span", 83);
+    \u0275\u0275element(230, "span", 82)(231, "span", 83);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(226, "div", 84)(227, "span", 85);
-    \u0275\u0275text(228, "Footer su righe visibili");
+    \u0275\u0275elementStart(232, "div", 84)(233, "span", 85);
+    \u0275\u0275text(234, "Footer su righe visibili");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(229, "span", 86);
-    \u0275\u0275text(230, "I totali/aggregati del footer si ricalcolano solo sulle righe visibili (escludendo ricerca, filtri e righe nascoste), come SUBTOTAL di Excel.");
+    \u0275\u0275elementStart(235, "span", 86);
+    \u0275\u0275text(236, "I totali/aggregati del footer si ricalcolano solo sulle righe visibili (escludendo ricerca, filtri e righe nascoste), come SUBTOTAL di Excel.");
     \u0275\u0275elementEnd()()()()();
   }
   if (rf & 2) {
@@ -64113,6 +64315,8 @@ function AppComponent_div_125_Template(rf, ctx) {
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.cfg.defaultRowHeight);
     \u0275\u0275advance(6);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.cfg.freezeColumns);
+    \u0275\u0275advance(6);
+    \u0275\u0275twoWayProperty("ngModel", ctx_r2.cfg.freezeColumnsRight);
     \u0275\u0275advance(6);
     \u0275\u0275twoWayProperty("ngModel", ctx_r2.cfg.tableHeight);
     \u0275\u0275advance(9);
@@ -74772,6 +74976,7 @@ var AppComponent = class _AppComponent {
     // freeze
     freezeColumns: 0,
     freezeRows: 0,
+    freezeColumnsRight: 2,
     frozenIndexesInput: "0,1,2",
     frozenIndexesActive: true,
     // sticky header / footer
@@ -75476,6 +75681,7 @@ var AppComponent = class _AppComponent {
       defaultRowHeight: this.cfg.defaultRowHeight || void 0,
       // ── freeze ───────────────────────────────────────────────────────────
       freezeColumns: this.cfg.freezeColumns || void 0,
+      freezeColumnsRight: this.cfg.freezeColumnsRight || void 0,
       freezeRows: this.cfg.freezeRows || void 0,
       frozenColumnIndexes: frozenIndexes,
       // ── sticky header / footer ────────────────────────────────────────────
@@ -75829,15 +76035,37 @@ var AppComponent = class _AppComponent {
       // ── footers ──────────────────────────────────────────────────────────
       // Riga 0: toggle collassabile — comprime/espande le righe successive
       // Righe 1-2: dettagli nascosti di default (collapsedByDefault: true)
+      // Ogni riga footer copre TUTTE le 20 colonne del body (celle vuote di riempimento).
       footers: [
-        [{
-          value: "\u25BC Totali",
-          colspan: 1,
-          footerComponent: CollapsibleFooterToggleComponent,
-          options: { label: "Riepilogo totali", collapsedByDefault: false }
-        }],
-        ["", "Tot. Q.t\xE0", "=SUM(B1:B12)", "Tot. imp.", "=SUM(D1:D12)", "Tot. IVA", "=SUM(F1:F12)", "", "", "", "", "", "", "", "Custom", "=SUM(P1:P12)"],
-        ["", "", "", "", "", "Totale gen.", "=SUM(G1:G12)", "", "", "", "", "", "", "", "", ""]
+        [
+          {
+            value: "\u25BC Totali",
+            colspan: 1,
+            footerComponent: CollapsibleFooterToggleComponent,
+            options: { label: "Riepilogo totali", collapsedByDefault: false }
+          },
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        ["", "Tot. Q.t\xE0", "=SUM(B1:B12)", "Tot. imp.", "=SUM(D1:D12)", "Tot. IVA", "=SUM(F1:F12)", "", "", "", "", "", "", "", "Custom", "=SUM(P1:P12)", "", "", "", ""],
+        ["", "", "", "", "", "Totale gen.", "=SUM(G1:G12)", "", "", "", "", "", "", "", "", "", "", "", "", ""]
       ],
       // ── events ───────────────────────────────────────────────────────────
       onchange: (_el, _cell, name, nv, ov) => this.log("change", `onchange ${name}: ${ov} \u2192 ${nv}`),
@@ -75983,6 +76211,7 @@ var AppComponent = class _AppComponent {
       defaultColAlign: this.cfg.defaultColAlign || void 0,
       defaultRowHeight: this.cfg.defaultRowHeight || void 0,
       freezeColumns: this.cfg.freezeColumns || void 0,
+      freezeColumnsRight: this.cfg.freezeColumnsRight || void 0,
       freezeRows: this.cfg.freezeRows || void 0,
       frozenColumnIndexes: fi,
       stickyHeader: this.cfg.stickyHeader,
@@ -77091,7 +77320,7 @@ var AppComponent = class _AppComponent {
       \u0275\u0275text(122, "5");
       \u0275\u0275elementEnd()()();
       \u0275\u0275elementStart(123, "div", 45);
-      \u0275\u0275template(124, AppComponent_div_124_Template, 281, 27, "div", 46)(125, AppComponent_div_125_Template, 231, 44, "div", 46)(126, AppComponent_div_126_Template, 108, 10, "div", 46)(127, AppComponent_div_127_Template, 143, 21, "div", 46);
+      \u0275\u0275template(124, AppComponent_div_124_Template, 281, 27, "div", 46)(125, AppComponent_div_125_Template, 237, 45, "div", 46)(126, AppComponent_div_126_Template, 108, 10, "div", 46)(127, AppComponent_div_127_Template, 143, 21, "div", 46);
       \u0275\u0275elementEnd()()()()();
       \u0275\u0275elementStart(128, "div", 47)(129, "div", 48);
       \u0275\u0275template(130, AppComponent_div_130_Template, 2, 0, "div", 49)(131, AppComponent_div_131_Template, 2, 1, "div", 50);
@@ -77994,6 +78223,12 @@ var AppComponent = class _AppComponent {
           <span class="config-field__label">Freeze columns</span>\r
           <span class="config-field__desc">Prime N colonne fissate al bordo sinistro durante lo scroll orizzontale.</span>\r
           <input type="number" [(ngModel)]="cfg.freezeColumns" min="0" max="10" />\r
+        </div>\r
+\r
+        <div class="config-field">\r
+          <span class="config-field__label">Freeze columns (right)</span>\r
+          <span class="config-field__desc">Ultime N colonne fissate al bordo destro durante lo scroll orizzontale.</span>\r
+          <input type="number" [(ngModel)]="cfg.freezeColumnsRight" min="0" max="10" />\r
         </div>\r
 \r
         <div class="config-field">\r
@@ -80578,7 +80813,7 @@ var AppModule = class _AppModule {
       multi: true
     },
     // Icone personalizzate per tutte le istanze <jx-table> della demo
-    { provide: _, useValue: DEMO_ICONS }
+    { provide: E, useValue: DEMO_ICONS }
   ], imports: [
     BrowserModule,
     FormsModule,
@@ -80603,7 +80838,7 @@ var AppModule = class _AppModule {
           multi: true
         },
         // Icone personalizzate per tutte le istanze <jx-table> della demo
-        { provide: _, useValue: DEMO_ICONS }
+        { provide: E, useValue: DEMO_ICONS }
       ],
       declarations: [AppComponent, StatusBadgeCellComponent, CustomNumberCellComponent, ColumnStatsHeaderComponent, PriorityCellComponent, BudgetHeaderComponent, SumGaugeFooterComponent, GroupNestedHeaderComponent, CollapsibleFooterToggleComponent],
       imports: [

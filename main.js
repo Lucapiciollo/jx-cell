@@ -49237,7 +49237,7 @@ var P = class _P {
     const o = Math.max(40, Math.round(t));
     if (!Array.isArray(this.options.columns)) return;
     const n = this.options.columns[e];
-    n && (n.width = o, this._renderedColWidths[e] = o, this.cdr.markForCheck());
+    n && (n.width = o, this._renderedColWidths[e] = o, (this.isFrozenColumn(e) || this.isFrozenColumnRight(e)) && this.bumpCellRenderCache(), this.cdr.markForCheck());
   }
   scheduleColWidthsRebuild() {
     this._colWidthRebuildPending || (this._colWidthRebuildPending = true, requestAnimationFrame(() => {

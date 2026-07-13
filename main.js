@@ -51702,25 +51702,25 @@ var P = class _P {
   }
   attachAcScrollListeners() {
     this.acScrollSub?.();
-    const e = [], t = () => {
-      this.cdr.markForCheck();
+    const e = [], t = this.host?.nativeElement?.querySelector(".jx-ac-dropdown"), o = (e2) => {
+      t && t.contains(e2.target) || this.acClose();
     };
-    window.addEventListener("scroll", t, {
+    window.addEventListener("scroll", o, {
       passive: true,
       capture: true
-    }), e.push(() => window.removeEventListener("scroll", t, {
+    }), e.push(() => window.removeEventListener("scroll", o, {
       capture: true
     }));
-    let o = this.host?.nativeElement ?? null;
-    for (; o && o !== document.body; ) {
-      const n = getComputedStyle(o);
-      if (["auto", "scroll", "overlay"].includes(n.overflowY) || ["auto", "scroll", "overlay"].includes(n.overflowX)) {
-        const n2 = o;
-        n2.addEventListener("scroll", t, {
+    let n = this.host?.nativeElement ?? null;
+    for (; n && n !== document.body; ) {
+      const t2 = getComputedStyle(n);
+      if (["auto", "scroll", "overlay"].includes(t2.overflowY) || ["auto", "scroll", "overlay"].includes(t2.overflowX)) {
+        const t3 = n;
+        t3.addEventListener("scroll", o, {
           passive: true
-        }), e.push(() => n2.removeEventListener("scroll", t));
+        }), e.push(() => t3.removeEventListener("scroll", o));
       }
-      o = o.parentElement;
+      n = n.parentElement;
     }
     this.acScrollSub = () => e.forEach((e2) => e2());
   }
@@ -51759,7 +51759,8 @@ var P = class _P {
       position: "fixed",
       top: `${r}px`,
       left: `${Math.max(0, l3)}px`,
-      minWidth: `${s}px`
+      minWidth: `${s}px`,
+      zIndex: "9999"
     };
     return n && (a.transform = "translateY(-100%)"), a;
   }

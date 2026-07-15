@@ -201,6 +201,9 @@ jx-table .jexcel tbody td > .jx-ac-editing-label {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+jx-table .jexcel tbody td > .jx-angular-cell-host {
+  height: 100%;
+}
 jx-table .jexcel.jx-word-wrap tbody td,
 jx-table .jexcel tbody td.jx-word-wrap {
   white-space: normal;

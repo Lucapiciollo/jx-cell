@@ -1,6 +1,6 @@
 # JxCell
 
-> **Componente table per Angular** — v6.9.0
+> **Componente table per Angular** — v6.9.7
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
 > API TypeScript tipizzata · Temi via CSS custom properties · Icone personalizzabili (`JX_ICONS`) · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
@@ -412,6 +412,13 @@ const options: JxCellOptions = {
 
   // Ridimensionamento colonne: trascina il bordo destro dell'header.
   columnResize: true,
+
+  // Preserva le larghezze correnti delle colonne tra chiamate successive a setConfig().
+  // Quando true, ogni volta che si chiama setConfig({ columns }), le larghezze già
+  // presenti nel workbook vengono mantenute per le colonne con lo stesso name/field,
+  // evitando il flash visivo "espansione→restringimento" causato dal reset ai valori
+  // di configurazione. Nuovo con v6.9.6. Default: false.
+  preserveColumnWidths: true,
 
   // Drag & drop righe: trascina il numero di riga per riordinarle.
   rowDrag: true,
@@ -1319,6 +1326,17 @@ workbook.getWidth(col: number): number        // larghezza in px
 workbook.setWidth(col: number, width: number): void
 workbook.getHeight(row: number): number       // altezza in px
 workbook.setHeight(row: number, height: number): void
+
+// ── Stato configurazione ──────────────────────────────────────────────────
+// true dopo il primo setConfig({ columns }) con colonne reali.
+// Utile per distinguere il primo caricamento dai reload successivi
+// (es. cambio periodo, aggiornamento dati) senza stato esterno al componente.
+// Nuovo con v6.9.7.
+//
+// @example
+// // Esegui autofit solo al primo caricamento, poi lascia i resize manuali intatti:
+// if (!wb.configuredOnce) { autofit.schedule(); }
+workbook.configuredOnce: boolean              // getter, readonly
 
 // ── Fill (riempimento) ─────────────────────────────────────────────────────
 // Replica il valore di (fromX, fromY) verso il basso fino a toY.

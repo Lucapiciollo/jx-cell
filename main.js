@@ -44998,7 +44998,7 @@ function P_For_14_ng_container_4_td_4_ng_container_2_ng_template_2_span_3_Templa
     \u0275\u0275nextContext();
     const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
+    \u0275\u0275property("title", ctx_r3.getAcLabel(x_r37, y_r35));
     \u0275\u0275advance();
     \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r37, y_r35));
   }
@@ -45354,7 +45354,7 @@ function P_For_14_ng_container_4_td_4_ng_template_3_ng_container_0_Template(rf, 
     const y_r35 = \u0275\u0275readContextLet(0);
     const ctx_r3 = \u0275\u0275nextContext();
     \u0275\u0275advance();
-    \u0275\u0275property("title", ctx_r3.rawValue(x_r37, y_r35));
+    \u0275\u0275property("title", ctx_r3.getAcLabel(x_r37, y_r35));
     \u0275\u0275advance();
     \u0275\u0275textInterpolate(ctx_r3.getAcLabel(x_r37, y_r35));
     \u0275\u0275advance();
@@ -46562,6 +46562,9 @@ var z = class _z {
   locked$ = new BehaviorSubject(false);
   config$ = new BehaviorSubject(void 0);
   columnsPatchVersion = 0;
+  get configuredOnce() {
+    return this.columnsPatchVersion > 0;
+  }
   loading$ = new BehaviorSubject(false);
   isInitializing = false;
   events = {
@@ -46760,6 +46763,20 @@ var z = class _z {
   setConfig(e) {
     const t = ["defaultCellStyle", "defaultHeaderStyle", "defaultNestedHeaderStyle", "defaultFooterStyle"];
     for (const o2 of t) o2 in e && void 0 === e[o2] && delete this.options[o2];
+    if ("columns" in e && Array.isArray(e.columns) && (e.preserveColumnWidths ?? this.options.preserveColumnWidths)) {
+      const t2 = this.options.columns ?? [], o2 = /* @__PURE__ */ new Map();
+      t2.forEach((e2) => {
+        const t3 = e2?.name ?? e2?.field;
+        t3 && null != e2.width && o2.set(String(t3), e2.width);
+      }), o2.size > 0 && (e = __spreadProps(__spreadValues({}, e), {
+        columns: e.columns.map((e2) => {
+          const t3 = e2?.name ?? e2?.field;
+          return t3 && o2.has(String(t3)) ? __spreadProps(__spreadValues({}, e2), {
+            width: o2.get(String(t3))
+          }) : e2;
+        })
+      }));
+    }
     Object.assign(this.options, e), "columns" in e && (this.evaluatedHeaderTitles = [], this.columnsPatchVersion++);
     let o = false;
     "data" in e && void 0 !== e.data && (this.rawData = this.normalizeData(e.data, this.options.columns ?? []), this.padToMinRows(), this.options.data = this.rawData, this.rebuildFormulaIndex(), o = true), ("footers" in e || "footer" in e) && (this.footerRawData = this.normalizeFooters(e.footers ?? e.footer ?? []), this.options.footers = this.footerRawData, o = true), o && (this.recalculateAll(), "data" in e && void 0 !== e.data && this.checkAutoAddRow()), this.config$.next();
@@ -52332,7 +52349,7 @@ var P = class _P {
                 </select>\r
 \r
                 <!-- Autocomplete: display mode \u2192 mostra label risolta; edit mode usa editTpl -->\r
-                <span *ngSwitchCase="'autocomplete'" [title]="rawValue(x,y)">{{ getAcLabel(x, y) }}</span>\r
+                <span *ngSwitchCase="'autocomplete'" [title]="getAcLabel(x,y)">{{ getAcLabel(x, y) }}</span>\r
 \r
                 <input\r
                   *ngSwitchCase="'calendar'"\r
@@ -52407,7 +52424,7 @@ var P = class _P {
               <!-- Editor autocomplete: hidden focus anchor; visible filter is in the dropdown overlay -->\r
               <ng-container *ngIf="columnType(x) === 'autocomplete'; else standardEditTpl">\r
                 <!-- Show the current label so the cell does not blank out while editing -->\r
-                <span class="jx-ac-editing-label" [title]="rawValue(x,y)">{{ getAcLabel(x, y) }}</span>\r
+                <span class="jx-ac-editing-label" [title]="getAcLabel(x,y)">{{ getAcLabel(x, y) }}</span>\r
                 <input\r
                   #editorInput\r
                   class="editor jx-ac-input jx-ac-input--anchor"\r

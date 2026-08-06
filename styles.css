@@ -877,15 +877,16 @@ jx-table .jx-toolbar-combo__anchor {
   border-radius: var(--jx-radius-md);
   box-shadow: var(--jx-shadow-overlay);
   min-width: 160px;
-  max-height: 220px;
+  max-height: 260px;
   overflow-y: auto;
+  overflow-x: hidden;
   pointer-events: auto;
   font-family: var(--jx-font-family);
 }
 .jx-ac-list {
   list-style: none;
   margin: 0;
-  padding: 4px 0;
+  padding: 4px 0 8px;
 }
 .jx-ac-item {
   padding: 6px 12px;

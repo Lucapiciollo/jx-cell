@@ -326,9 +326,14 @@ const options: JxCellOptions = {
       // Abilita/disabilita il click sull'header per ordinare questa colonna.
       sortable: true,
 
-      // Comparatore personalizzato. Signature come Array.sort.
-      // rowA, rowB = array completo della riga; col = indice 0-based della colonna.
-      sortFn: (rowA, rowB, col) => String(rowA[col]).localeCompare(String(rowB[col])),
+      // Comparatore personalizzato. Signature come Array.sort, con la direzione
+      // corrente in più: rowA, rowB = riga completa; col = indice colonna 0-based;
+      // direction = 'asc' | 'desc'. Il valore ritornato viene usato COSÌ COM'È
+      // (nessuna inversione automatica) → applica tu il segno in base a `direction`.
+      sortFn: (rowA, rowB, col, direction) => {
+        const cmp = String(rowA[col]).localeCompare(String(rowB[col]));
+        return direction === 'asc' ? cmp : -cmp;
+      },
 
       // ── FILTRO ────────────────────────────────────────────────────────────
       // Se false, non mostra l'input filtro per questa colonna (richiede columnFilter: true).
@@ -605,13 +610,31 @@ const options: JxCellOptions = {
     // Disabilita l'ordinamento su questa colonna.
     { title: 'ID', name: 'id', sortable: false },
 
-    // Comparatore personalizzato. Parametri:
+    // Comparatore personalizzato per un tipo che il confronto di default non
+    // gestisce bene (es. date). Parametri:
     // rowA / rowB = array completo della riga da confrontare
     // col         = indice 0-based della colonna corrente
+    // direction   = 'asc' | 'desc' — la funzione possiede l'INTERA logica di
+    //               ordinamento: il valore ritornato è usato così com'è, senza
+    //               alcuna inversione automatica in base a `direction`.
     {
       title: 'Data', name: 'data', type: 'calendar',
-      sortFn: (rowA, rowB, col) =>
-        new Date(rowA[col]).getTime() - new Date(rowB[col]).getTime(),
+      sortFn: (rowA, rowB, col, direction) => {
+        const cmp = new Date(rowA[col]).getTime() - new Date(rowB[col]).getTime();
+        return direction === 'asc' ? cmp : -cmp;
+      },
+    },
+
+    // Ordinamento custom "vero": un ordine di business che non è né alfabetico
+    // né numerico (es. livelli di priorità testuali).
+    {
+      title: 'Priorità', name: 'priority', type: 'text', sortable: true,
+      sortFn: (rowA, rowB, col, direction) => {
+        const order = ['—', 'Bassa', 'Media', 'Alta', 'Critica'];
+        const rank = (v: any) => { const i = order.indexOf(v); return i === -1 ? order.length : i; };
+        const cmp = rank(rowA[col]) - rank(rowB[col]);
+        return direction === 'asc' ? cmp : -cmp;
+      },
     },
   ],
 };
@@ -1115,7 +1138,7 @@ Riferimento rapido di tutte le proprietà:
 | `readOnly` | `boolean` | `false` | Cella non modificabile dall'utente. |
 | `hidden` | `boolean` | `false` | Nasconde la colonna dal DOM. |
 | `sortable` | `boolean` | `true` | Abilita ordinamento tramite click header. |
-| `sortFn` | `function` | — | Comparatore `(rowA, rowB, col) => number`. |
+| `sortFn` | `function` | — | Comparatore custom `(rowA, rowB, col, direction) => number`. Possiede l'intera logica di ordinamento: il risultato è usato senza inversione automatica, quindi va gestito manualmente in base a `direction` (`'asc' \| 'desc'`). |
 | `filterable` | `boolean` | `true` | Mostra input filtro colonna. |
 | `source` | `any[]` | — | Opzioni per `dropdown` / `autocomplete`. |
 | `autocompleteSource` | `JxAutocompleteSource` | — | Sorgente dinamica per `autocomplete`. |

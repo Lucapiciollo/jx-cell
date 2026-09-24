@@ -212,6 +212,33 @@ Accessibili tramite `@ViewChild(JxTableComponent)`.
 
 ## Opzioni di configurazione (`JxCellOptions`)
 
+### Selezione celle con Shift+click
+
+Seleziona una cella, mantieni premuto `Shift` e fai click su una seconda cella
+per selezionare il range. Il comportamento è configurabile con l'enum numerico
+`JxCellSelectionMode`:
+
+```ts
+import { JxCellOptions, JxCellSelectionMode } from 'jx-cell';
+
+const options: JxCellOptions = {
+  // Default: range rettangolare, esteso su righe e colonne.
+  selectionMode: JxCellSelectionMode.Both,
+};
+```
+
+Valori disponibili:
+
+| Valore | Codice | Comportamento |
+| --- | --- | --- |
+| `Both` (`0`) | `JxCellSelectionMode.Both` | Seleziona il rettangolo tra cella iniziale e finale. Default. |
+| `Row` (`1`) | `JxCellSelectionMode.Row` | Estende la selezione solo sulla riga della cella iniziale. |
+| `Column` (`2`) | `JxCellSelectionMode.Column` | Estende la selezione solo sulla colonna della cella iniziale. |
+
+La stessa regola viene applicata alla selezione trascinata con il mouse. La
+proprietà `multiSelect` è separata e continua a controllare la selezione degli
+header di riga e colonna.
+
 ### Dati
 
 ```typescript

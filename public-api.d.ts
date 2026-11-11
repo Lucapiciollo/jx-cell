@@ -9,3 +9,6 @@ export * from './lib/services/jx-workbook.service';
 export * from './lib/services/jx-formula.service';
 export * from './lib/services/jx-address.service';
 export * from './lib/services/jx-clipboard.service';
+export * from './lib/services/jx-theme.service';
+export * from './lib/services/jx-icon.service';
+export * from './lib/tokens/jx-cell-icons.tokens';

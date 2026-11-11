@@ -12,7 +12,8 @@ import * as i9 from "./components/cells/button-cell/button-cell.component";
 import * as i10 from "./components/cells/attachment-cell/attachment-cell.component";
 import * as i11 from "@angular/common";
 import * as i12 from "@angular/forms";
-import * as i13 from "ux-directives";
+import * as i13 from "@angular/common/http";
+import * as i14 from "ux-directives";
 /**
  * Angular NgModule that provides the `jx-cell` library.
  *
@@ -44,6 +45,6 @@ import * as i13 from "ux-directives";
 export declare class JxCellModule {
     constructor(registry: JxCellRegistryService);
     static ɵfac: i0.ɵɵFactoryDeclaration<JxCellModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<JxCellModule, [typeof i1.JxTableComponent, typeof i2.JxGridComponent, typeof i3.JxCellHostComponent, typeof i4.JxCellEditableDirective, typeof i5.TextCellComponent, typeof i6.NumberCellComponent, typeof i7.CheckboxCellComponent, typeof i8.FormulaCellComponent, typeof i9.ButtonCellComponent, typeof i10.AttachmentCellComponent], [typeof i11.CommonModule, typeof i12.FormsModule, typeof i13.UxDirectivesModule], [typeof i1.JxTableComponent, typeof i2.JxGridComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<JxCellModule, [typeof i1.JxTableComponent, typeof i2.JxGridComponent, typeof i3.JxCellHostComponent, typeof i4.JxCellEditableDirective, typeof i5.TextCellComponent, typeof i6.NumberCellComponent, typeof i7.CheckboxCellComponent, typeof i8.FormulaCellComponent, typeof i9.ButtonCellComponent, typeof i10.AttachmentCellComponent], [typeof i11.CommonModule, typeof i12.FormsModule, typeof i13.HttpClientModule, typeof i14.UxDirectivesModule], [typeof i1.JxTableComponent, typeof i2.JxGridComponent]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<JxCellModule>;
 }

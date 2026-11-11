@@ -1,0 +1,186 @@
+// =============================================================================
+// JxCell — Cell States
+// =============================================================================
+// Selection, hover, readonly, drag/drop, resize, copy, sort indicators.
+// All colours come from CSS custom properties.
+//
+// All rules are scoped under the `jx-table` host element — see _table.scss.
+// =============================================================================
+
+// ── All component styles scoped to the jx-table host element ─────────────────
+jx-table {
+
+  // ── Active/focused cell (body only — sticky cells must stay opaque) ──────────
+  // The whole selected range shares a single translucent tint and only the outer
+  // perimeter is bordered, so intermediate borders between adjacent selected
+  // cells are never drawn. Border colour/width and the range background are fully
+  // configurable via the --jx-selection-* custom properties.
+  .jexcel tbody td.highlight-selected {
+    position: relative;
+    background-color: var(--jx-selection-range-bg) !important;
+  }
+
+  // Tint overlay — sits above inner content so custom/HTML cells and any inner
+  // elements are tinted with the same colour too.
+  .jexcel tbody td.highlight-selected:not(.editor)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--jx-selection-range-bg);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  // Perimeter border — each edge class adds a single side to the shared ::after
+  // pseudo-element, so only the outer contour of the selection is outlined.
+  .jexcel tbody td.highlight-selected::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .jexcel tbody td.jx-sel-top::after    { border-top:    var(--jx-selection-border-width) solid var(--jx-selection-border); }
+  .jexcel tbody td.jx-sel-bottom::after { border-bottom: var(--jx-selection-border-width) solid var(--jx-selection-border); }
+  .jexcel tbody td.jx-sel-left::after   { border-left:   var(--jx-selection-border-width) solid var(--jx-selection-border); }
+  .jexcel tbody td.jx-sel-right::after  { border-right:  var(--jx-selection-border-width) solid var(--jx-selection-border); }
+
+  // ── Column-selection indicator on header/footer: subtle underline, no bg change ─
+  // thead/tfoot cells MUST keep their opaque background so scrolling rows below
+  // don't bleed through the sticky cells.
+  .jexcel thead td[data-x].selected {
+    box-shadow: inset 0 -2px 0 var(--jx-selection-border);
+  }
+  .jexcel tfoot td.selected {
+    box-shadow: inset 0 2px 0 var(--jx-selection-border);
+  }
+
+  // ── Readonly ─────────────────────────────────────────────────────────────────
+  .jexcel tbody td.readonly {
+    background: var(--jx-cell-soft-bg);
+    color: var(--jx-text-muted);
+    cursor: default;
+  }
+
+  // ── Row hover (body only) ───────────────────────────────────────────────────
+  // Handled in _table.scss via tbody tr:hover td
+
+  // ── Column drag indicators ───────────────────────────────────────────────────
+  .jexcel thead td[data-x].jx-col-drag-left  { box-shadow: inset  3px 0 0 var(--jx-accent); }
+  .jexcel thead td[data-x].jx-col-drag-right { box-shadow: inset -3px 0 0 var(--jx-accent); }
+  .jexcel thead td[data-x].jx-col-resizing   { box-shadow: inset -2px 0 0 var(--jx-accent); }
+  .jexcel thead.draggable td[data-x].dragging { opacity: 0.45; background: var(--jx-primary-bg-mid) !important; }
+
+  // ── Row drag/resize indicators ───────────────────────────────────────────────
+  .jexcel td.jexcel_row.jx-row-resizing  { box-shadow: inset 0 -2px 0 var(--jx-accent); }
+  .jexcel td.jexcel_row.jx-row-drop-top  { box-shadow: inset 0  3px 0 var(--jx-accent); }
+  .jexcel td.jexcel_row.jx-row-drop-bottom { box-shadow: inset 0 -3px 0 var(--jx-accent); }
+
+  // ── Copy/paste dashed border ─────────────────────────────────────────────────
+  .jexcel tbody td.jx-cell-copying {
+    border: 1px dashed var(--jx-accent) !important;
+  }
+
+  // ── Fill handle ──────────────────────────────────────────────────────────────
+  .jx-fill-handle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    right: -3px;
+    bottom: -3px;
+    background: var(--jx-fill-handle);
+    border: 1px solid var(--jx-fill-handle);
+    border-radius: 1px;
+    cursor: crosshair;
+    z-index: 10000;
+    user-select: none;
+    pointer-events: auto;
+  }
+
+  .jexcel tbody td.jx-fill-preview { background-color: transparent; }
+  .jexcel tbody td.jx-fill-preview.jx-fill-preview-top    { box-shadow: inset 0  1px 0 var(--jx-fill-handle); }
+  .jexcel tbody td.jx-fill-preview.jx-fill-preview-bottom { box-shadow: inset 0 -1px 0 var(--jx-fill-handle); }
+  .jexcel tbody td.jx-fill-preview.jx-fill-preview-left   { border-left: 1px solid var(--jx-fill-handle); }
+  .jexcel tbody td.jx-fill-preview.jx-fill-preview-right  { border-right: 1px solid var(--jx-fill-handle); }
+
+  // ── Sort column header indicator ─────────────────────────────────────────────
+  .jexcel thead td[data-x].jx-col-sortable { cursor: pointer; }
+
+  // Inner flex wrapper — sits inside the td (which stays text-align:center).
+  // display:inline-flex keeps the group centered in the cell.
+  // For 'right' mode it switches to display:flex so the icon can be pushed to the edge.
+  .jx-col-header-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .jx-col-header-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    text-align: center;
+  }
+
+  // ── Sort icon — always inline next to the label ───────────────────────────────
+  .jx-sort-icon {
+    display: inline-flex;
+    align-items: center;
+    font-size: 8px;
+    line-height: 1;
+    flex-shrink: 0;
+    opacity: 0.35;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: opacity var(--jx-transition), color var(--jx-transition);
+    user-select: none;
+
+    &:hover { opacity: 0.75; }
+  }
+
+  // ── Variant: icon pushed to the far-right edge of the cell ───────────────────
+  // The wrapper becomes a full-width flex so margin-left: auto works.
+  .jx-sort-icon--push-right {
+    margin-left: auto;
+  }
+  .jx-col-header-inner:has(.jx-sort-icon--push-right) {
+    display: flex;
+    width: 100%;
+    .jx-col-header-label { flex: 1; }
+  }
+
+  // ── Variant: icon before the label (left) ────────────────────────────────────
+  .jx-sort-icon--order-first {
+    order: -1;
+  }
+
+  // ── Active state (sorted column) ─────────────────────────────────────────────
+  .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon,
+  .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--order-first,
+  .jexcel thead td[data-x].jx-col-sort-asc .jx-sort-icon--push-right,
+  .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon,
+  .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--order-first,
+  .jexcel thead td[data-x].jx-col-sort-desc .jx-sort-icon--push-right {
+    opacity: 1;
+    color: var(--jx-primary);
+  }
+
+  // ── Comment indicator (Excel-style red triangle) ──────────────────────────────
+  .jx-comment-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 7px 7px 0;
+    border-color: transparent var(--jx-indicator-danger) transparent transparent;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+} // end jx-table

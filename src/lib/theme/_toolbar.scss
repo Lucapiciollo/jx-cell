@@ -1,0 +1,340 @@
+// =============================================================================
+// JxCell — Toolbar, Pagination & Add Row/Col Buttons
+// =============================================================================
+//
+// Component rules are scoped under the `jx-table` host element — see _table.scss.
+// Exception: .jx-toolbar-combo-menu is appended to body by ContextMenuDirective
+// and must remain a global rule.
+// =============================================================================
+
+// ── All component styles scoped to the jx-table host element ─────────────────
+jx-table {
+
+  // ── Toolbar container ───────────────────────────────────────────────────────
+  .jexcel_toolbar {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    height: var(--jx-toolbar-height);
+    border-bottom: 1px solid var(--jx-border);
+    background: var(--jx-header-bg);
+    flex-wrap: wrap;
+    user-select: none;
+    font-family: var(--jx-font-family);
+    box-sizing: border-box;
+  }
+
+  // ── Icon button ─────────────────────────────────────────────────────────────
+  .jexcel_toolbar_item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 4px;
+    border: 1px solid transparent;
+    border-radius: var(--jx-radius-sm);
+    background: transparent;
+    color: var(--jx-text-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--jx-transition), border-color var(--jx-transition), color var(--jx-transition);
+    vertical-align: middle;
+
+    // Material Icons font properties
+    font-family: "Material Icons", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+
+    &:hover {
+      background: var(--jx-primary-bg-mid);
+      border-color: var(--jx-primary);
+      color: var(--jx-primary);
+    }
+  }
+
+  // ── Select dropdown ─────────────────────────────────────────────────────────
+  select.jexcel_toolbar_item {
+    height: 28px;
+    font-size: var(--jx-font-size-sm);
+    font-family: var(--jx-font-family);
+    padding: 0 6px;
+    border: 1px solid var(--jx-border);
+    border-radius: var(--jx-radius-sm);
+    background: var(--jx-cell-bg);
+    color: var(--jx-text);
+    cursor: pointer;
+    min-width: 64px;
+    outline: none;
+
+    &:hover, &:focus {
+      border-color: var(--jx-primary);
+    }
+  }
+
+  // ── Visual separator ────────────────────────────────────────────────────────
+  .jx-toolbar-divisor {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background: var(--jx-border-strong, var(--jx-border));
+    margin: 0 4px;
+    flex-shrink: 0;
+    border-radius: 1px;
+  }
+
+  // ── Color picker button ──────────────────────────────────────────────────────
+  .jx-toolbar-color {
+    position: relative;
+    overflow: hidden;
+
+    .jx-toolbar-color-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+    }
+  }
+
+  // ── Combo dropdown button ────────────────────────────────────────────────────
+  .jx-toolbar-combo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    &__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px 0 8px;
+      height: 28px;
+      min-width: 64px;
+      border: 1px solid var(--jx-border);
+      border-radius: var(--jx-radius-sm);
+      background: var(--jx-cell-bg);
+      color: var(--jx-text);
+      font-size: var(--jx-font-size-sm);
+      font-family: var(--jx-font-family);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color var(--jx-transition), color var(--jx-transition);
+      width: 100%;
+
+      &:hover {
+        border-color: var(--jx-primary);
+        color: var(--jx-primary);
+      }
+    }
+
+    &__label {
+      flex: 1;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 120px;
+    }
+
+    &__arrow {
+      font-style: normal;
+      font-size: 9px;
+      font-family: sans-serif;
+      flex-shrink: 0;
+      opacity: 0.6;
+      margin-top: 1px;
+    }
+
+    // Zero-height positioning anchor — sits at the bottom-left of the combo
+    &__anchor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      pointer-events: none;
+      display: block;
+    }
+  }
+
+} // end jx-table
+
+// ── Combo context menu (appended to body by ContextMenuDirective) ─────────────
+// NOT inside jx-table's DOM at runtime — must remain a global rule.
+.jx-toolbar-combo-menu {
+  background: var(--jx-header-bg, #1a1a2e);
+  border: 1px solid var(--jx-border);
+  border-radius: var(--jx-radius-sm);
+  padding: 4px 0;
+  list-style: none;
+  margin: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  font-family: var(--jx-font-family);
+  font-size: var(--jx-font-size-sm);
+  z-index: 9999;
+
+  // Custom scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: var(--jx-border) transparent;
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--jx-border); border-radius: 3px; }
+
+  &__item {
+    padding: 5px 14px;
+    color: var(--jx-text);
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: 1.4;
+    transition: background var(--jx-transition), color var(--jx-transition);
+
+    &:hover, &.active {
+      background: var(--jx-primary-bg-mid);
+      color: var(--jx-primary);
+    }
+  }
+}
+
+// ── Pagination bar ────────────────────────────────────────────────────────────
+.jx-pagination {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 8px;
+  border-top: 1px solid var(--jx-border);
+  background: var(--jx-header-bg);
+  flex-wrap: wrap;
+  user-select: none;
+  font-family: var(--jx-font-family);
+}
+
+.jx-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--jx-border);
+  border-radius: var(--jx-radius-sm);
+  background: var(--jx-cell-bg);
+  color: var(--jx-text);
+  font-size: var(--jx-font-size-sm);
+  font-family: var(--jx-font-family);
+  cursor: pointer;
+  transition: background var(--jx-transition), border-color var(--jx-transition), color var(--jx-transition);
+
+  &:hover:not(:disabled) {
+    background: var(--jx-primary-bg-mid);
+    border-color: var(--jx-primary);
+    color: var(--jx-primary);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  &--active {
+    background: var(--jx-primary);
+    border-color: var(--jx-primary);
+    color: #fff;
+    font-weight: 600;
+
+    &:hover {
+      background: var(--jx-primary-hover);
+      border-color: var(--jx-primary-hover);
+      color: #fff;
+    }
+  }
+}
+
+.jx-page-info {
+  margin-left: auto;
+  font-size: var(--jx-font-size-xs);
+  color: var(--jx-text-muted);
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+// ── Manual add-row bar ────────────────────────────────────────────────────────
+.jx-add-row-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  cursor: pointer;
+  color: var(--jx-add-btn-color);
+  font-size: 16px;
+  font-weight: 400;
+  border: 1px dashed var(--jx-add-btn-border);
+  border-top: none;
+  background: var(--jx-add-btn-bg);
+  user-select: none;
+  transition: background var(--jx-transition), color var(--jx-transition);
+  font-family: var(--jx-font-family);
+
+  &:hover {
+    background: var(--jx-add-btn-hover-bg);
+    color: var(--jx-add-btn-hover-color);
+  }
+}
+
+// ── Manual add-column button (rightmost header cell) ─────────────────────────
+.jx-add-col-btn {
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--jx-add-btn-color);
+  background: var(--jx-add-btn-bg);
+  border: 1px dashed var(--jx-add-btn-border);
+  min-width: 28px;
+  user-select: none;
+  transition: background var(--jx-transition), color var(--jx-transition);
+
+  &:hover {
+    background: var(--jx-add-btn-hover-bg);
+    color: var(--jx-add-btn-hover-color);
+  }
+}
+
+// ── Loading overlay ────────────────────────────────────────────────────────────
+.jx-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--jx-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  backdrop-filter: blur(1px);
+}
+
+@keyframes jx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.jx-loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid var(--jx-border);
+  border-top-color: var(--jx-primary);
+  border-radius: 50%;
+  animation: jx-spin 0.65s linear infinite;
+}

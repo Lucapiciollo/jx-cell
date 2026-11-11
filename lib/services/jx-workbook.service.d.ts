@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject } from 'rxjs';
-import { JxAfterChangesPayload, JxBeforeEditionEndPayload, JxCancellableEvent, JxCellColumn, JxCellOptions, JxCellStyle, JxChangePayload, JxColOpPayload, JxEditionEndPayload, JxEditionStartPayload, JxFooterChangePayload, JxJsonExportOptions, JxMergeInfo, JxMergePayload, JxMoveColPayload, JxMoveRowPayload, JxPastePayload, JxPersistPayload, JxResizeColPayload, JxResizeRowPayload, JxRowOpPayload, JxSelection, JxSortPayload, JxSortState } from '../models/jx-cell.models';
+import { JxAfterChangesPayload, JxBeforeEditionEndPayload, JxCancellableEvent, JxCellColumn, JxCellOptions, JxCellStyle, JxChangePayload, JxColOpPayload, JxEditionEndPayload, JxEditionStartPayload, JxFooterChangePayload, JxJsonExportOptions, JxMergeInfo, JxMergePayload, JxMoveColPayload, JxMoveRowPayload, JxPastePayload, JxPersistPayload, JxResizeColPayload, JxResizeRowPayload, JxRowOpPayload, JxRowHeaderCellRef, JxSelection, JxSortPayload, JxSortState } from '../models/jx-cell.models';
 import { JxAddressService } from './jx-address.service';
 import { JxFormulaService } from './jx-formula.service';
 import * as i0 from "@angular/core";
@@ -40,11 +40,11 @@ import * as i0 from "@angular/core";
  * - **Events**: `workbook.events.*$` — typed RxJS Subjects for every grid event
  */
 export declare class JxWorkbookService<T extends Record<string, any> = Record<string, any>> {
-    private address;
-    private formula;
+    private readonly address;
+    private readonly formula;
     private options;
     private rawData;
-    private formulas;
+    private readonly formulas;
     private selection;
     private mergeCells;
     private footerRawData;
@@ -52,16 +52,25 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /** Evaluated column-header titles (formulas resolved). Parallel to options.columns. */
     private evaluatedHeaderTitles;
     /** Evaluated nested-header cell titles (formulas resolved). [rowIndex][cellIndex]. */
+    /**
+     * Transient slot: set by the component immediately before a `setValue` call
+     * for dropdown/autocomplete selections.  Read once by `setValue` then cleared.
+     * Carries `{ extras, description }` from the selected source item.
+     */
+    _pendingItemMeta: {
+        extras?: any;
+        description?: string;
+    } | undefined;
     private evaluatedNestedHeaderTitles;
     private undoStack;
     private redoStack;
     private applyingHistory;
     private readonly maxHistoryEntries;
     readonly data$: BehaviorSubject<any[][]>;
-    readonly selection$: BehaviorSubject<JxSelection>;
+    readonly selection$: BehaviorSubject<JxSelection | null>;
     readonly footers$: BehaviorSubject<any[][]>;
     readonly styles$: BehaviorSubject<void>;
-    readonly sort$: BehaviorSubject<JxSortState>;
+    readonly sort$: BehaviorSubject<JxSortState | null>;
     /**
      * Emette il numero corrente di righe ad ogni cambiamento strutturale
      * (insertRow, deleteRow, moveRow, sort, setData, init).
@@ -76,34 +85,133 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /** Current page index (0-based). Emits whenever the page changes. */
     readonly page$: BehaviorSubject<number>;
     private _currentPage;
-    private columnFilters;
-    private cellStyles;
-    private rowStyles;
-    private colStyles;
-    private headerColStyles;
-    private footerCellStyles;
-    private footerRowStyles;
-    private hiddenFooterRows;
-    private nestedHeaderRowStyles;
-    private nestedHeaderCellStyles;
-    private readonlyCells;
-    private readonlyRows;
-    private readonlyCols;
+    private readonly columnFilters;
+    /**
+     * Resolver opzionale registrato dal componente tabella per risolvere il testo
+     * visualizzato di celle con label asincrone (es. `autocomplete` con sorgente
+     * async, la cui cache label vive nel componente). Restituisce `undefined`
+     * quando non sa risolvere, lasciando la risoluzione a `getCellDisplayText`.
+     */
+    private _displayTextResolver?;
+    /**
+     * Registra un resolver per il testo visualizzato delle celle. Usato dal
+     * componente tabella per esporre la risoluzione delle label `autocomplete`
+     * async (che dipende dalla cache di rendering) a `search()` e ai filtri.
+     *
+     * @param fn - Funzione `(col, value) => string | undefined`. Restituire
+     *             `undefined`/`null` per delegare alla logica di default.
+     */
+    setDisplayTextResolver(fn: ((col: number, value: any) => string | null | undefined) | undefined): void;
+    /**
+     * Invalidatore opzionale registrato dal componente tabella per svuotare la
+     * cache delle label `autocomplete` (colonne con sorgente funzione/async), la
+     * cui cache vive nel componente. Vedi {@link invalidateAutocompleteCache}.
+     */
+    private _acInvalidator?;
+    /**
+     * Registra l'invalidatore della cache label `autocomplete`. Chiamato
+     * internamente dal componente tabella — non è pensato per il codice applicativo.
+     * @internal
+     */
+    _setAutocompleteInvalidator(fn: ((col?: number | string) => void) | undefined): void;
+    /**
+     * Invalida la cache delle label `autocomplete` popolata per le colonne con
+     * `autocompleteSource` funzione (sorgente async), forzando la ri-risoluzione
+     * delle label al prossimo render.
+     *
+     * Utile dopo un `setConfig(...)` che cambia i dati/combo sottostanti: gli id
+     * non ancora presenti in cache mostrerebbero altrimenti il valore grezzo
+     * (es. un GUID) finché la cache non viene ripopolata.
+     *
+     * @param col - Indice colonna (0-based), oppure `name`/`field` della colonna.
+     *              Se omesso, invalida la cache di **tutte** le colonne.
+     *
+     * @example
+     * wb.setConfig({ ...opts, columns, data });
+     * wb.invalidateAutocompleteCache();           // tutte le colonne
+     * wb.invalidateAutocompleteCache('projectId'); // solo la colonna 'projectId'
+     */
+    invalidateAutocompleteCache(col?: number | string): void;
+    private readonly cellStyles;
+    private readonly rowStyles;
+    private readonly colStyles;
+    private readonly headerColStyles;
+    private readonly rowHeaderCellStyles;
+    private rowHeaderElementResolver?;
+    private readonly footerCellStyles;
+    private readonly footerRowStyles;
+    private readonly hiddenFooterRows;
+    private readonly nestedHeaderRowStyles;
+    private readonly nestedHeaderCellStyles;
+    private readonly readonlyCells;
+    private readonly readonlyRows;
+    private readonly readonlyCols;
     readonly readonly$: BehaviorSubject<void>;
-    private hiddenRows;
-    private hiddenCols;
+    private readonly hiddenRows;
+    private readonly hiddenCols;
     /** Emits whenever hidden-row or hidden-column state changes. */
     readonly visibility$: BehaviorSubject<void>;
-    private cellMeta;
-    private cellComments;
+    private readonly cellMeta;
+    private readonly cellComments;
     /** Emits whenever setComments/clearComments is called. */
     readonly comments$: BehaviorSubject<void>;
-    private cellClasses;
+    /**
+     * Emits a request to programmatically open (or close) a cell's comment popup.
+     * The table component listens and shows/hides the popup, auto-closing it after
+     * `duration` ms (when `duration > 0`). A `null` payload closes any open popup.
+     */
+    readonly commentPopup$: Subject<{
+        x: number;
+        y: number;
+        duration: number;
+    } | null>;
+    private readonly cellClasses;
     /** Emits whenever addClass/removeClass is called so the template can re-render. */
     readonly cellClasses$: BehaviorSubject<void>;
+    private rowOrigin;
+    private readonly rowRenderEpochs;
     private locked;
     readonly locked$: BehaviorSubject<boolean>;
+    private batchDepth;
+    private _batchDirty;
+    /**
+     * Enter batch mode. All style/readonly/comment emissions are deferred until
+     * the matching `endBatch()` call. Calls may be nested; only the outermost
+     * `endBatch()` triggers the flush.
+     */
+    beginBatch(): void;
+    /**
+     * Exit batch mode. If this is the outermost call, flush all deferred changes:
+     * footers are always re-emitted (to pick up any `setFooter` calls made during
+     * the batch), and `config$` is emitted only if styles/readonly/comments were
+     * changed (tracked by `_batchDirty`).
+     */
+    endBatch(): void;
+    /** True while `beginBatch()` is in effect. */
+    get isBatching(): boolean;
+    /** @internal Emit `config$.next()` immediately or mark dirty if in batch mode. */
+    private _emitConfig;
     readonly config$: BehaviorSubject<void>;
+    /**
+     * Incremented every time `setConfig` is called with a `columns` patch.
+     * Used by the table component to force recreation of `NgComponentOutlet`
+     * instances for custom header components.
+     */
+    columnsPatchVersion: number;
+    /**
+     * Returns `true` after the grid has been configured at least once with a
+     * non-empty `columns` array (i.e., after the first real `setConfig({ columns })`
+     * call that populates the grid).
+     *
+     * Use this to distinguish "first load" from "subsequent setConfig calls"
+     * (e.g., period changes or data updates) without having to maintain external
+     * state in the host component.
+     *
+     * @example
+     * // Run autofit only on first load, then let the user resize freely
+     * if (!wb.configuredOnce) { autofit.schedule(); }
+     */
+    get configuredOnce(): boolean;
     readonly loading$: BehaviorSubject<boolean>;
     private isInitializing;
     /**
@@ -206,10 +314,52 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
             x2: number;
             y2: number;
         }>;
+        /**
+         * Fired when this table instance becomes the active grid, i.e. the user
+         * clicked a cell in it (via startMouseSelection).
+         *
+         * Custom cell components can subscribe to this event to know when their
+         * parent table is active and register keyboard listeners accordingly.
+         * All other table instances will NOT emit this event at the same time,
+         * so a subscriber can use this to set or clear an "active API" reference.
+         *
+         * @example
+         * ngOnInit(): void {
+         *   this.context.api.events.tableActivate$
+         *     .pipe(takeUntilDestroyed(this.destroyRef))
+         *     .subscribe(() => myService.setActiveApi(this.context.api));
+         * }
+         */
+        readonly tableActivate$: Subject<void>;
+        /**
+         * Fired when this table instance is **deactivated** because the user clicked
+         * a cell in a *different* `jx-table`. The active-table registry
+         * (`JxTableRegistry`) automatically emits this on every previously-active
+         * workbook whenever a new table calls `tableActivate$.next()`.
+         *
+         * Custom cell components can subscribe to react to deactivation — e.g. to
+         * clear keyboard-routing state or reset per-table UI state.
+         *
+         * @example
+         * // In JxCustomCellBase subclass:
+         * jxOnTableDeactivate(): void {
+         *   this.myService.clearActiveTable();
+         * }
+         */
+        readonly tableDeactivate$: Subject<void>;
+        /**
+         * Fired by `setData()` when only the row data changes — columns, structure
+         * and row-count are the same as before. Listeners can use this to refresh
+         * cell values without rebuilding the grid DOM (no `bumpCellRenderCache`,
+         * no `scheduleColWidthsRebuild`, no `rebuildVisibleRows`).
+         * `setConfig()` never emits `data$`; it always emits the heavier `config$`.
+         */
+        readonly data$: Subject<void>;
     };
     private persistTimer;
     private searchQuery;
     constructor(address: JxAddressService, formula: JxFormulaService);
+    private readonly http;
     /**
      * Initialises (or re-initialises) the workbook with a new set of options.
      *
@@ -432,6 +582,12 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     /**
      * Converte il nome lettera di una colonna (A, B, … AA) nel suo indice 0-based.
      */
+    /**
+     * Converte una lettera-colonna Excel (es. 'A' → 0, 'C' → 2, 'AA' → 26) in indice 0-based.
+     * Accetta solo stringhe composte esclusivamente da lettere (A-Z, a-z).
+     * Ritorna -1 se l'input non è una lettera di colonna valida.
+     * Per cercare per name/field usare `getColumnByKey`.
+     */
     getIdFromColumnName(name: string): number;
     /**
      * Restituisce l'indice della colonna (0-based) cercando per `name` o `field`
@@ -440,10 +596,38 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      */
     getColumnByKey(key: string): number;
     /**
+     * Restituisce il `name` o `field` della colonna all'indice dato (inverso di `getColumnByKey`).
+     * Ritorna `undefined` se la colonna non ha né `name` né `field`, o se l'indice non esiste.
+     */
+    getColumnKey(index: number): string | undefined;
+    /**
+     * Looks up the source item matching `value` in column `x` static source/autocompleteSource.
+     * Returns `{ extras, description }` or undefined if not found or source is not a static array.
+     * Used to auto-populate extras/description in change events when no transient meta is set.
+     */
+    _lookupSourceItem(x: number, value: any): {
+        extras?: any;
+        description?: string;
+    } | undefined;
+    /**
      * Restituisce la label visibile (display value) di un valore in una colonna dropdown.
      * Se il valore non è trovato nelle `source` della colonna, restituisce il valore grezzo.
      */
     getDropDownValue(col: number, key: any): string;
+    /**
+     * Restituisce il **testo visualizzato** (etichetta) di una cella, così come
+     * appare all'utente nella griglia: risolve le label di `dropdown`/`select`/
+     * `autocomplete` e applica la formattazione della maschera. Usato da
+     * `search()` e dai filtri di colonna affinché la ricerca operi sul testo
+     * visibile e non sul valore grezzo memorizzato.
+     *
+     * @param col   - Indice di colonna (zero-based).
+     * @param value - Valore grezzo della cella.
+     * @returns Il testo visibile della cella (stringa).
+     */
+    getCellDisplayText(col: number, value: any): string;
+    /** Formatta `value` applicando il pattern della maschera `cfg`. */
+    private _applyMaskFormat;
     /**
      * Returns all processed footer rows as a 2-D array.
      *
@@ -949,6 +1133,30 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * workbook.recalculateAll();
      */
     recalculateAll(): void;
+    /**
+     * Insieme combinato degli indici di riga attualmente nascosti: unione di
+     * `hideRow()` (API imperativa), ricerca (`search$`) e filtri di colonna
+     * (`columnFilter$`). Usato per il calcolo dei footer sulle sole righe visibili.
+     */
+    private getCombinedHiddenRows;
+    /**
+     * Restituisce la matrice dati da usare per il calcolo dei footer.
+     * Se `footerOnVisibleRows` è attivo ed esistono righe nascoste, restituisce
+     * la matrice filtrata (solo righe visibili); altrimenti la matrice completa.
+     */
+    private getFooterSourceMatrix;
+    /**
+     * Valuta le formule dei footer rispetto alla matrice `matrix` fornita ed
+     * emette il risultato su `footers$`. Estratto da `recalculateAll()` per poter
+     * essere riusato quando cambiano ricerca/filtri (footer sulle righe visibili).
+     */
+    private evaluateFooters;
+    /**
+     * Ricalcola ed emette i footer sulle sole righe visibili. No-op quando
+     * `footerOnVisibleRows` non è attivo. Chiamato quando cambiano ricerca o
+     * filtri di colonna senza un ricalcolo completo dei dati.
+     */
+    private refreshVisibleFooters;
     private schedulePersist;
     private loadPersistedData;
     /**
@@ -970,8 +1178,9 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * Performs a full-text search across all cell values, hiding rows that do
      * not contain `query`.  Hidden row indices are emitted via `search$`.
      *
-     * The search is case-insensitive and works on processed (formula-evaluated)
-     * cell values.
+     * The search is case-insensitive and works on the **displayed** cell text
+     * (dropdown/autocomplete labels and masked values are resolved), so the term
+     * matches what the user actually sees in the grid.
      *
      * @param query - Text to search for. Pass an empty string to show all rows.
      *
@@ -1097,6 +1306,66 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     private shiftMergesForColumnInsert;
     private shiftMergesForColumnDelete;
     /**
+     * Returns the new coordinate after an insert/delete on a single axis, or
+     * `null` if the coordinate belonged to a deleted band.
+     * @param coord  original 0-based coordinate (row or column)
+     * @param index  first affected index
+     * @param amount `> 0` rows/cols inserted; `< 0` rows/cols deleted (count = `-amount`)
+     */
+    private shiftCoord;
+    /** Rebuilds an address-keyed Map in place using `remap` (returns `null` to drop the entry). */
+    private remapAddressMap;
+    /** Rebuilds an address-keyed Set in place using `remap` (returns `null` to drop the entry). */
+    private remapAddressSet;
+    /** Rebuilds a numeric-index-keyed Map in place, shifting keys along one axis. */
+    private remapIndexMap;
+    /** Rebuilds a numeric-index-keyed Set in place, shifting keys along one axis. */
+    private remapIndexSet;
+    /** Rebuilds an `"x:y"`-keyed Map in place, shifting only the `x` (column) coordinate. */
+    private remapColumnKeyedXYMap;
+    /** Notifies all positional-state streams so the view re-renders after a remap. */
+    private emitPositionalStateChange;
+    /** Ensures `rowOrigin` is a valid identity mapping matching the current row count. */
+    private ensureRowOrigin;
+    /**
+     * Remaps every ROW-positional state entry through a row permutation
+     * `mapY(oldRow) => newRow`: per-cell styles/comments/classes/meta and the
+     * per-row style / read-only / hidden maps. Used by `sort()` and `moveRow()`
+     * so that styling, colours and fonts travel with their rows when the row
+     * order changes.
+     */
+    private remapRowPositionalStateByPermutation;
+    /** Rebuilds a row-index-keyed Map in place through a `mapY` permutation. */
+    private remapRowIndexMapByPermutation;
+    /** Rebuilds a row-index-keyed Set in place through a `mapY` permutation. */
+    private remapRowIndexSetByPermutation;
+    /**
+     * Shifts all row-positional state (cell styles, comments, classes, meta,
+     * read-only cells, plus row-index-keyed styles/read-only/hidden sets) after a
+     * row insert (`amount > 0`) or delete (`amount < 0`).
+     */
+    private remapStateForRowChange;
+    /**
+     * Shifts all column-positional state (cell styles, comments, classes, meta,
+     * read-only cells, plus column-index-keyed styles/header styles/filters/
+     * read-only/hidden sets and footer cell styles) after a column insert
+     * (`amount > 0`) or delete (`amount < 0`).
+     */
+    private remapStateForColumnChange;
+    /**
+     * Bumps the render epoch of every row at position `>= fromIndex` after a
+     * structural row change (insert/delete). The table reads `getRowRenderEpoch()`
+     * as the identity key of its custom-cell `NgComponentOutlet`s, so a bumped
+     * epoch forces Angular to destroy and recreate the custom component for each
+     * shifted row — re-running its `ngOnInit` (and any attach-time lifecycle) with
+     * the freshly-passed inputs/context of the row now occupying that position.
+     * This is consumer-agnostic: it refreshes every custom cell regardless of
+     * which lifecycle hook it relies on.
+     */
+    bumpRowRenderEpochsFrom(fromIndex: number): void;
+    /** Current render epoch for the row at position `y` (0 when never bumped). */
+    getRowRenderEpoch(y: number): number;
+    /**
      * Pads every row in nestedHeaders so that the sum of all colspan values equals
      * the total column count.  Rows that already cover all columns are left untouched.
      * Rows with MORE colspan than columns are also left untouched (edge case).
@@ -1106,6 +1375,10 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     private recordHistory;
     private captureSnapshot;
     private applySnapshot;
+    /** Clones every ROW/CELL-positional style & state map into a serializable bag. */
+    private captureStyleState;
+    /** Restores every ROW/CELL-positional style & state map from a snapshot bag. */
+    private applyStyleState;
     private cloneMergeMap;
     private cloneNestedHeaders;
     /** Returns true if the column is sortable (column-level overrides global option).
@@ -1184,6 +1457,37 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
     getHeaderColumnStyle(col: number): JxCellStyle | null;
     /** Remove style overrides from a column header. */
     clearHeaderColumnStyle(col: number): void;
+    /**
+     * Set or merge style on a single row-header (row-number) cell (0-based row index).
+     * Use friendly keys like `borderColor`, `borderTopColor`, `background`, `color`.
+     * Per-cell styles override the global `rowHeaderStyle` option for that row.
+     */
+    setRowHeaderStyle(row: number, style: JxCellStyle): void;
+    /** Get the current per-cell style override for a row-header cell. */
+    getRowHeaderStyle(row: number): JxCellStyle | null;
+    /** Remove the per-cell style override from a row-header cell. */
+    clearRowHeaderStyle(row: number): void;
+    /**
+     * Registers the resolver used by {@link getRowHeaderCell} to locate the
+     * rendered `<td>` of a row-header cell. Called internally by the table
+     * component — not intended for application code.
+     * @internal
+     */
+    _setRowHeaderElementResolver(resolver: ((row: number) => HTMLElement | null) | undefined): void;
+    /**
+     * Returns a live handle to a row-header (row-number) cell so its per-cell
+     * configuration can be read or modified through a single object.
+     *
+     * The handle stays bound to the given row index and always reads/writes the
+     * current state, so it can be cached and reused.
+     *
+     * @param row Zero-based row index.
+     * @example
+     * const cell = api.getRowHeaderCell(2);
+     * cell.setStyle({ borderColor: '#e11d48' }).setStyle({ fontWeight: 'bold' });
+     * cell.getElement()?.scrollIntoView();
+     */
+    getRowHeaderCell(row: number): JxRowHeaderCellRef;
     /** Set or merge style on a single footer cell (x = column, y = footer row, both 0-based). */
     setFooterCellStyle(x: number, y: number, style: JxCellStyle): void;
     /** Set or merge style on every cell in a footer row (0-based footer row index). */
@@ -1516,6 +1820,36 @@ export declare class JxWorkbookService<T extends Record<string, any> = Record<st
      * Remove the comment from a cell, or clear all comments.
      */
     clearComments(cellName?: string): void;
+    /**
+     * Set a comment on a cell **and** open its popup automatically, closing it
+     * after `duration` milliseconds.
+     *
+     * Like {@link setComments} but, in addition, it shows the comment popup over
+     * the cell without requiring a click on the comment indicator. When
+     * `duration > 0` the popup auto-closes after that interval; pass `0` (or a
+     * negative value) to keep it open until the user closes it or another cell is
+     * selected. Passing an empty/`null` comment removes the comment and closes
+     * any open popup.
+     *
+     * @param cellName - Target cell address (e.g. `'B2'`).
+     * @param comment  - Comment text, or `null`/`''` to remove it.
+     * @param duration - Milliseconds before auto-closing the popup. Default `3000`.
+     *
+     * @example
+     * workbook.setCommentsTemporized('B2', 'Salvato!', 2000); // shows for 2s
+     */
+    setCommentsTemporized(cellName: string, comment: string | null, duration?: number): void;
+    /**
+     * Open the comment popup for a cell that already has a comment, optionally
+     * auto-closing it after `duration` ms. Does nothing if the cell has no
+     * comment. Use {@link setCommentsTemporized} to set and show in one call.
+     *
+     * @param cellName - Target cell address (e.g. `'B2'`).
+     * @param duration - Milliseconds before auto-closing. `0` keeps it open. Default `3000`.
+     */
+    showCommentPopup(cellName: string, duration?: number): void;
+    /** Close any open comment popup opened via {@link setCommentsTemporized}/{@link showCommentPopup}. */
+    hideCommentPopup(): void;
     /**
      * Add a CSS class to a cell.
      * Equivalent to jExcel `addClass(cellName, className)`.

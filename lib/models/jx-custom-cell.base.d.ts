@@ -77,6 +77,19 @@ export declare abstract class JxCustomCellBase<T extends Record<string, any> = R
      * ngOnInit() { this.wireLifecycle(); }
      */
     protected wireLifecycle(): void;
+    /**
+     * Fired when this table instance becomes the **active** grid.
+     * Override in subclasses to update keyboard-routing state or UI.
+     * Default: no-op.
+     */
+    jxOnTableActivate(): void;
+    /**
+     * Fired when this table is **deactivated** because the user clicked
+     * a cell in a different `jx-table`.
+     * Override in subclasses to clear keyboard-routing state or UI.
+     * Default: no-op.
+     */
+    jxOnTableDeactivate(): void;
     /** Raw cell value as stored in the workbook (formula strings returned as-is). */
     get value(): any;
     /** Formatted/display value for the cell. Falls back to `value` when no display value is set. */

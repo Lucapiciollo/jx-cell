@@ -27,35 +27,119 @@ export interface JxCellStyle {
     borderBottom?: string;
     borderLeft?: string;
     borderRight?: string;
+    /** Friendly border-color keys (resolved against the row-header CSS variables). */
+    borderColor?: string;
+    borderTopColor?: string;
+    borderRightColor?: string;
+    borderBottomColor?: string;
+    borderLeftColor?: string;
+    /** Background shorthand (alias of `backgroundColor`). */
+    background?: string;
+}
+/**
+ * Live handle to a single row-header (row-number) cell.
+ *
+ * Returned by {@link JxWorkbookService.getRowHeaderCell} and from a custom
+ * cell's `context.getRowHeaderCell()`. Lets you read and modify that cell's
+ * per-cell configuration (style overrides) and reach its rendered DOM element.
+ *
+ * @example
+ * // From the public API
+ * const cell = api.getRowHeaderCell(2);
+ * cell.setStyle({ borderColor: '#e11d48', background: '#fff1f2' });
+ * console.log(cell.getStyle());
+ * cell.getElement()?.scrollIntoView();
+ *
+ * @example
+ * // From a custom cell component
+ * this.context.getRowHeaderCell().setStyle({ fontWeight: 'bold' });
+ */
+export interface JxRowHeaderCellRef {
+    /** Zero-based row index this handle points to. */
+    readonly row: number;
+    /** Current per-cell style override for this row-header cell, or `null` if none. */
+    getStyle(): JxCellStyle | null;
+    /**
+     * Merge a per-cell style override onto this row-header cell.
+     * Per-cell styles take precedence over the global `rowHeaderStyle` option.
+     * Returns the same handle so calls can be chained.
+     */
+    setStyle(style: JxCellStyle): JxRowHeaderCellRef;
+    /** Remove the per-cell style override from this row-header cell. */
+    clearStyle(): JxRowHeaderCellRef;
+    /** The rendered `<td>` element for this row-header cell, or `null` if not in the DOM. */
+    getElement(): HTMLElement | null;
 }
 export type JxSortDirection = 'asc' | 'desc' | null;
 export interface JxSortState {
     columnIndex: number;
     direction: 'asc' | 'desc';
 }
+/**
+ * Voce di sorgente per colonne `dropdown` e `autocomplete`.
+ * - `id`          — valore salvato nella cella (obbligatorio)
+ * - `description` — etichetta mostrata in cella (alias di `name`; se entrambi presenti prevale `description`)
+ * - `name`        — etichetta mostrata in cella (compat. legacy)
+ * - `extras`      — dati JSON aggiuntivi passati nell'evento `change$`/`onchange` alla selezione
+ */
+export interface JxSourceItem {
+    /** Valore salvato nella cella. */
+    id: any;
+    /** Etichetta mostrata in cella — ha precedenza su `name`. */
+    description?: string;
+    /** Etichetta mostrata in cella (compat. legacy). */
+    name?: string;
+    /** Dati aggiuntivi arbitrari — ripescabili in `onchange` / `change$` tramite `payload.extras`. */
+    extras?: any;
+    [key: string]: any;
+}
 /** Voce normalizzata restituita dall'autocomplete. */
 export interface JxAutocompleteItem {
     /** Valore salvato nella cella. */
     id: any;
-    /** Testo mostrato nel dropdown. */
+    /** Testo mostrato nel dropdown/overlay (= description ?? name ?? id). */
     label: string;
+    /** Dati aggiuntivi originali passati dall'item sorgente (extras). */
+    extras?: any;
+}
+/**
+ * Contesto passato alla funzione `autocompleteSource` (secondo parametro opzionale).
+ * Permette alla sorgente di filtrare le opzioni in base al contesto di riga (es. cascading).
+ */
+export interface JxAutocompleteSourceContext {
+    /** Indice colonna (0-based). */
+    x: number;
+    /** Indice riga (0-based). */
+    y: number;
+    /**
+     * Nome del campo della colonna che ha aperto il pannello autocomplete
+     * (= `column.name ?? column.field`, oppure `undefined` se la colonna non ha un nome).
+     * Utile per distinguere quale combo sta chiamando la sorgente in funzioni condivise:
+     * ```ts
+     * autocompleteSource: (q, ctx) => ctx?.field === 'subStatus' ? SUB_ITEMS : ALL_ITEMS
+     * ```
+     */
+    field?: string;
+    /**
+     * Riga corrente come oggetto chiave-valore.
+     * Le chiavi sono i `name`/`field` delle colonne; i valori sono i dati processati della riga.
+     * Usa questo per cascading dipendenti da altri campi della riga:
+     * ```ts
+     * autocompleteSource: (q, ctx) => ALL_ITEMS.filter(i => i.category === ctx?.row['category'])
+     * ```
+     */
+    row: Record<string, any>;
+    /** Valore corrente della cella. */
+    value: any;
 }
 /**
  * Sorgente per le colonne `autocomplete`.
- * - Array statico di stringhe o oggetti `{id, name}`.
- * - Callback sincrona/asincrona che riceve la query corrente.
+ * - Array statico di stringhe o oggetti `JxSourceItem` (`{id, description?, name?, extras?}`).
+ * - Callback sincrona/asincrona che riceve la query corrente e, opzionalmente,
+ *   il contesto di riga ({x, y, row, value}) per supportare cascading/dipendenze.
  * - Observable (compatibile con RxJS).
  */
-export type JxAutocompleteSource = string[] | {
-    id: any;
-    name: string;
-}[] | ((query: string) => string[] | {
-    id: any;
-    name: string;
-}[] | Promise<string[] | {
-    id: any;
-    name: string;
-}[]> | {
+export type JxAutocompleteSource = string[] | JxSourceItem[] | ((query: string, ctx?: JxAutocompleteSourceContext) => string[] | JxSourceItem[] | Promise<string[] | JxSourceItem[]> | {
     subscribe: (observer: any) => any;
 });
 /** Contesto passato al `filterFn` di una colonna. */
@@ -70,6 +154,15 @@ export interface JxCellFilterContext {
     row: readonly any[];
     /** Testo digitato (solo per `autocomplete`, stringa vuota per `dropdown`). */
     query: string;
+    /**
+     * Item caricati dalla sorgente (`autocompleteSource` o `source`) prima di qualsiasi filtraggio.
+     * Disponibile solo per colonne `autocomplete`; è `undefined` per `dropdown`.
+     * Usalo per filtrare per contesto di riga partendo dagli item già recuperati dalla sorgente:
+     * ```ts
+     * filterFn: ({ row, items }) => (items ?? []).filter(i => i.category === row[3])
+     * ```
+     */
+    items?: any[];
 }
 /**
  * Configurazione maschera di input per una colonna.
@@ -128,6 +221,13 @@ export interface JxCellColumn<T extends Record<string, any> = Record<string, any
      */
     autocompleteSource?: JxAutocompleteSource;
     /**
+     * Funzione di trasformazione del valore per la visualizzazione (sola lettura).
+     * Non modifica il dato sottostante — serve per localizzazioni o formattazioni.
+     * Riceve il valore raw, l'intera riga e le coordinate x/y.
+     * @example render: (v) => v === 'SI' ? 'Sì' : v === 'NO' ? 'No' : v
+     */
+    render?: (value: any, row: any[], x: number, y: number) => any;
+    /**
      * Maschera di input applicata durante l'editing tramite `MaskDirective` (ux-directives).
      * Può essere una stringa pattern (es. `'###-####'`) o un oggetto `JxMaskConfig`.
      */
@@ -139,10 +239,28 @@ export interface JxCellColumn<T extends Record<string, any> = Record<string, any
     sortable?: boolean;
     /** Se false, questa colonna non mostra l'input nella filter row anche quando `columnFilter` è abilitato. Default: true. */
     filterable?: boolean;
-    /** Custom comparator. Receives two full raw rows and the column index. Return negative/0/positive like Array.sort. */
-    sortFn?: (rowA: any[], rowB: any[], columnIndex: number) => number;
+    /**
+     * Custom comparator for this column. Receives the two full raw rows, the
+     * zero-based column index, and the current sort direction (`'asc'` | `'desc'`).
+     * Must return negative/0/positive like `Array.prototype.sort`, exactly as the
+     * final ordering should be — the direction is **not** applied automatically on
+     * top of the returned value, so invert your own comparison when `direction === 'desc'`.
+     *
+     * @example
+     * sortFn: (rowA, rowB, columnIndex, direction) => {
+     *   const sign = direction === 'asc' ? 1 : -1;
+     *   return sign * String(rowA[columnIndex]).localeCompare(String(rowB[columnIndex]));
+     * }
+     */
+    sortFn?: (rowA: any[], rowB: any[], columnIndex: number, direction: 'asc' | 'desc') => number;
     /** Se true (o type === 'hidden'), la colonna è completamente nascosta nel DOM. */
     hidden?: boolean;
+    /**
+     * Se `false`, questa colonna non può essere ridimensionata trascinando il bordo dell'header.
+     * Sovrascrive `options.columnResize` a livello di singola colonna.
+     * @default true
+     */
+    resizable?: boolean;
     /**
      * Default formula template auto-inserted when an empty row is added (via `autoAddRow` or
      * `insertRow` without data). Use `{row}` as placeholder for the 1-based row number.
@@ -161,6 +279,17 @@ export interface JxCellColumn<T extends Record<string, any> = Record<string, any
      * When set, replaces the default text rendering in every footer row for this column.
      */
     footerComponent?: Type<import('./jx-custom-cell.base').JxCustomFooterComponent<any>>;
+    /**
+     * One or more CSS classes added to **every body cell `<td>`** of this column.
+     * Accepts a space-separated string (`'a b'`) or an array (`['a','b']`).
+     * Combined with `options.classes[x]` and dynamic `workbook.addClass()` classes.
+     */
+    cellClassList?: string | string[];
+    /**
+     * One or more CSS classes added to the **header `<td>`** of this column.
+     * Accepts a space-separated string (`'a b'`) or an array (`['a','b']`).
+     */
+    headerClassList?: string | string[];
 }
 /**
  * Context passed to a custom header cell component via @Input() context.
@@ -262,6 +391,12 @@ export interface JxCustomCellContext<T extends Record<string, any> = Record<stri
     recalculate: () => void;
     /** Moves DOM focus to this cell. */
     focusCell: () => void;
+    /**
+     * Returns a live handle to a row-header (row-number) cell so its per-cell
+     * configuration can be read or modified from inside a custom component.
+     * Defaults to this cell's own row when `row` is omitted.
+     */
+    getRowHeaderCell: (row?: number) => JxRowHeaderCellRef;
 }
 /**
  * Optional lifecycle hooks for custom cell components.
@@ -287,6 +422,19 @@ export interface JxCellLifecycle {
     jxOnSelection?(selection: JxSelection): void;
     /** After a row is inserted or deleted. */
     jxOnRowsChange?(payload: JxRowOpPayload, action: 'insert' | 'delete'): void;
+    /**
+     * Fired when **this** table instance becomes the active grid (user clicked a cell).
+     * Implement to register keyboard listeners or update UI state for the active table.
+     */
+    jxOnTableActivate?(): void;
+    /**
+     * Fired when this table instance is **deactivated** because the user clicked a cell
+     * in a different `jx-table`. Implement to clear keyboard-routing state, remove
+     * per-table UI highlights, or reset any "active table" reference.
+     *
+     * Emitted automatically by `JxTableRegistry` via `tableDeactivate$` on the workbook.
+     */
+    jxOnTableDeactivate?(): void;
 }
 export interface JxCellEditorDefinition {
     /** Angular component rendered inside the cell when column.type = 'custom' or when this property is present.
@@ -365,6 +513,17 @@ export interface JxNestedHeaderCellContext<T extends Record<string, any> = Recor
 export interface JxFooterCell {
     value: any;
     colspan?: number | string;
+    /**
+     * Vertical span of the cell across footer rows. A number spans that many
+     * visible rows; `'group'` (or `groupRowspan: true`) auto-spans every visible
+     * row of the collapsible group starting at this cell's row (collapsing back
+     * to a single row when the group is collapsed).
+     */
+    rowspan?: number | string;
+    /** Shortcut for `rowspan: 'group'` — auto-span the collapsible footer group. */
+    groupRowspan?: boolean;
+    /** One or more CSS classes to add to the footer `<td>` element. */
+    classList?: string | string[];
 }
 export interface JxJsonExportOptions {
     processed?: boolean;
@@ -601,6 +760,18 @@ export interface JxToolbarPlugin {
     readonly items: JxToolbarItem[];
 }
 /**
+ * Defines which dimensions a Shift+click cell selection may extend.
+ *
+ * Numeric values are kept stable for configuration objects crossing package
+ * boundaries. `Both` is the default and preserves the rectangular range
+ * behaviour.
+ */
+export declare enum JxCellSelectionMode {
+    Both = 0,
+    Row = 1,
+    Column = 2
+}
+/**
  * Root configuration object passed to `JxTableComponent` via the `[options]` input.
  *
  * All properties are optional.  The minimal working configuration only requires `columns`
@@ -626,6 +797,12 @@ export interface JxToolbarPlugin {
  */
 export interface JxCellOptions<T extends Record<string, any> = Record<string, any>> {
     /**
+     * Restricts the dimensions extended by Shift+click between cells.
+     * `Both` (default) selects the rectangular range; `Row` keeps the anchor
+     * row and `Column` keeps the anchor column.
+     */
+    selectionMode?: JxCellSelectionMode;
+    /**
      * Grid data.  Accepts either:
      * - `any[][]` — 2-D array of rows × columns (positional values)
      * - `T[]` — array of objects keyed by column `name`/`field`
@@ -648,8 +825,83 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     defaultColWidth?: number;
     /** Allineamento default per le colonne senza align esplicita. Default: 'left'. */
     defaultColAlign?: 'left' | 'center' | 'right' | string;
+    /**
+     * Quando `true`, ogni chiamata a `setConfig({ columns })` preserva le larghezze
+     * correnti delle colonne abbinate per `name`/`field`, evitando il flash visivo
+     * "espansione → restringimento" causato dal reset ai valori di config.
+     *
+     * Le colonne la cui larghezza è stata modificata dall'utente (drag) o dall'autofit
+     * vengono mantenute. Le colonne con un `name`/`field` nuovo (es. nuovi giorni in un
+     * periodo diverso) usano il valore di config.
+     *
+     * Default: `false` per retrocompatibilità.
+     *
+     * @example
+     * // Nel gridOptions del componente
+     * gridOptions: JxCellOptions = { preserveColumnWidths: true, ... }
+     */
+    preserveColumnWidths?: boolean;
     /** Altezza default delle righe in px. Default: 28. */
     defaultRowHeight?: number;
+    /**
+     * Abilita la virtualizzazione delle righe: renderizza solo le righe visibili
+     * nel viewport (più un piccolo overscan), mantenendo l'altezza totale tramite
+     * spaziatori. Migliora drasticamente le prestazioni su dataset con molte righe.
+     * Default: `false` (tutte le righe renderizzate).
+     */
+    virtualScroll?: boolean;
+    /**
+     * Numero di righe extra renderizzate sopra e sotto il viewport quando
+     * `virtualScroll` è attivo, per ridurre il flicker durante lo scroll.
+     * Default: 8.
+     */
+    virtualScrollOverscan?: number;
+    /**
+     * Numero massimo di righe extra aggiunto dall'overscan dinamico basato
+     * sulla velocit\u00e0 di scroll. Valori pi\u00f9 alti eliminano quasi completamente
+     * il flash bianco durante scroll veloci, a fronte di un rendering leggermente
+     * pi\u00f9 ampio in quei momenti. Default: `40`.
+     */
+    virtualScrollMaxVelocityOverscan?: number;
+    /**
+     * Numero di righe dati visibili contemporaneamente nel viewport.
+     * Quando impostato, jx-table calcola automaticamente 	ableHeight
+     * come headerRowHeight + visibleRowCount x defaultRowHeight.
+     * Se anche 	ableHeight e impostato, 	ableHeight ha priorita.
+     */
+    visibleRowCount?: number;
+    /**
+     * Stile CSS applicato a **tutte** le celle come livello base.
+     * Sovrascrivibile da stili per colonna, riga o singola cella.
+     *
+     * @example
+     * defaultCellStyle: { fontSize: '13px', fontFamily: 'Roboto, sans-serif', color: '#333' }
+     */
+    defaultCellStyle?: JxCellStyle;
+    /**
+     * Stile CSS applicato a **tutte** le celle dell'header principale (riga `<thead>`).
+     * Sovrascrivibile da `setHeaderColumnStyle()` su singola colonna.
+     *
+     * @example
+     * defaultHeaderStyle: { fontSize: '12px', fontWeight: 'bold', color: '#555' }
+     */
+    defaultHeaderStyle?: JxCellStyle;
+    /**
+     * Stile CSS applicato a **tutte** le celle dei nested header.
+     * Sovrascrivibile da `setNestedHeaderCellStyle()` su singola cella.
+     *
+     * @example
+     * defaultNestedHeaderStyle: { backgroundColor: '#e8eaf6', color: '#1a237e' }
+     */
+    defaultNestedHeaderStyle?: JxCellStyle;
+    /**
+     * Stile CSS applicato a **tutte** le celle del footer.
+     * Sovrascrivibile da `setFooterCellStyle()` su singola cella.
+     *
+     * @example
+     * defaultFooterStyle: { fontStyle: 'italic', color: '#666' }
+     */
+    defaultFooterStyle?: JxCellStyle;
     /** Numero minimo di righe vuote in coda. Aggiunge righe dopo i dati. */
     minSpareRows?: number;
     /** Numero minimo di colonne vuote aggiuntive (compat. jExcel). */
@@ -682,8 +934,70 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     showFooter?: boolean;
     /** Mostra una riga di input di filtro sotto l'header per filtrare per colonna. Default: false. */
     columnFilter?: boolean;
+    /**
+     * Se `true`, le righe escluse dai filtri attivi (ricerca o filtri di colonna) —
+     * quindi nascoste in modalità `hide` o attenuate in modalità `dim` — diventano
+     * **non editabili** per tutta la riga finché i filtri restano attivi. Quando i
+     * filtri vengono rimossi le righe tornano editabili. Default: `false`.
+     */
+    lockFilteredRows?: boolean;
+    /**
+     * Se `true`, i footer (totali/aggregati) vengono ricalcolati considerando solo
+     * le righe attualmente **visibili** — escludendo quelle nascoste da ricerca,
+     * filtri di colonna o `hideRow()`. Utile per ottenere un comportamento simile
+     * a `SUBTOTAL` di Excel. Default: `false` (i footer aggregano l'intero dataset).
+     */
+    footerOnVisibleRows?: boolean;
     /** Mostra/nasconde la colonna degli indici di riga (prima colonna numerica). Default: true. */
     rowHeaders?: boolean;
+    /** Se `true`, evidenzia la cella dell'header di colonna corrispondente alla selezione corrente. Default: `true`. */
+    highlightSelectedColumnHeader?: boolean;
+    /** Se `true`, evidenzia la cella dell'header di riga corrispondente alla selezione corrente. Default: `true`. */
+    highlightSelectedRowHeader?: boolean;
+    /**
+     * Larghezza della colonna degli header di riga (la prima colonna con gli
+     * indici). Accetta un numero (interpretato come px) o una stringa numerica.
+     * Default: 50.
+     */
+    rowHeaderWidth?: number | string;
+    /**
+     * Stile inline applicato a TUTTE le celle della colonna degli header di riga
+     * (angolo "seleziona tutto" dell'header principale e annidato, celle di riga,
+     * footer e riga di filtro). Le proprietà di layout sticky
+     * (position/left/top/z-index) e la larghezza restano gestite internamente e
+     * non sono sovrascrivibili da qui.
+     */
+    rowHeaderStyle?: Record<string, string | number>;
+    /** Classe CSS extra applicata alle celle della colonna degli header di riga. */
+    rowHeaderClass?: string;
+    /**
+     * Mostra il numero di riga (1-based) nelle celle della colonna degli header
+     * di riga. Impostare a `false` per nascondere la numerazione mantenendo la
+     * colonna (utile per usare solo `rowHeaderContent` o lasciarla vuota).
+     * Default: `true`.
+     */
+    rowHeaderNumbers?: boolean;
+    /**
+     * Contenuto personalizzato delle celle dell'header di riga, al posto del
+     * numero. Può essere:
+     * - una stringa (testo, emoji o markup HTML semplice, es. `'★'` o
+     *   `'<i class="fa fa-star"></i>'`), uguale per ogni riga;
+     * - una funzione `(rowIndex, row) => string` per contenuto per-riga.
+     * Il markup HTML viene sanificato da Angular. Quando presente ha la
+     * precedenza su `rowHeaderNumbers`.
+     */
+    rowHeaderContent?: string | ((rowIndex: number, row: any) => string);
+    /**
+     * Abilita la selezione multipla (range contiguo con Shift+click) cliccando
+     * sugli header di riga e/o di colonna.
+     * - `'rows'`    → Shift+click sugli header di riga estende la selezione a un intervallo di righe.
+     * - `'columns'` → Shift+click sugli header di colonna estende la selezione a un intervallo di colonne.
+     * - `'both'`    → abilita entrambe.
+     * - `false`     → disabilitata (un click seleziona sempre una singola riga/colonna). Default.
+     *
+     * Le righe/colonne selezionate sono leggibili via `getSelectedRows()` / `getSelectedColumns()`.
+     */
+    multiSelect?: 'rows' | 'columns' | 'both' | false;
     /** Numero minimo di righe presenti all'init; aggiunge righe vuote se i dati sono insufficienti. */
     minRows?: number;
     allowInsertRow?: boolean;
@@ -730,6 +1044,10 @@ export interface JxCellOptions<T extends Record<string, any> = Record<string, an
     freezeColumns?: number;
     /** Explicit array of column indices to freeze (alternative to `freezeColumns`). */
     frozenColumnIndexes?: number[];
+    /** Number of columns to freeze from the right (always visible during horizontal scroll). */
+    freezeColumnsRight?: number;
+    /** Explicit array of column indices to freeze on the right (alternative to `freezeColumnsRight`). */
+    frozenColumnIndexesRight?: number[];
     /** Se `true`, l'header rimane visibile durante lo scroll verticale. Richiede `tableHeight`. */
     stickyHeader?: boolean;
     /** Se `true`, il footer rimane visibile durante lo scroll verticale. Richiede `tableHeight`. */
@@ -1065,6 +1383,16 @@ export interface JxChangePayload {
     columnDef: JxCellColumn | null;
     /** Snapshot dell'intera riga al momento dell'evento (valori grezzi). */
     rowData: readonly any[];
+    /**
+     * Dati aggiuntivi dell'item selezionato (campo `extras` dell'oggetto sorgente).
+     * Disponibile per selezioni da `dropdown` e `autocomplete`; `undefined` per input liberi.
+     */
+    extras?: any;
+    /**
+     * Descrizione testuale dell'item selezionato (= `description ?? name` dell'item sorgente).
+     * Disponibile per selezioni da `dropdown` e `autocomplete`; `undefined` per input liberi.
+     */
+    description?: string;
 }
 export interface JxAfterChangesPayload {
     changes: Array<{
@@ -1164,6 +1492,10 @@ export interface JxBeforeEditionEndPayload {
     oldValue: any;
     /** Definizione della colonna. */
     columnDef: JxCellColumn | null;
+    /** Dati extras dell'item selezionato (dropdown/autocomplete), se presenti. */
+    extras?: any;
+    /** Descrizione testuale dell'item selezionato (dropdown/autocomplete), se presente. */
+    description?: string;
 }
 export interface JxEditionEndPayload {
     x: number;
@@ -1176,6 +1508,10 @@ export interface JxEditionEndPayload {
     oldValue: any;
     /** Definizione della colonna. */
     columnDef: JxCellColumn | null;
+    /** Dati extras dell'item selezionato (dropdown/autocomplete), se presenti. */
+    extras?: any;
+    /** Descrizione testuale dell'item selezionato (dropdown/autocomplete), se presente. */
+    description?: string;
 }
 export interface JxFooterChangePayload {
     row: number;

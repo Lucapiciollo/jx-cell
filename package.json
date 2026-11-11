@@ -1,9 +1,26 @@
 {
   "name": "jx-cell",
-  "version": "6.2.0",
+  "version": "6.10.11",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucapiciollo/jx-cell.git"
+  },
+  "homepage": "https://github.com/Lucapiciollo/jx-cell#readme",
+  "files": [
+    "README.md",
+    "fesm2022/",
+    "index.d.ts",
+    "jx-cell.css",
+    "jx-cell.expanded.css",
+    "lib/",
+    "public-api.d.ts",
+    "src/lib/theme/",
+    "src/scss/"
+  ],
   "peerDependencies": {
     "@angular/common": "^17.3.0 || ^18.0.0 || ^19.0.0",
-    "@angular/core": "^17.3.0 || ^18.0.0 || ^19.0.0"
+    "@angular/core": "^17.3.0 || ^18.0.0 || ^19.0.0",
+    "ux-directives": "^0.0.5"
   },
   "dependencies": {
     "tslib": "^2.3.0"

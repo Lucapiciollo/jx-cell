@@ -1,0 +1,220 @@
+// =============================================================================
+// JxCell — Overlay Components
+// =============================================================================
+// Context menu, autocomplete dropdown, and comment popup.
+// All colours come from CSS custom properties.
+// =============================================================================
+
+// ── Context menu ──────────────────────────────────────────────────────────────
+.jx-context-menu {
+  background: var(--jx-ctx-bg);
+  border: 1px solid var(--jx-ctx-border);
+  border-radius: var(--jx-radius-md);
+  box-shadow: var(--jx-shadow-overlay);
+  padding: 4px 0;
+  min-width: 188px;
+  font-family: var(--jx-font-family);
+}
+
+.jx-ctx-menu { padding: 4px 0; }
+
+.jx-ctx-menu__header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 12px 4px;
+  font-size: var(--jx-font-size-xs);
+  color: var(--jx-text-muted);
+  border-bottom: 1px solid var(--jx-ctx-separator);
+  margin-bottom: 4px;
+
+  strong {
+    font-weight: 600;
+    color: var(--jx-ctx-text);
+  }
+}
+
+.jx-ctx-menu__value {
+  font-style: italic;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jx-ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--jx-font-size-md);
+  font-family: var(--jx-font-family);
+  color: var(--jx-ctx-text);
+  text-align: left;
+  white-space: nowrap;
+  transition: background var(--jx-transition);
+
+  &:hover                   { background: var(--jx-ctx-hover-bg); }
+  &:disabled                { opacity: .4; cursor: not-allowed; }
+  &.jx-ctx-item--danger     { color: var(--jx-ctx-danger); }
+  &.jx-ctx-item--danger:hover { background: var(--jx-ctx-danger-hover); }
+}
+
+.jx-ctx-icon {
+  font-size: 14px;
+  opacity: .7;
+  flex-shrink: 0;
+}
+
+.jx-ctx-separator {
+  height: 1px;
+  background: var(--jx-ctx-separator);
+  margin: 4px 0;
+}
+
+// ── Autocomplete dropdown ─────────────────────────────────────────────────────
+.jx-ac-dropdown {
+  position: absolute;
+  z-index: 2000;
+  background: var(--jx-ac-bg);
+  border: 1px solid var(--jx-ac-border);
+  border-radius: var(--jx-radius-md);
+  box-shadow: var(--jx-shadow-overlay);
+  min-width: 160px;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  pointer-events: auto;
+  font-family: var(--jx-font-family);
+}
+
+.jx-ac-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 8px;
+}
+
+.jx-ac-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--jx-font-size-md);
+  line-height: 1.4;
+  color: var(--jx-ac-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background var(--jx-transition);
+
+  &:hover,
+  &.jx-ac-item--active {
+    background: var(--jx-ac-hover-bg);
+    color: var(--jx-ac-hover-text);
+  }
+}
+
+.jx-ac-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: var(--jx-font-size-xs);
+  color: var(--jx-text-muted);
+}
+
+@keyframes jx-ac-spin {
+  to { transform: rotate(360deg); }
+}
+
+.jx-ac-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--jx-border);
+  border-top-color: var(--jx-primary);
+  border-radius: 50%;
+  animation: jx-ac-spin 0.6s linear infinite;
+}
+
+.jx-ac-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Anchor input is invisible and absolute so it does not replace the cell text.
+// The cell continues to show .jx-ac-editing-label while the dropdown is open.
+.jx-ac-input--anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+
+// Label shown inside the cell while autocomplete editor is active.
+.jx-ac-editing-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+// ── Comment popup ─────────────────────────────────────────────────────────────
+.jx-comment-popup {
+  position: absolute;
+  z-index: 300;
+  min-width: 180px;
+  max-width: 280px;
+  background: var(--jx-comment-bg);
+  border: 1px solid var(--jx-comment-border);
+  border-radius: var(--jx-radius-sm);
+  box-shadow: var(--jx-shadow-overlay);
+  font-size: var(--jx-font-size-sm);
+  font-family: var(--jx-font-family);
+  pointer-events: auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: var(--jx-comment-header-bg);
+    border-bottom: 1px solid var(--jx-comment-border);
+    border-radius: var(--jx-radius-sm) var(--jx-radius-sm) 0 0;
+    font-weight: 600;
+    font-size: var(--jx-font-size-xs);
+    color: var(--jx-comment-header-text);
+  }
+
+  &__label {
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--jx-comment-header-text);
+    padding: 0 2px;
+    opacity: .65;
+
+    &:hover { opacity: 1; }
+  }
+
+  &__body {
+    padding: 8px 10px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--jx-comment-text);
+    line-height: 1.5;
+  }
+}

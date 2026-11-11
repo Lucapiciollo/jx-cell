@@ -1,9 +1,11 @@
 # JxCell
 
-> **Componente table per Angular** — v6.9.0
+> **Componente table per Angular** — v6.10.11
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
-> API TypeScript tipizzata · Temi via CSS custom properties · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
+> API TypeScript tipizzata · Temi via CSS custom properties · Icone personalizzabili (`JX_ICONS`) · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
+>
+> 🚀 **Demo live:** [Apri la demo interattiva](https://lucapiciollo.github.io/jx-cell/) · 📦 **npm:** [jx-cell](https://www.npmjs.com/package/jx-cell)
 
 ---
 
@@ -21,6 +23,7 @@
    - [Colonne (columns)](#colonne-columns)
    - [Modifica e interazione](#modifica-e-interazione)
    - [Layout e visualizzazione](#layout-e-visualizzazione)
+   - [Virtualizzazione righe (Virtual Scroll)](#virtualizzazione-righe-virtual-scroll)
    - [Header e footer fissi — colonne congelate](#header-e-footer-fissi--colonne-congelate)
    - [Ordinamento](#ordinamento)
    - [Ricerca e filtri](#ricerca-e-filtri)
@@ -53,6 +56,8 @@
    - [Operazioni remote e CSV](#operazioni-remote-e-csv)
    - [Utility, i18n, hash](#utility-i18n-hash)
    - [Stream reattivi (events)](#stream-reattivi-events)
+   - [Sistema multi-tabella: JxTableRegistry](#sistema-multi-tabella-jxtableregistry-e-lifecycle-activatedeactivate)
+   - [Lifecycle hook nelle celle custom](#lifecycle-hook-nelle-celle-custom-jxontableactivate-e-jxontabledeactivate)
    - [BehaviorSubject interni](#behaviorsubject-interni)
 8. [Barra strumenti: sistema plugin](#barra-strumenti-sistema-plugin)
 9. [Celle personalizzate — guida completa](#celle-personalizzate--guida-completa)
@@ -63,12 +68,13 @@
    - [Cella sub-header (Nested Header Cell)](#cella-sub-header-nested-header-cell)
 10. [Context menu personalizzato](#context-menu-personalizzato)
 11. [Temi e stili](#temi-e-stili)
-12. [Indirizzi e formule](#indirizzi-e-formule)
-13. [Esempio completo](#esempio-completo)
-14. [Componente `jx-grid` — data-grid nativo Angular](#componente-jx-grid--data-grid-nativo-angular)
+12. [Icone personalizzate](#icone-personalizzate)
+13. [Indirizzi e formule](#indirizzi-e-formule)
+14. [Esempio completo](#esempio-completo)
+15. [Componente `jx-grid` — data-grid nativo Angular](#componente-jx-grid--data-grid-nativo-angular)
     - [Personalizzazione SCSS di `jx-grid`](#personalizzazione-scss-di-jx-grid)
 
-> Documentazione aggiornata al 2026-06-10
+> Documentazione aggiornata al 2026-07-16
 
 ---
 
@@ -87,8 +93,19 @@ Se usi la toolbar con le icone Material Icons, aggiungi a `index.html`:
 Importa il tema nel tuo `styles.scss` globale:
 
 ```scss
+// Opzione A — sorgenti SCSS (personalizzazione compile-time con @use ... with)
 @use 'jx-cell/theme';
+
+// Opzione B — CSS precompilato (più semplice, nessun tool SCSS richiesto)
+// @import 'jx-cell/jx-cell.expanded.css';
+// oppure minificato:
+// @import 'jx-cell/jx-cell.css';
 ```
+
+> **📌 Isolamento multi-istanza** — Tutti gli stili della libreria sono automaticamente
+> scopati sotto il selettore `jx-table`. Due o più istanze `<jx-table>` sulla stessa
+> pagina non interferiscono tra loro e non confliggono con la libreria jExcel originale
+> o qualsiasi altro CSS che usa nomi di classe simili.
 
 ---
 
@@ -190,6 +207,33 @@ Accessibili tramite `@ViewChild(JxTableComponent)`.
 ---
 
 ## Opzioni di configurazione (`JxCellOptions`)
+
+### Selezione celle con Shift+click
+
+Seleziona una cella, mantieni premuto `Shift` e fai click su una seconda cella
+per selezionare il range. Il comportamento è configurabile con l'enum numerico
+`JxCellSelectionMode`:
+
+```ts
+import { JxCellOptions, JxCellSelectionMode } from 'jx-cell';
+
+const options: JxCellOptions = {
+  // Default: range rettangolare, esteso su righe e colonne.
+  selectionMode: JxCellSelectionMode.Both,
+};
+```
+
+Valori disponibili:
+
+| Valore | Codice | Comportamento |
+| --- | --- | --- |
+| `Both` (`0`) | `JxCellSelectionMode.Both` | Seleziona il rettangolo tra cella iniziale e finale. Default. |
+| `Row` (`1`) | `JxCellSelectionMode.Row` | Estende la selezione solo sulla riga della cella iniziale. |
+| `Column` (`2`) | `JxCellSelectionMode.Column` | Estende la selezione solo sulla colonna della cella iniziale. |
+
+La stessa regola viene applicata alla selezione trascinata con il mouse. La
+proprietà `multiSelect` è separata e continua a controllare la selezione degli
+header di riga e colonna.
 
 ### Dati
 
@@ -305,9 +349,14 @@ const options: JxCellOptions = {
       // Abilita/disabilita il click sull'header per ordinare questa colonna.
       sortable: true,
 
-      // Comparatore personalizzato. Signature come Array.sort.
-      // rowA, rowB = array completo della riga; col = indice 0-based della colonna.
-      sortFn: (rowA, rowB, col) => String(rowA[col]).localeCompare(String(rowB[col])),
+      // Comparatore personalizzato. Signature come Array.sort, con la direzione
+      // corrente in più: rowA, rowB = riga completa; col = indice colonna 0-based;
+      // direction = 'asc' | 'desc'. Il valore ritornato viene usato COSÌ COM'È
+      // (nessuna inversione automatica) → applica tu il segno in base a `direction`.
+      sortFn: (rowA, rowB, col, direction) => {
+        const cmp = String(rowA[col]).localeCompare(String(rowB[col]));
+        return direction === 'asc' ? cmp : -cmp;
+      },
 
       // ── FILTRO ────────────────────────────────────────────────────────────
       // Se false, non mostra l'input filtro per questa colonna (richiede columnFilter: true).
@@ -342,6 +391,15 @@ const options: JxCellOptions = {
       // Sostituisce l'editor built-in con un componente Angular.
       // Usato solo con type: 'custom'.
       editor: { component: MiaCellaComponent },
+
+      // ── CLASSI CSS PERSONALIZZATE ──────────────────────────────────────────
+      // Classi CSS aggiunte all'header <td> di questa colonna.
+      // Accetta una stringa ('a b') o un array (['a','b']).
+      headerClassList: 'col-header-bold text-end',
+
+      // Classi CSS aggiunte a OGNI cella <td> del corpo di questa colonna.
+      // Si combinano con options.classes[x] e con le classi dinamiche di workbook.addClass().
+      cellClassList: ['num-cell', 'text-end'],
 
       // ── TIPO NATIVO DEL VALORE ─────────────────────────────────────────────
       // Per colonne 'custom': dichiara il tipo nativo del valore.
@@ -457,12 +515,72 @@ const options: JxCellOptions = {
   // Mostra la colonna degli indici riga (prima colonna con 1, 2, 3...).
   rowHeaders: true,
 
+  // Evidenzia la cella dell'header di colonna corrispondente alla selezione. Default: true.
+  highlightSelectedColumnHeader: true,
+
+  // Evidenzia la cella dell'header di riga corrispondente alla selezione. Default: true.
+  highlightSelectedRowHeader: true,
+
+  // ── Personalizzazione della colonna degli header di riga ──────────────────
+
+  // Larghezza della colonna degli indici di riga. Numero (px) o stringa numerica.
+  // Default: 50.
+  rowHeaderWidth: 40,
+
+  // Classe CSS extra applicata a tutte le celle della colonna degli header di riga.
+  rowHeaderClass: 'my-row-header',
+
+  // Stile inline applicato a TUTTE le celle della colonna degli header di riga
+  // (angolo "seleziona tutto", numeri di riga, footer e riga di filtro).
+  // Supporta chiavi "amichevoli" per i bordi che vengono tradotte nelle CSS
+  // variabili interne. Le proprietà sticky (position/left/top/z-index) e la
+  // larghezza restano gestite internamente e non sono sovrascrivibili.
+  rowHeaderStyle: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    // Bordo intero (tutti e 4 i lati):
+    borderColor: '#1e3a8a',
+    // …oppure i 4 lati separatamente (hanno precedenza su borderColor):
+    // borderTopColor: '#22c55e',
+    // borderRightColor: '#a855f7',
+    // borderBottomColor: '#3b82f6',
+    // borderLeftColor: '#f59e0b',
+  },
+
+  // Mostra/nasconde il numero di riga (1-based) mantenendo la colonna.
+  // Utile per lasciare la colonna vuota o usare solo rowHeaderContent. Default: true.
+  rowHeaderNumbers: true,
+
+  // Contenuto personalizzato al posto del numero di riga. Quando presente ha la
+  // precedenza su rowHeaderNumbers. Accetta:
+  //   - una stringa (testo, emoji o HTML semplice — sanificato da Angular),
+  //   - una funzione (rowIndex, row) => string per contenuto per-riga.
+  // Esempi:
+  //   rowHeaderContent: '★'
+  //   rowHeaderContent: '<i class="fa fa-bars"></i>'
+  //   rowHeaderContent: (i) => (i % 2 === 0 ? '●' : '○')
+  rowHeaderContent: undefined,
+
+  // Selezione multipla a range contiguo (Shift+click sugli header).
+  //   'rows'    -> Shift+click sugli header di riga seleziona un intervallo di righe
+  //   'columns' -> Shift+click sugli header di colonna seleziona un intervallo di colonne
+  //   'both'    -> entrambe
+  //   false     -> disabilitata (default)
+  // Le righe/colonne selezionate sono leggibili con getSelectedRows() / getSelectedColumns().
+  multiSelect: false,
+
   // Mostra il tfoot (righe footer).
   showFooter: true,
 
   // Altezza del contenitore scroll. Accetta qualsiasi valore CSS.
   // OBBLIGATORIO per sticky header/footer e freeze.
   tableHeight: '500px',
+
+  // Alternativa a tableHeight: indica quante righe dati devono essere visibili
+  // contemporaneamente. jx-table calcola automaticamente l'altezza come:
+  //   34px (header colonne) + visibleRowCount × defaultRowHeight
+  // Se tableHeight è impostato, ha la precedenza su visibleRowCount.
+  visibleRowCount: 10,
 
   // Larghezza del contenitore scroll. Se omessa usa la larghezza naturale.
   tableWidth: '100%',
@@ -472,6 +590,44 @@ const options: JxCellOptions = {
   tableOverflow: true,
 };
 ```
+
+### Virtualizzazione righe (Virtual Scroll)
+
+Per dataset con centinaia o migliaia di righe, `jx-table` supporta un motore di
+**row virtualization** nativo: mantiene nel DOM solo la finestra di righe visibili
+più un buffer di overscan, riducendo il rendering iniziale fino al **−96%**
+(esempio: 400 righe → da 626 ms a 25 ms).
+
+```typescript
+const options: JxCellOptions = {
+  // Attiva la virtualizzazione delle righe.
+  // Disabilitata automaticamente se sono presenti celle con rowspan > 1.
+  virtualScroll: true,
+
+  // OBBLIGATORIO con virtualScroll: definisce l'altezza del viewport.
+  // Puoi usare tableHeight (stringa CSS) oppure visibleRowCount (n. righe).
+  tableHeight: '480px',
+  // — oppure —
+  visibleRowCount: 15,    // 34 + 15 × defaultRowHeight px
+
+  // Numero di righe extra renderizzate oltre il viewport (sopra e sotto).
+  // Aumentare per ridurre il lampeggio durante scroll lento. Default: 8.
+  virtualScrollOverscan: 8,
+
+  // Limite massimo di righe extra aggiunte dall'overscan dinamico basato
+  // sulla velocità di scroll. Buffer anti-flash durante scroll veloce.
+  // Default: 40.
+  virtualScrollMaxVelocityOverscan: 40,
+
+  tableOverflow: true,    // OBBLIGATORIO
+};
+```
+
+> **Limitazioni**:
+> - Incompatibile con celle unite che occupano più righe (`mergeCells` con rowspan > 1):
+>   la virtualizzazione si disabilita automaticamente con un avviso in console.
+> - Le righe congelate (`freezeRows`) vengono sempre renderizzate indipendentemente
+>   dalla finestra virtuale.
 
 ### Header e footer fissi — colonne congelate
 
@@ -492,12 +648,19 @@ const options: JxCellOptions = {
   // Le celle congelate hanno uno sfondo opaco (--jx-header-bg).
   freezeColumns: 2,
 
+  // Congela le ultime N colonne al bordo DESTRO: il body scorre orizzontalmente
+  // tra le colonne ferme a sinistra e quelle ferme a destra.
+  freezeColumnsRight: 1,
+
   // Congela le prime N righe del tbody durante lo scroll verticale.
   freezeRows: 1,
 
   // Lista precisa di indici colonna (0-based) da congelare.
   // Alternativa più flessibile a freezeColumns: permette colonne non contigue.
   frozenColumnIndexes: [0, 1, 2],
+
+  // Come frozenColumnIndexes ma per il bordo destro.
+  frozenColumnIndexesRight: [8, 9],
 
   // Mostra una riga di input filtro sotto ogni header colonna.
   columnFilter: false,
@@ -508,6 +671,19 @@ const options: JxCellOptions = {
 > `--jx-header-bg` e `--jx-footer-bg` **devono essere colori completamente opachi**.
 > Valori semi-trasparenti (`rgba(...)`) rendono visibili le righe in scorrimento
 > dietro le celle sticky/congelate.
+>
+> Per lo stesso motivo, **l'evidenziazione della selezione** sulle celle congelate
+> non può usare lo sfondo semi-trasparente `--jx-selection-range-bg`: la libreria
+> applica automaticamente il token opaco **`--jx-frozen-selection-bg`** (default
+> `#bed0f9`) a `td.jx-frozen-col.highlight-selected` e `td.jx-frozen-row.highlight-selected`.
+> Personalizza il colore di evidenziazione delle righe/colonne congelate impostando
+> il token, senza bisogno di override `::ng-deep`:
+>
+> ```css
+> .jexcel_container {
+>   --jx-frozen-selection-bg: #cfe0ff; /* tinta opaca a piacere */
+> }
+> ```
 
 ### Ordinamento
 
@@ -520,13 +696,31 @@ const options: JxCellOptions = {
     // Disabilita l'ordinamento su questa colonna.
     { title: 'ID', name: 'id', sortable: false },
 
-    // Comparatore personalizzato. Parametri:
+    // Comparatore personalizzato per un tipo che il confronto di default non
+    // gestisce bene (es. date). Parametri:
     // rowA / rowB = array completo della riga da confrontare
     // col         = indice 0-based della colonna corrente
+    // direction   = 'asc' | 'desc' — la funzione possiede l'INTERA logica di
+    //               ordinamento: il valore ritornato è usato così com'è, senza
+    //               alcuna inversione automatica in base a `direction`.
     {
       title: 'Data', name: 'data', type: 'calendar',
-      sortFn: (rowA, rowB, col) =>
-        new Date(rowA[col]).getTime() - new Date(rowB[col]).getTime(),
+      sortFn: (rowA, rowB, col, direction) => {
+        const cmp = new Date(rowA[col]).getTime() - new Date(rowB[col]).getTime();
+        return direction === 'asc' ? cmp : -cmp;
+      },
+    },
+
+    // Ordinamento custom "vero": un ordine di business che non è né alfabetico
+    // né numerico (es. livelli di priorità testuali).
+    {
+      title: 'Priorità', name: 'priority', type: 'text', sortable: true,
+      sortFn: (rowA, rowB, col, direction) => {
+        const order = ['—', 'Bassa', 'Media', 'Alta', 'Critica'];
+        const rank = (v: any) => { const i = order.indexOf(v); return i === -1 ? order.length : i; };
+        const cmp = rank(rowA[col]) - rank(rowB[col]);
+        return direction === 'asc' ? cmp : -cmp;
+      },
     },
   ],
 };
@@ -544,6 +738,11 @@ const s = workbook.getSortState();
 
 ### Ricerca e filtri
 
+> La ricerca globale e i filtri di colonna operano sul **testo visualizzato**
+> della cella (case-insensitive): le etichette di `dropdown`/`select`/
+> `autocomplete` e i valori formattati dalle maschere vengono risolti, così il
+> termine cercato corrisponde a ciò che l'utente vede effettivamente in griglia.
+
 ```typescript
 const options: JxCellOptions = {
   // Mostra una casella di ricerca globale.
@@ -559,6 +758,21 @@ const options: JxCellOptions = {
 
   // Mostra una riga di input filtro per colonna sotto l'header.
   columnFilter: true,
+
+  // Per-colonna: scegli SU QUALI colonne mostrare l'input filtro.
+  // Imposta `filterable: false` sulla definizione di colonna per escluderla
+  // (richiede `columnFilter: true`). Le colonne senza il flag restano filtrabili.
+  columns: [
+    { title: 'Nome',  name: 'name'  /* filtrabile (default) */ },
+    { title: 'Avatar', name: 'img', filterable: false },  // niente input filtro
+    { title: 'Ruolo', name: 'role', filterable: true  },
+  ],
+
+  // Blocca le righe filtrate: le righe escluse dai filtri attivi (nascoste in
+  // modalità 'hide' o attenuate in 'dim', sia da ricerca che da filtri colonna)
+  // diventano NON editabili per l'intera riga finché i filtri restano attivi.
+  // Quando i filtri vengono rimossi le righe tornano editabili. Default: false.
+  lockFilteredRows: true,
 };
 
 // ── Ricerca globale ────────────────────────────────────────────────────────
@@ -664,6 +878,12 @@ const options: JxCellOptions = {
 
 **Normalizzazione automatica**: la libreria aggiunge celle vuote per coprire le colonne rimanenti.
 
+**Colonne senza gruppo (rowspan automatico)**: una colonna non coperta da alcun gruppo
+(cella vuota con `colspan: 1` in tutte le righe `nestedHeaders`) rende la sua intestazione
+principale su un'unica cella che occupa in verticale tutta l'altezza dell'header
+(rowspan). Così non resta una cella nested vuota che scorre autonomamente sopra la
+colonna, e l'intestazione mantiene ordinamento/resize/filtro.
+
 **Formule nei titoli**:
 
 ```typescript
@@ -732,6 +952,32 @@ const options: JxCellOptions = {
   ],
 };
 ```
+
+**Footer sulle sole righe visibili (`footerOnVisibleRows`)**
+
+Per impostazione predefinita i footer aggregano l'**intero dataset**: ricerca,
+filtri di colonna e `hideRow()` nascondono le righe a video ma non influenzano i
+totali. Attivando `footerOnVisibleRows: true` i footer vengono invece
+ricalcolati considerando **solo le righe visibili** — un comportamento analogo a
+`SUBTOTAL` di Excel.
+
+```typescript
+const options: JxCellOptions = {
+  footerOnVisibleRows: true,   // i totali riflettono solo le righe visibili
+  footers: [
+    ['Totale', '=SUM(B:B)', '=AVERAGE(C:C)'],  // usa riferimenti a colonna intera
+  ],
+};
+
+// Il footer si aggiorna automaticamente quando cambiano:
+workbook.search('alice');          // ricerca full-text
+workbook.setColumnFilter(3, 'HR'); // filtro di colonna
+workbook.hideRow(2);               // nascondere righe via API
+```
+
+> **Nota:** usa riferimenti a colonna intera (`=SUM(C:C)`) o funzioni aggregate
+> nei footer. I riferimenti a range con indice assoluto (`=SUM(C1:C10)`) si
+> riferirebbero alle prime righe *visibili* della matrice filtrata.
 
 **Gestione programmatica:**
 
@@ -980,10 +1226,10 @@ Riferimento rapido di tutte le proprietà:
 | `hidden` | `boolean` | `false` | Nasconde la colonna dal DOM. |
 | `defaultFormula` | `string` | — | Template formula auto-inserita quando una riga è aggiunta via API (`insertRow()` senza dati). Usa `{row}` come segnaposto per il numero riga 1-based. Es. `'=B{row}*C{row}'` → `'=B5*C5'` per la riga 5. |
 | `sortable` | `boolean` | `true` | Abilita ordinamento tramite click header. |
-| `sortFn` | `function` | — | Comparatore `(rowA, rowB, col) => number`. |
+| `sortFn` | `function` | — | Comparatore custom `(rowA, rowB, col, direction) => number`. Possiede l'intera logica di ordinamento: il risultato è usato senza inversione automatica, quindi va gestito manualmente in base a `direction` (`'asc' \| 'desc'`). |
 | `filterable` | `boolean` | `true` | Mostra input filtro colonna. |
-| `source` | `any[]` | — | Opzioni per `dropdown` / `autocomplete`. |
-| `autocompleteSource` | `JxAutocompleteSource` | — | Sorgente dinamica per `autocomplete`. |
+| `source` | `any[]` | — | Opzioni per `dropdown` / `autocomplete`. Può essere `string[]` oppure `JxSourceItem[]` (`{ id, description?, extras? }`). |
+| `autocompleteSource` | `JxAutocompleteSource` | — | Sorgente dinamica per `autocomplete`. Ogni item può essere `string` o `JxSourceItem`. |
 | `filterFn` | `function` | — | Filtro opzioni `({ row }) => any[]`. |
 | `decimal` | `string` | `'.'` | Separatore decimale per numerici. |
 | `mask` | `string` | — | Maschera input (es. `'###,###.##'`). |
@@ -1011,23 +1257,93 @@ Riferimento rapido di tutte le proprietà:
 | `hidden` | Colonna nascosta (equivalente a `hidden: true`). |
 | `custom` | Componente Angular via `editor.component`. |
 
+> **Commit alla chiusura del popup.** Gli editor nativi a popup (`calendar`, `date`,
+> `color`) applicano il valore alla cella e lanciano `onchange` / `change$` **solo
+> alla conferma/chiusura** del controllo (evento nativo `change`), non durante la
+> navigazione interna. Cambiare mese nel calendario o muoversi nel color picker non
+> genera quindi eventi intermedi: la cella riceve un solo aggiornamento col valore
+> finale. Il `dropdown` (`<select>`) committa alla selezione, il `checkbox` al toggle.
+
+
+### Formato item: `JxSourceItem`
+
+Sia `source` (dropdown) che `autocompleteSource` (autocomplete) supportano un formato unificato:
+
+```typescript
+interface JxSourceItem {
+  id:           any;     // ← valore salvato nella cella
+  description?: string;  // ← testo mostrato in cella e nel pannello (priority over name)
+  name?:        string;  // ← fallback display se description è assente
+  extras?:      any;     // ← metadati liberi, restituiti in onchange / change$
+  [key: string]: any;    // ← eventuali campi aggiuntivi (_parent, icon, …)
+}
+```
+
+**Regole di risoluzione:**
+- Il **valore salvato** nella cella è sempre `id`.
+- La **label visibile** è `description ?? name ?? label ?? id`.
+- `extras` viene propagato negli eventi `change$` / `beforeChange$` / `editionEnd$` come campo aggiuntivo.
+
+```typescript
+// Esempio dropdown con JxSourceItem
+{
+  title: 'Stato', name: 'status', type: 'dropdown',
+  source: [
+    { id: 'new',  description: 'Nuovo',    extras: { color: '#3498db', step: 1 } },
+    { id: 'wip',  description: 'In corso', extras: { color: '#f39c12', step: 2 } },
+    { id: 'done', description: 'Fatto',    extras: { color: '#2ecc71', step: 3 } },
+  ],
+}
+
+// Nell'evento onchange:
+workbook.events.change$.subscribe(e => {
+  console.log(e.value);       // 'new'  ← id salvato
+  console.log(e.description); // 'Nuovo' ← label visibile
+  console.log(e.extras);      // { color: '#3498db', step: 1 }
+});
+```
+
 ### Colonna autocomplete
+
+La colonna `autocomplete` si comporta come un **combo a ricerca libera** (select2 / Material Autocomplete):
+
+- **Click singolo** sulla cella apre immediatamente il pannello overlay (senza doppio click).
+- All'apertura viene mostrato un **campo filtro vuoto** in cima: tutte le opzioni sono visibili anche se la cella ha già un valore.
+- Digitando nel campo filtro la lista viene ristretta in tempo reale.
+- **Riaprendo** il pannello il filtro si azzera sempre e tutte le opzioni tornano visibili.
+- Il pannello usa `position: fixed` con coordinate viewport-relative: rimane **ancorato alla cella** indipendentemente da scroll interni, contenitori con `overflow`, o transform/iframe.
+- Se sotto la cella non c'è spazio sufficiente, il pannello si **apre verso l'alto** automaticamente (flip-up). Non sfora mai a destra dello schermo (clamp orizzontale).
+- Navigazione tastiera: `↑`/`↓` muovono l'evidenziazione, `Enter` seleziona, `Escape` annulla, `Tab` conferma e passa alla cella successiva.
 
 ```typescript
 columns: [
-  // ── Sorgente statica ───────────────────────────────────────────────────
+  // ── Sorgente statica (array di stringhe) ──────────────────────────────
   {
     title: 'Paese', name: 'paese', type: 'autocomplete',
     autocompleteSource: ['Italia', 'Francia', 'Germania'],
   },
 
+  // ── Sorgente statica (JxSourceItem) ───────────────────────────────────
+  // id = valore salvato; description = label mostrata; extras = metadati liberi.
+  {
+    title: 'Categoria', name: 'cat', type: 'autocomplete',
+    autocompleteSource: [
+      { id: 'food',        description: 'Alimentari',    extras: { icon: '🍎' } },
+      { id: 'electronics', description: 'Elettronica',   extras: { icon: '💻' } },
+      { id: 'home',        description: 'Casa & Giardino', extras: { icon: '🏠' } },
+    ],
+  },
+
   // ── Sorgente asincrona (Promise) ───────────────────────────────────────
-  // query = testo digitato. Restituire string[] o { id, name }[].
+  // `query` è la stringa digitata dall'utente (vuota all'apertura).
+  // Restituire string[] o JxSourceItem[].
+  // Quando query è vuota la libreria chiama la funzione con '' per
+  // pre-caricare tutte le opzioni all'apertura del pannello.
   {
     title: 'Città', name: 'citta', type: 'autocomplete',
     autocompleteSource: async (query) => {
       const res = await fetch(`/api/citta?q=${encodeURIComponent(query)}`);
-      return res.json();
+      return res.json(); // ritorna JxSourceItem[]
     },
   },
 
@@ -1039,6 +1355,38 @@ columns: [
   },
 ]
 ```
+
+#### Aggiornamento a runtime della sorgente
+
+Usa `workbook.setConfig({ columns: colsAggiornate })` per sostituire `autocompleteSource` senza reinizializzare la griglia:
+
+```typescript
+const cols = [...this.wb.options.columns];
+cols[9] = { ...cols[9], autocompleteSource: nuoviItems };
+this.wb.setConfig({ columns: cols });
+```
+
+#### Invalidare la cache delle label (`invalidateAutocompleteCache`)
+
+Le colonne `autocomplete` con `autocompleteSource` **funzione** risolvono la label
+mostrata tramite una cache popolata **una sola volta per colonna** al primo
+rendering. Se in seguito cambi i dati/combo sottostanti (es. `setConfig` dopo un
+cambio periodo), gli id non ancora presenti in cache mostrerebbero il valore
+grezzo (es. un GUID) finché la cache non si ripopola. Chiama
+`wb.invalidateAutocompleteCache()` subito dopo il `setConfig` per forzare la
+ri-risoluzione:
+
+```typescript
+// dopo aver ricaricato dati/combo (es. cambio periodo):
+wb.setConfig({ ...opts, columns, data });
+wb.invalidateAutocompleteCache();            // tutte le colonne
+// oppure mirato a una sola colonna (per indice o per name/field):
+wb.invalidateAutocompleteCache('projectId');
+wb.invalidateAutocompleteCache(9);
+```
+
+Non ha effetto sulle colonne con `render` (hanno sempre priorità) né sulle
+sorgenti statiche (array), che si risolvono già sincronamente ad ogni render.
 
 ### Dropdown a cascata (filterFn)
 
@@ -1059,6 +1407,29 @@ columns: [
     // filterFn è chiamato ogni volta che l'utente apre il dropdown.
     // ctx.row = array completo della riga corrente (valori processati).
     filterFn: ({ row }) => MODELLI[row[0] as string] ?? [],
+  },
+]
+
+// ── Con JxSourceItem (id + description + extras) ─────────────────────────
+// I `source` items possono avere un campo _parent o qualsiasi proprietà
+// aggiuntiva che filterFn può usare per filtrare le opzioni.
+const SUB_STATUS = [
+  { id: 'bozza',  description: 'Bozza',   _parent: 'new', extras: { icon: '📝' } },
+  { id: 'inviato',description: 'Inviato', _parent: 'new', extras: { icon: '📤' } },
+  { id: 'in_rev', description: 'In revisione', _parent: 'wip', extras: { icon: '🔍' } },
+];
+columns: [
+  {
+    title: 'Status', name: 'status', type: 'dropdown',
+    source: [
+      { id: 'new', description: 'Nuovo',    extras: { color: '#3498db' } },
+      { id: 'wip', description: 'In corso', extras: { color: '#f39c12' } },
+    ],
+  },
+  {
+    title: 'Sub-status', name: 'subStatus', type: 'dropdown',
+    source: SUB_STATUS,
+    filterFn: ({ row }) => SUB_STATUS.filter(i => i._parent === row[0]),
   },
 ]
 ```
@@ -1227,6 +1598,25 @@ workbook.setColumnStyle(col: number, style: JxCellStyle): void
 workbook.setHeaderColumnStyle(col: number, style: JxCellStyle): void
 workbook.clearHeaderColumnStyle(col: number): void
 
+// ── Cella header di RIGA (numero di riga) — per singola cella ───────────────
+// Sovrascrive lo stile globale `rowHeaderStyle` per la riga indicata (0-based).
+// Supporta le chiavi "amichevoli" dei bordi (borderColor / border{Top,Right,
+// Bottom,Left}Color); una cella con bordo intero ha precedenza su un bordo
+// per-lato impostato a livello globale.
+workbook.setRowHeaderStyle(row: number, style: JxCellStyle): void
+workbook.getRowHeaderStyle(row: number): JxCellStyle | null
+workbook.clearRowHeaderStyle(row: number): void
+
+// Handle "vivo" alla cella header di riga: un unico oggetto per leggere e
+// modificare la configurazione della cella e raggiungere il suo elemento DOM.
+const cell = workbook.getRowHeaderCell(2);     // JxRowHeaderCellRef
+cell.getStyle();                                // stile per-cella corrente (o null)
+cell.setStyle({ borderColor: '#e11d48' })       // concatenabile
+    .setStyle({ fontWeight: 'bold' });
+cell.clearStyle();                              // rimuove l'override → default
+cell.getElement();                              // il <td> renderizzato (o null)
+cell.row;                                       // indice riga (0-based)
+
 // Cella footer [fx=item, fy=riga] (entrambi 0-based).
 workbook.setFooterCellStyle(fx: number, fy: number, style: JxCellStyle): void
 workbook.setFooterRowStyle(fy: number, style: JxCellStyle): void
@@ -1285,6 +1675,19 @@ workbook.getComments(cell?: string): string | Record<string, string>
 // Cancella commento (senza arg → tutti).
 workbook.clearComments(cell?: string): void
 
+// Imposta un commento E apre il popup automaticamente, chiudendolo dopo `duration` ms.
+// duration = 0 (o negativo) → resta aperto finché non lo si chiude. Default: 3000.
+// Comment vuoto/null → rimuove il commento e chiude il popup.
+// Il popup si posiziona da solo per restare sempre visibile (sotto la cella se c'è
+// spazio, altrimenti sopra; clamp orizzontale dentro il viewport).
+workbook.setCommentsTemporized(cell: string, comment: string | null, duration?: number): void
+
+// Apre il popup di un commento GIÀ esistente (non fa nulla se la cella non ha commento).
+workbook.showCommentPopup(cell: string, duration?: number): void
+
+// Chiude un eventuale popup commento aperto.
+workbook.hideCommentPopup(): void
+
 // ── METADATI ──────────────────────────────────────────────────────────────
 
 // Imposta metadati su una cella (non visibili).
@@ -1313,7 +1716,8 @@ workbook.getIdFromColumnName(name: string): number
 // Indice colonna cercando per name/field. -1 se non trovata.
 workbook.getColumnByKey(key: string): number
 
-// Label display di un valore dropdown (es. traduce l'id nel nome).
+// Label display di un valore dropdown/autocomplete (es. traduce l'id nella description/name).
+// Per JxSourceItem restituisce description ?? name ?? id.
 workbook.getDropDownValue(col: number, key: any): string
 
 // Elemento DOM della cella.
@@ -1390,8 +1794,20 @@ workbook.sort(col: number, direction: 'asc' | 'desc' | null): void
 workbook.clearSort(): void
 workbook.orderBy(col: number, asc: boolean): void   // alias
 workbook.getSortState(): JxSortState | null         // { columnIndex, direction } | null
+```
 
+> **Celle custom e `sort()`.** Quando l'ordinamento (o il ripristino con `direction:
+> null`) riposiziona le righe, le celle con componenti Angular custom vengono
+> **distrutte e ricreate** nella nuova posizione: viene invocato `ngOnDestroy` sul
+> componente precedente e `ngOnInit` (più eventuali hook di attach) su quello nuovo,
+> con il contesto/inputs della riga che ora occupa quella posizione. Questo evita
+> stato "stale" (es. id di riga, sottoscrizioni) sui componenti riordinati. Il
+> componente custom resta responsabile della pulizia delle proprie subscription in
+> `ngOnDestroy`.
+
+```typescript
 workbook.search(query: string): void
+
 workbook.resetSearch(): void
 workbook.getSearchQuery(): string
 
@@ -1522,6 +1938,13 @@ workbook.getConfig(): JxCellOptions
 workbook.config$.subscribe(() => { /* config aggiornata */ });
 workbook.loading$.subscribe(isLoading => { /* spinner */ });
 workbook.locked$.subscribe(locked => { /* UI bloccata */ });
+
+// Invalida la cache delle label `autocomplete` (source funzione/async),
+// forzando la ri-risoluzione al prossimo render. Utile dopo un setConfig()
+// che cambia dati/combo. Senza argomenti invalida tutte le colonne; con
+// indice numerico o name/field invalida solo quella. Vedi la sezione
+// "Colonna autocomplete" → "Invalidare la cache delle label".
+workbook.invalidateAutocompleteCache(col?: number | string): void
 ```
 
 ### Operazioni remote e CSV
@@ -1569,7 +1992,7 @@ Tutti i `before*` stream emettono un `JxCancellableEvent`:
 // ── Before-events (cancellabili) ─────────────────────────────────────────
 
 workbook.events.beforeChange$.subscribe(e => {
-  // e.data: { x, y, cellName, value, oldValue, columnDef, rowData }
+  // e.data: { x, y, cellName, value, oldValue, columnDef, rowData, description?, extras? }
   if (e.data.value === '') e.cancel();
 });
 
@@ -1605,7 +2028,10 @@ workbook.events.beforeEditionEnd$.subscribe(e => {
 // ── After-events ─────────────────────────────────────────────────────────
 
 workbook.events.change$.subscribe(e => {
-  // { x, y, cellName, value, oldValue, columnDef, rowData }
+  // { x, y, cellName, value, oldValue, columnDef, rowData, description?, extras? }
+  // description = label visibile (per colonne dropdown/autocomplete con JxSourceItem)
+  // extras      = campo extras dell'item selezionato (se presente)
+  console.log(e.value, e.description, e.extras);
 });
 workbook.events.afterChanges$.subscribe(e => {
   // { changes: [{ x, y, name, oldValue, newValue }] }
@@ -1687,7 +2113,162 @@ workbook.events.copy$.subscribe(e => { /* { data: any[][], cut: boolean } */ });
 | `changeMeta$` | `{ cell, meta }` | — |
 | `changeStyle$` | `{ cells: string[] }` | — |
 | `copy$` | `{ data: any[][], cut: boolean }` | — |
+| `tableActivate$` | `void` | — |
+| `tableDeactivate$` | `void` | — |
 | `selectStart$` | `{ x1, y1, x2, y2 }` | — |
+
+---
+
+### Sistema multi-tabella: `JxTableRegistry` e lifecycle activate/deactivate
+
+Quando una pagina contiene **più istanze** di `jx-table` (es. timesheet + annotation + spese), il
+`JxTableRegistry` garantisce che **solo una tabella alla volta sia "attiva"** visivamente e per
+l'instradamento degli eventi da tastiera.
+
+#### Come funziona
+
+Ogni `jx-table`, al momento della creazione (`ngAfterViewInit`), si registra nel registry globale:
+
+```typescript
+JxTableRegistry.register(workbook);
+```
+
+Quando l'utente fa clic su una qualsiasi cella (sia normale che in un componente inline), viene
+chiamato:
+
+```typescript
+JxTableRegistry.activate(workbook);   // workbook = istanza del workbook cliccato
+```
+
+Questo metodo:
+1. Se la tabella cliccata è **diversa** da quella attualmente attiva:
+   - emette `workbook.events.tableDeactivate$.next()` sulla tabella **precedente**
+   - chiama `previousWorkbook.resetSelection()` → rimuove l'evidenziazione visiva delle celle
+   - imposta la tabella cliccata come nuova tabella attiva
+2. Emette `workbook.events.tableActivate$.next()` sulla tabella **corrente** (già emesso da
+   `startMouseSelection` prima di `JxTableRegistry.activate`)
+3. Alla distruzione (`ngOnDestroy`), `JxTableRegistry.deregister(workbook)` rimuove il workbook.
+
+#### Stream `tableActivate$` e `tableDeactivate$`
+
+```typescript
+// Accesso diretto (utile se non usi JxCustomCellBase)
+workbook.events.tableActivate$.subscribe(() => {
+  console.log('Questa tabella è diventata attiva');
+  // → aggiorna stato, registra listener keyboard, ecc.
+});
+
+workbook.events.tableDeactivate$.subscribe(() => {
+  console.log('Questa tabella è stata disattivata');
+  // → rimuovi listener keyboard, azzera API attiva, ecc.
+});
+```
+
+> **Nota:** `tableActivate$` viene emesso sia da `startMouseSelection` (click su cella normale)
+> sia da `onInlineComponentMouseDown` (click su cella con componente custom inline). In entrambi i
+> casi `JxTableRegistry.activate()` viene chiamato, garantendo la corretta deattivazione delle
+> altre tabelle.
+
+---
+
+### Lifecycle hook nelle celle custom: `jxOnTableActivate` e `jxOnTableDeactivate`
+
+`JxCustomCellBase` espone due lifecycle hook che vengono collegati automaticamente da
+`wireLifecycle()` **senza bisogno di codice aggiuntivo** nei componenti figli:
+
+| Hook | Quando viene chiamato | Default |
+|---|---|---|
+| `jxOnTableActivate()` | La tabella diventa attiva (l'utente ha cliccato una cella) | no-op |
+| `jxOnTableDeactivate()` | La tabella viene disattivata (clic su un'altra `jx-table`) | no-op |
+
+Chiama `this.wireLifecycle()` in `ngOnInit` per attivarli:
+
+```typescript
+@Component({ ... })
+export class MiaCellaComponent extends JxCustomCellBase<MyRow> {
+  @Input() override context!: JxCustomCellContext<MyRow>;
+
+  private myService = inject(MyService);
+
+  ngOnInit(): void {
+    this.wireLifecycle();   // ← collega TUTTI i jxOn* hook, inclusi activate/deactivate
+  }
+}
+```
+
+#### Override per comportamento custom
+
+Poiché `JxCustomCellBase` fornisce implementazioni **no-op** di default, è sufficiente fare
+`override` nel componente per aggiungere logica specifica:
+
+```typescript
+@Component({ ... })
+export class NumberStepCellComponent extends JxCustomCellBase<TimeSheetRow> {
+  @Input() override context!: JxCustomCellContext<TimeSheetRow>;
+
+  private indexService = inject(IndexService);
+
+  ngOnInit(): void {
+    this.wireLifecycle();
+  }
+
+  /**
+   * La tabella è diventata attiva → registra il workbook come tabella attiva
+   * per l'instradamento da tastiera (instrada i tasti SOLO a questa griglia).
+   */
+  override jxOnTableActivate(): void {
+    this.indexService.setActiveApi(this.context?.api);
+  }
+
+  /**
+   * La tabella è stata disattivata perché l'utente ha cliccato su un'altra
+   * jx-table → rimuovi il workbook dall'instradamento da tastiera.
+   * JxTableRegistry ha già resettato la selezione visiva.
+   */
+  override jxOnTableDeactivate(): void {
+    this.indexService.setActiveApi(null);
+  }
+}
+```
+
+> **Ereditarietà:** se una sottoclasse NON dichiara un hook, il no-op della classe base viene
+> usato — nessun effetto indesiderato. Se lo dichiara con `override`, sostituisce il comportamento.
+> La keyword `override` è consigliata per chiarezza ma non obbligatoria.
+
+#### Diagramma del flusso
+
+```
+Utente clicca cella in tabella A                Utente clicca cella in tabella B
+─────────────────────────────────────           ─────────────────────────────────
+1. tableActivate$.next()         (workbook A)   1. tableActivate$.next()         (workbook B)
+2. JxTableRegistry.activate(A)                 2. JxTableRegistry.activate(B)
+   └─ _active era null → nessuna deattivazione     ├─ tableDeactivate$.next()    (workbook A)
+   └─ _active = A                                  │  └─ jxOnTableDeactivate() su tutte le
+3. jxOnTableActivate() su tutte le                 │     celle custom di A → setActiveApi(null)
+   celle custom di A → setActiveApi(A)             ├─ A.resetSelection() → rimuove highlight
+                                                   └─ _active = B
+                                               3. jxOnTableActivate() su tutte le
+                                                  celle custom di B → setActiveApi(B)
+```
+
+#### API di `JxTableRegistry` (uso avanzato)
+
+```typescript
+import { JxTableRegistry } from 'jx-cell';
+
+// Registra manualmente un workbook (fatto automaticamente da jx-table)
+JxTableRegistry.register(workbook);
+
+// Attiva un workbook (deattiva il precedente)
+JxTableRegistry.activate(workbook);
+
+// Rimuovi al destroy (fatto automaticamente da jx-table)
+JxTableRegistry.deregister(workbook);
+```
+
+> In scenari standard non è necessario usare `JxTableRegistry` direttamente: `jx-table` lo
+> gestisce in autonomia. Usalo solo se stai costruendo una tabella custom che non usa
+> `JxTableComponent`.
 
 ### BehaviorSubject interni
 
@@ -1704,6 +2285,7 @@ workbook.events.copy$.subscribe(e => { /* { data: any[][], cut: boolean } */ });
 | `visibility$` | `BehaviorSubject<void>` | Emette quando la visibilità di righe/colonne cambia. |
 | `readonly$` | `BehaviorSubject<void>` | Emette quando le impostazioni sola-lettura cambiano. |
 | `comments$` | `BehaviorSubject<void>` | Emette quando i commenti cambiano. |
+| `commentPopup$` | `Subject<{ x, y, duration } \| null>` | Richiesta di apertura/chiusura programmatica del popup commento. |
 | `cellClasses$` | `BehaviorSubject<void>` | Emette quando le classi CSS delle celle cambiano. |
 | `locked$` | `BehaviorSubject<boolean>` | Stato blocco globale. |
 | `config$` | `BehaviorSubject<void>` | Emette dopo setConfig(). |
@@ -1903,6 +2485,7 @@ export class AppModule {}
 | `startEdit()` | `() => void` | Apre l'editor inline built-in. |
 | `recalculate()` | `() => void` | Forza ricalcolo formule. |
 | `focusCell()` | `() => void` | Mette il focus sulla cella. |
+| `getRowHeaderCell(row?)` | `(row?: number) => JxRowHeaderCellRef` | Handle alla cella header di riga per leggerne/modificarne la configurazione (stile per-cella, elemento DOM). Senza argomento usa la riga della cella corrente. |
 
 ---
 
@@ -2513,6 +3096,27 @@ contextMenu: {
 `jx-table` usa un sistema di temi a **tre livelli** identico a quello di `jx-grid`:
 compile-time SCSS, runtime globale e runtime per istanza.
 
+### Isolamento CSS e multi-istanza
+
+Tutti i selettori del tema sono scopati sotto l'elemento host `jx-table`:
+
+```css
+/* CSS generato dalla libreria */
+jx-table .jexcel_container { ... }
+jx-table .jexcel tbody td  { ... }
+jx-table .jexcel_toolbar   { ... }
+```
+
+Questo garantisce:
+- **Zero conflitti** con la libreria jExcel originale (stesse classi `jexcel_*`)
+- **Isolamento completo** tra più istanze `<jx-table>` sulla stessa pagina
+- Ogni istanza può avere il proprio tema via CSS custom properties (vedi §Runtime per istanza)
+
+Eccezioni globali (appese a `body` a runtime): `.jdropdown-container`, `.jcontextmenu`,
+`.jx-toolbar-combo-menu` (overlay context menu / autocomplete / combo toolbar).
+
+---
+
 ### 1 — Compile-time: variabili SCSS (massima priorità)
 
 Sovrascrivere le `$jx-*` **prima** del `@use` modifica i valori compilati nel CSS finale.
@@ -2716,6 +3320,9 @@ oppure direttamente su `jx-table`:
 |---|---|---|---|
 | `--jx-selection` | `$jx-selection` | `rgba(37,99,235,.07)` | Sfondo range selezionato |
 | `--jx-selection-border` | `$jx-selection-border` | `#2563eb` | Contorno cella attiva |
+| `--jx-selection-border-width` | `$jx-selection-border-width` | `2px` | Spessore del bordo perimetrale della selezione |
+| `--jx-selection-range-bg` | `$jx-selection-range-bg` | `rgba(37,99,235,.3)` | Sfondo (tint) del range selezionato — copre anche il contenuto interno delle celle |
+| `--jx-frozen-selection-bg` | `$jx-frozen-selection-bg` | `#bed0f9` | **⚠️ Opaco** — sfondo del range selezionato sulle celle **congelate/sticky** (`frozenColumnIndexes`, freeze righe). Deve restare opaco, altrimenti le colonne/righe non congelate che scorrono sotto traspaiono attraverso la cella sticky |
 | `--jx-row-hover` | `$jx-row-hover` | `rgba(37,99,235,.04)` | Sfondo riga hover |
 
 #### Overlay: context menu
@@ -2780,6 +3387,108 @@ oppure direttamente su `jx-table`:
 | `--jx-row-height` | `$jx-row-height` | `32px` | Altezza riga dati |
 | `--jx-toolbar-height` | `$jx-toolbar-height` | `36px` | Altezza toolbar |
 | `--jx-transition` | `$jx-transition` | `0.12s ease` | Durata transizioni CSS |
+
+---
+
+## Icone personalizzate
+
+Tutte le icone di sistema usate da `jx-table` (ordinamento, menu contestuale, paginazione, freccia combo della toolbar, chiusura del popup commento, placeholder del filtro colonna) sono personalizzabili tramite l'`InjectionToken` **`JX_ICONS`**.
+
+La mappa di override è strutturata in due livelli — **nome componente → chiave icona → valore** — così si capisce a colpo d'occhio a quale componente appartiene ogni icona. Ogni chiave che **non** fornisci usa automaticamente l'icona di sistema di default (`JX_DEFAULT_ICONS`).
+
+Un valore icona può essere un semplice glifo (`'▲'`), un'entità HTML (`'&#x2398;'`), markup HTML (`'<i class="fa fa-copy"></i>'`) o un SVG inline (`'<svg>…</svg>'`): viene reso tramite `[innerHTML]`.
+
+> ⚠️ **Sicurezza** — I valori passano per `bypassSecurityTrustHtml`, necessario per consentire SVG/HTML. Devono quindi provenire dallo sviluppatore (configurazione fidata), **mai** da input utente.
+
+### Configurazione
+
+```typescript
+// app.module.ts
+import { NgModule } from '@angular/core';
+import { JxCellModule, JX_ICONS, JxIconOverrides } from 'jx-cell';
+
+const MY_ICONS: JxIconOverrides = {
+  'jx-table': {
+    // Ordinamento (intestazioni di colonna)
+    sortAsc:  '<svg viewBox="0 0 24 24" width="12" height="12"><path d="M7 14l5-5 5 5z" fill="currentColor"/></svg>',
+    sortDesc: '<svg viewBox="0 0 24 24" width="12" height="12"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg>',
+    sortNone: '<i class="fa fa-sort"></i>',
+
+    // Filtro colonna (solo testo: il placeholder non rende HTML/SVG)
+    filterPlaceholder: 'Cerca…',
+
+    // Menu contestuale
+    contextCopy:  '<i class="fa fa-copy"></i>',
+    contextPaste: '<i class="fa fa-paste"></i>',
+
+    // Paginazione
+    pageFirst:    '«',
+    pagePrevious: '‹',
+    pageNext:     '›',
+    pageLast:     '»',
+
+    // Le chiavi non elencate mantengono il default di sistema
+  },
+};
+
+@NgModule({
+  imports: [JxCellModule],
+  providers: [
+    { provide: JX_ICONS, useValue: MY_ICONS },
+  ],
+})
+export class AppModule {}
+```
+
+### Chiavi disponibili per `jx-table`
+
+| Chiave | Default | Dove appare |
+|---|---|---|
+| `sortAsc` | `▲` | Indicatore ordinamento crescente (header) |
+| `sortDesc` | `▼` | Indicatore ordinamento decrescente (header) |
+| `sortNone` | `⇅` | Colonna ordinabile non ordinata (header) |
+| `comboArrow` | `▼` | Freccia dropdown dei combo della toolbar |
+| `filterPlaceholder` | `🔍` | Placeholder dell'input filtro colonna *(solo testo)* |
+| `filterIndicator` | _(funnel SVG)_ | Icona filtro sull'header di colonna (colonne filtrabili, evidenziata se il filtro è attivo) |
+| `contextCopy` | `⎘` | Menu contestuale → Copia |
+| `contextPaste` | `⎙` | Menu contestuale → Incolla |
+| `contextInsertRowBefore` | `⤒` | Menu contestuale → Inserisci riga prima |
+| `contextInsertRowAfter` | `⤓` | Menu contestuale → Inserisci riga dopo |
+| `contextDeleteRows` | `✕` | Menu contestuale → Elimina righe |
+| `contextInsertColumnBefore` | `⤐` | Menu contestuale → Inserisci colonna prima |
+| `contextInsertColumnAfter` | `⤑` | Menu contestuale → Inserisci colonna dopo |
+| `contextDeleteColumns` | `✕` | Menu contestuale → Elimina colonne |
+| `contextOrderAsc` | `▲` | Menu contestuale → Ordina crescente |
+| `contextOrderDesc` | `▼` | Menu contestuale → Ordina decrescente |
+| `pageFirst` | `⇤` | Paginazione → Prima pagina |
+| `pagePrevious` | `‹` | Paginazione → Pagina precedente |
+| `pageNext` | `›` | Paginazione → Pagina successiva |
+| `pageLast` | `⇥` | Paginazione → Ultima pagina |
+| `addColumn` | `+` | Pulsante "aggiungi colonna" |
+| `commentClose` | `✕` | Pulsante chiusura popup commento |
+
+> La chiave `filterPlaceholder` è renderizzata in un attributo `placeholder`, quindi accetta **solo testo semplice** (niente HTML/SVG). Tutte le altre chiavi supportano glifo, HTML o SVG.
+
+### Come funziona internamente
+
+Il servizio `JxIconService` (`providedIn: 'root'`) risolve ogni icona con la precedenza **override → default**:
+
+```typescript
+import { JxIconService } from 'jx-cell';
+
+// component / key → SafeHtml (per [innerHTML]) — supporta glifo/HTML/SVG
+icons.get('jx-table', 'sortAsc');
+
+// component / key → string grezza (per attributi testuali, es. placeholder)
+icons.getRaw('jx-table', 'filterPlaceholder');
+```
+
+Il componente `jx-table` espone due helper usati internamente dal template, utili anche nelle tue celle personalizzate se inietti lo stesso servizio:
+
+| Helper | Ritorna | Uso |
+|---|---|---|
+| `icon(key)` | `SafeHtml` | Binding `[innerHTML]` (glifo/HTML/SVG) |
+| `iconRaw(key)` | `string` | Contesti solo-testo (es. `[attr.placeholder]`) |
 
 ---
 
@@ -2961,7 +3670,7 @@ il sistema di dependency injection Angular.
 | Motore | motore interno della libreria | Angular nativo (`*ngFor`) |
 | Funzionalità avanzate (merge, formula engine, sticky header, …) | ✅ | ❌ |
 | API RxJS / `JxWorkbookService` | ✅ | ❌ |
-| Dataset molto grandi con virtual scroll | ⚠️ sperimentale | ✅ built-in |
+| Dataset molto grandi con virtual scroll | ✅ built-in | ✅ built-in |
 | Tipizzazione generica `T` | ❌ (array di array) | ✅ `JxGridComponent<T>` |
 | Celle Angular custom native | parziale | ✅ |
 | Change detection OnPush-friendly | parziale | ✅ |

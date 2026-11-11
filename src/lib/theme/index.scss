@@ -1,0 +1,45 @@
+// =============================================================================
+// JxCell Theme — Public Entry Point
+// =============================================================================
+//
+// Importare questo file una sola volta nello stylesheet globale:
+//
+// @use 'jx-cell/theme';
+//
+// Personalizzazione compile-time:
+//
+// @use 'jx-cell/theme' with (
+//   $jx-primary: #9333ea,
+//   $jx-container-radius: 4px
+// );
+//
+// Personalizzazione runtime:
+//
+// .my-jx-theme jx-table {
+//   --jx-primary: #818cf8;
+//   --jx-cell-bg: #1e1e2e;
+//   --jx-header-bg: #181825;
+//   --jx-text: #cdd6f4;
+//   --jx-border: rgba(255, 255, 255, 0.08);
+// }
+//
+// =============================================================================
+
+// Espone pubblicamente le variabili SCSS dichiarate con !default.
+// Deve essere dichiarato prima dei moduli che generano il tema.
+@forward "variables";
+
+// Genera le CSS Custom Properties a partire dalle variabili SCSS.
+@use "tokens";
+
+// 3. Global table + container theme
+@use "table";
+
+// 4. Cell interaction states (selection, hover, drag, fill handle…)
+@use "states";
+
+// 5. Toolbar, pagination, add-row/col, loading overlay
+@use "toolbar";
+
+// 6. Overlay components (context menu, autocomplete, comment popup)
+@use "overlays";

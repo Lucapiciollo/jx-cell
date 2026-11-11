@@ -1,0 +1,292 @@
+// =============================================================================
+// JxCell — Table Theme
+// =============================================================================
+// Global styles for the .jexcel_container, table, thead, tbody, tfoot,
+// row-number column, and scrollbars. All colours come from CSS custom
+// properties defined in _tokens.scss — override them to create a new skin.
+//
+// All component rules are scoped under the `jx-table` host element selector.
+// This prevents style conflicts when the original jExcel library is loaded
+// alongside jx-cell, and provides isolation when multiple jx-cell instances
+// coexist on the same page with different themes.
+//
+// Exceptions kept global:
+//   .jdropdown-container / .jcontextmenu — jSuites overlays appended to body
+// =============================================================================
+
+// ── Material Icons font (required by toolbar icon items) ─────────────────────
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+// ── All component styles scoped to the jx-table host element ─────────────────
+jx-table {
+
+  // ── Container ───────────────────────────────────────────────────────────────
+  .jexcel_container {
+    position: relative;
+    background: var(--jx-container-bg);
+    border: 1px solid var(--jx-border);
+    border-radius: var(--jx-container-radius);
+    box-shadow: var(--jx-container-shadow);
+    overflow: clip;          // clip: NO scroll-container, sticky still works
+    max-width: 100%;
+    font-family: var(--jx-font-family);
+    font-size: var(--jx-font-size-md);
+    color: var(--jx-text);
+  }
+
+  .jexcel_container.jx-sticky-active { overflow: clip; }
+  .jexcel_container.jx-freeze-active { overflow: hidden; }
+
+  // ── Content scroll area ─────────────────────────────────────────────────────
+  .jexcel_content {
+    overflow: auto;
+    background: var(--jx-cell-bg);
+
+    &::-webkit-scrollbar {
+      width: var(--jx-scrollbar-size);
+      height: var(--jx-scrollbar-size);
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--jx-scrollbar-track);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--jx-scrollbar-thumb);
+      border-radius: 999px;
+      &:hover { background: var(--jx-scrollbar-thumb-hover); }
+    }
+    scrollbar-width: thin;
+    scrollbar-color: var(--jx-scrollbar-thumb) var(--jx-scrollbar-track);
+  }
+
+  // ── Table ────────────────────────────────────────────────────────────────────
+  table.jexcel {
+    // width: auto — with table-layout:fixed the browser uses <col> widths exactly.
+    // No min-width:100% and no max-content: columns render at exactly their configured
+    // pixel values; horizontal scroll appears when total > container width.
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: var(--jx-cell-bg);
+  }
+
+  // ── Column header row (thead) ─────────────────────────────────────────────────
+  .jexcel thead td {
+    height: var(--jx-header-height);
+    padding: 0 10px;
+    border: 1px solid var(--jx-border);
+    background: var(--jx-header-bg);
+    font-size: var(--jx-font-size-xs);
+    font-weight: 700;
+    font-family: var(--jx-font-family);
+    color: var(--jx-header-text);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.45px;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background var(--jx-transition);
+
+    &:hover { background: color-mix(in srgb, var(--jx-header-bg) 85%, var(--jx-primary) 15%); }
+  }
+
+  // ── Body rows ────────────────────────────────────────────────────────────────
+  .jexcel tbody td {
+    height: var(--jx-row-height);
+    padding: 0px 0px;
+    border: 1px solid var(--jx-border);
+    background: var(--jx-cell-bg);
+    color: var(--jx-text);
+    font-size: var(--jx-font-size-md);
+    font-family: var(--jx-font-family);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    transition: background var(--jx-transition);
+    // Prevent the browser's native text selection from kicking in while the user
+    // drags across cells to make a range selection (otherwise the cell text gets
+    // highlighted too). Editor inputs re-enable text selection below.
+    user-select: none;
+    // Clip all direct children (spans, custom cell hosts, labels) to the cell width.
+    // position:relative creates the stacking context for absolute-positioned editors.
+    position: relative;
+  }
+
+  // All direct content containers inside a body cell must stay within the cell bounds.
+  // Applies to the angular cell host span, display labels, and editing label.
+  .jexcel tbody td > span,
+  .jexcel tbody td > .jx-angular-cell-host,
+  .jexcel tbody td > .jx-ac-editing-label {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // Il custom Angular cell host deve adattarsi all'altezza variabile del td
+  // (normale: ~58px, selezionata/editing: ~76px).
+  // height:100% garantisce che il componente interno (es. number-step-cell)
+  // riempia sempre tutta la cella senza spazio bianco top/bottom.
+  .jexcel tbody td > .jx-angular-cell-host {
+    height: 100%;
+  }
+
+  // word-wrap mode: allow content to wrap when options.wordWrap is set
+  .jexcel.jx-word-wrap tbody td,
+  .jexcel tbody td.jx-word-wrap {
+    white-space: normal;
+    word-break: break-word;
+    text-overflow: clip;
+    > span,
+    > .jx-angular-cell-host,
+    > .jx-ac-editing-label {
+      white-space: normal;
+      word-break: break-word;
+      text-overflow: clip;
+    }
+  }
+
+  // Stacking context for tbody cells is handled via Angular inline style
+  // in getCellComputedStyle() — see jx-table.component.ts.
+
+  // Alternating row: exclude sticky row-number column so it stays opaque
+  .jexcel tbody tr:nth-child(even) td:not(.jexcel_row) {
+    background: var(--jx-cell-alt-bg);
+  }
+
+  // Row hover: exclude sticky row-number column so it stays opaque
+  .jexcel tbody tr:hover td:not(.jexcel_row) {
+    background: var(--jx-row-hover);
+  }
+
+  // ── Footer row ───────────────────────────────────────────────────────────────
+  .jexcel tfoot td {
+    height: var(--jx-header-height);
+    padding: 3px 9px;
+    border: 1px solid var(--jx-border);
+    background: var(--jx-footer-bg);
+    color: var(--jx-header-text);
+    font-size: var(--jx-font-size-sm);
+    font-family: var(--jx-font-family);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── Row-number column (row headers) ──────────────────────────────────────────
+  .jexcel_selectall,
+  .jexcel_row {
+    background: var(--jx-header-bg) !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-top-color: var(--jx-rowheader-border-top-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+    border-right-color: var(--jx-rowheader-border-right-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+    border-bottom-color: var(--jx-rowheader-border-bottom-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+    border-left-color: var(--jx-rowheader-border-left-color, var(--jx-rowheader-border-color, var(--jx-border))) !important;
+    color: var(--jx-text-muted);
+    font-size: var(--jx-font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    user-select: none;
+  }
+
+  // ── Cell editor inputs ────────────────────────────────────────────────────────
+  .jexcel input.editor {
+    width: 100%;
+    height: calc(var(--jx-row-height) - 2px);
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid var(--jx-primary);
+    outline: none;
+    padding: 3px 8px;
+    font-size: var(--jx-font-size-md);
+    font-family: var(--jx-font-family);
+    background: var(--jx-cell-bg);
+    color: var(--jx-text);
+    border-radius: var(--jx-radius-sm) var(--jx-radius-sm) 0 0;
+    user-select: text;
+  }
+
+  // Cell focus is represented by the selection state classes below; do not
+  // add the browser's default outline on top of a selected range.
+  .jexcel tbody td:focus {
+    outline: none;
+  }
+
+  // Re-enable native text selection inside any editing control (the body cells set
+  // user-select:none to suppress text highlight during range selection).
+  .jexcel td input,
+  .jexcel td textarea,
+  .jexcel td select {
+    user-select: text;
+  }
+
+  .jexcel select,
+  .jexcel input[type="date"],
+  .jexcel input[type="color"] {
+    width: 100%;
+    height: calc(var(--jx-row-height) - 4px);
+    box-sizing: border-box;
+    border: 1px solid var(--jx-border);
+    border-radius: var(--jx-radius-sm);
+    font-size: var(--jx-font-size-md);
+    font-family: var(--jx-font-family);
+    padding: 0 6px;
+    background: var(--jx-cell-bg);
+    color: var(--jx-text);
+  }
+
+  .jexcel button {
+    border: 1px solid var(--jx-border);
+    border-radius: var(--jx-radius-sm);
+    background: var(--jx-cell-soft-bg);
+    padding: 3px 10px;
+    font-size: var(--jx-font-size-sm);
+    font-family: var(--jx-font-family);
+    font-weight: 600;
+    color: var(--jx-text);
+    cursor: pointer;
+    transition: background var(--jx-transition), border-color var(--jx-transition);
+
+    &:hover {
+      background: var(--jx-primary-bg-mid);
+      border-color: var(--jx-primary);
+      color: var(--jx-primary);
+    }
+  }
+
+  // ── Nested header cells ───────────────────────────────────────────────────────
+  .jexcel thead .jx-nested-header td {
+    background: var(--jx-header-bg);
+    color: var(--jx-header-text);
+    font-weight: 600;
+    font-size: var(--jx-font-size-xs);
+    border: 1px solid var(--jx-border);
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  // ── Filter row ───────────────────────────────────────────────────────────────
+  .jexcel thead tr.jx-filter-row td {
+    background: var(--jx-filter-bg);
+    border-bottom: 1px solid var(--jx-filter-border);
+    padding: 2px 3px;
+  }
+
+} // end jx-table
+
+// ── Global overlays (jSuites elements appended to document.body) ──────────────
+// These are NOT rendered inside jx-table's DOM — keep them global.
+.jdropdown-container,
+.jcontextmenu {
+  border-radius: var(--jx-radius-md) !important;
+  box-shadow: var(--jx-shadow-overlay) !important;
+  border: 1px solid var(--jx-ctx-border) !important;
+  background: var(--jx-ctx-bg) !important;
+  color: var(--jx-ctx-text) !important;
+  overflow: hidden;
+  font-family: var(--jx-font-family);
+}

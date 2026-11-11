@@ -1,0 +1,156 @@
+// =============================================================================
+// JxCell — Theme Variables
+// =============================================================================
+// All variables are declared with !default so consumers can override them
+// before @use-ing this library:
+//
+//   // your-app/styles.scss
+//   @use 'jx-cell/theme' with (
+//     $jx-primary: #e63946,
+//     $jx-radius-md: 6px,
+//   );
+//
+// At runtime, override CSS custom properties on :root or .jexcel_container:
+//
+//   .jexcel_container { --jx-primary: #e63946; }
+//
+// =============================================================================
+
+// ── Typography ────────────────────────────────────────────────────────────────
+$jx-font-family:   "Inter", "Segoe UI", system-ui, -apple-system, sans-serif !default;
+$jx-font-size-xs:  11px !default;
+$jx-font-size-sm:  12px !default;
+$jx-font-size-md:  13px !default;
+
+// ── Brand / Accent ────────────────────────────────────────────────────────────
+$jx-primary:            #2563eb !default;   // main action blue
+$jx-primary-hover:      #1d4ed8 !default;
+$jx-primary-bg:         rgba(37, 99, 235, 0.07) !default;  // selected cells
+$jx-primary-bg-mid:     rgba(37, 99, 235, 0.14) !default;  // active cell highlight
+$jx-accent:             #3b82f6 !default;   // drag/resize/copy indicators
+$jx-success:            #16a34a !default;
+$jx-danger:             #dc2626 !default;
+$jx-danger-bg:          #fef2f2 !default;
+$jx-warning:            #d97706 !default;
+
+// ── Fill handle (Excel-green) ─────────────────────────────────────────────────
+$jx-fill-handle:        #217346 !default;
+
+// ── Surfaces ──────────────────────────────────────────────────────────────────
+$jx-cell-bg:            #ffffff !default;
+$jx-cell-alt-bg:        #f8fafc !default;   // even rows
+$jx-cell-soft-bg:       #f1f5f9 !default;   // readonly / filter row
+$jx-header-bg:          #f1f5f9 !default;   // thead + row-number column
+$jx-footer-bg:          #f1f5f9 !default;
+$jx-filter-bg:          #f1f5f9 !default;
+$jx-filter-input-bg:    #ffffff !default;
+$jx-container-bg:       #ffffff !default;
+$jx-overlay-bg:         rgba(255, 255, 255, 0.75) !default;  // loading overlay
+
+// ── Text ──────────────────────────────────────────────────────────────────────
+$jx-text:               #1e293b !default;
+$jx-text-muted:         #64748b !default;
+$jx-header-text:        #475569 !default;
+$jx-filter-input-color: #1e293b !default;
+
+// ── Borders ───────────────────────────────────────────────────────────────────
+$jx-border:             #e2e8f0 !default;
+$jx-border-strong:      #cbd5e1 !default;
+$jx-filter-border:      #e2e8f0 !default;
+
+// ── States ────────────────────────────────────────────────────────────────────
+$jx-selection:          rgba(37, 99, 235, 0.07) !default;
+$jx-selection-border:   #2563eb !default;
+// Spessore del bordo perimetrale della selezione.
+$jx-selection-border-width: 2px !default;
+// Sfondo del range selezionato: stesso colore del bordo con alfa 0.3 (configurabile).
+$jx-selection-range-bg: rgba(37, 99, 235, 0.3) !default;
+// Sfondo OPACO per le celle CONGELATE (sticky) selezionate. Le celle sticky non
+// possono usare lo sfondo semi-trasparente del range: altrimenti le colonne/righe
+// non congelate che scorrono sotto traspaiono attraverso la cella. Default: blend
+// opaco del colore di selezione su sfondo bianco (≈ una passata di
+// $jx-selection-range-bg su #fff), così l'aspetto resta identico alle celle normali.
+$jx-frozen-selection-bg: #bed0f9 !default;
+$jx-row-hover:          rgba(37, 99, 235, 0.04) !default;
+
+// ── Contextual overlays ───────────────────────────────────────────────────────
+$jx-ctx-bg:             #ffffff !default;
+$jx-ctx-border:         #e2e8f0 !default;
+$jx-ctx-text:           #1e293b !default;
+$jx-ctx-hover-bg:       #f1f5f9 !default;
+$jx-ctx-separator:      #f1f5f9 !default;
+$jx-ctx-danger:         #dc2626 !default;
+$jx-ctx-danger-hover:   #fef2f2 !default;
+
+$jx-ac-bg:              #ffffff !default;
+$jx-ac-border:          #e2e8f0 !default;
+$jx-ac-text:            #1e293b !default;
+$jx-ac-hover-bg:        #eff6ff !default;
+$jx-ac-hover-text:      #1d4ed8 !default;
+$jx-ac-active-bg:       #dbeafe !default;
+
+$jx-comment-bg:         #fffde7 !default;
+$jx-comment-border:     #fde047 !default;
+$jx-comment-header-bg:  #fef08a !default;
+$jx-comment-header-text:#713f12 !default;
+$jx-comment-text:       #374151 !default;
+
+$jx-indicator-danger:   #dc2626 !default;  // comment triangle indicator
+
+// ── Add row/col buttons ───────────────────────────────────────────────────────
+$jx-add-btn-color:      #94a3b8 !default;
+$jx-add-btn-bg:         #f8fafc !default;
+$jx-add-btn-border:     #e2e8f0 !default;
+$jx-add-btn-hover-bg:   #f1f5f9 !default;
+$jx-add-btn-hover-color:#475569 !default;
+
+// ── Scrollbar ─────────────────────────────────────────────────────────────────
+$jx-scrollbar-track:        transparent !default;
+$jx-scrollbar-thumb:        #cbd5e1 !default;
+$jx-scrollbar-thumb-hover:  #94a3b8 !default;
+$jx-scrollbar-size:         7px !default;
+
+// ── Shape ─────────────────────────────────────────────────────────────────────
+$jx-radius-sm:          3px !default;
+$jx-radius-md:          6px !default;
+$jx-radius-lg:          10px !default;
+$jx-container-radius:   8px !default;
+
+// ── Elevation ─────────────────────────────────────────────────────────────────
+$jx-shadow:             0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06) !default;
+$jx-shadow-overlay:     0 4px 20px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08) !default;
+$jx-container-shadow:   0 2px 12px rgba(37,99,235,.06), 0 1px 3px rgba(0,0,0,.06) !default;
+
+// ── Dimensions ────────────────────────────────────────────────────────────────
+$jx-header-height:      34px !default;
+$jx-row-height:         32px !default;
+$jx-toolbar-height:     36px !default;
+
+// ── Transition ────────────────────────────────────────────────────────────────
+$jx-transition:         0.12s ease !default;
+
+// ── jx-grid component ─────────────────────────────────────────────────────────
+// These compile-time defaults map directly to the CSS custom properties
+// --jx-grid-* declared in _tokens.scss. Override here (before @use) or at
+// runtime by setting --jx-grid-* on jx-grid or :root.
+$jx-grid-bg:                    $jx-container-bg !default;
+$jx-grid-border-color:          $jx-border !default;
+$jx-grid-border-width:          1px !default;
+$jx-grid-radius:                $jx-container-radius !default;
+$jx-grid-header-bg:             $jx-header-bg !default;
+$jx-grid-header-color:          $jx-header-text !default;
+$jx-grid-header-font-weight:    700 !default;
+$jx-grid-header-border-color:   $jx-border !default;
+$jx-grid-header-padding-x:      10px !default;
+$jx-grid-header-padding-y:      8px !default;
+$jx-grid-cell-border-color:     $jx-border !default;
+$jx-grid-cell-padding-x:        10px !default;
+$jx-grid-cell-min-height:       $jx-row-height !default;
+$jx-grid-row-hover-bg:          $jx-row-hover !default;
+$jx-grid-row-selected-bg:       $jx-selection !default;
+$jx-grid-empty-color:           $jx-text-muted !default;
+$jx-grid-empty-padding:         20px !default;
+$jx-grid-attachment-color:      $jx-primary !default;
+$jx-grid-formula-font-weight:   600 !default;
+$jx-grid-total-font-weight:     700 !default;
+$jx-grid-number-font-variant:   tabular-nums !default;

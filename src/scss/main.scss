@@ -1,3 +1,7 @@
+// ── JxCell default theme (tokens + scoped component rules) ──────────────────
+@use "../lib/theme";
+
+// ── Demo/app styles ──────────────────────────────────────────────────────────
 @use "abstracts";
 @use "base";
 @use "layout";

@@ -1,0 +1,153 @@
+// =============================================================================
+// JxCell — CSS Custom Property Tokens
+// =============================================================================
+// Declares all CSS custom properties on :root using the SCSS variables from
+// _variables.scss. Override any token at runtime by setting the property on
+// :root (globally) or on .jexcel_container (per-instance):
+//
+//   .jexcel_container {
+//     --jx-primary:    #e63946;
+//     --jx-cell-bg:    #1a1a2e;
+//   }
+//
+@use "variables" as *;
+
+:root {
+  // ── Typography ────────────────────────────────────────────────────────────
+  --jx-font-family:        #{$jx-font-family};
+  --jx-font-size-xs:       #{$jx-font-size-xs};
+  --jx-font-size-sm:       #{$jx-font-size-sm};
+  --jx-font-size-md:       #{$jx-font-size-md};
+
+  // ── Brand ─────────────────────────────────────────────────────────────────
+  --jx-primary:            #{$jx-primary};
+  --jx-primary-hover:      #{$jx-primary-hover};
+  --jx-primary-bg:         #{$jx-primary-bg};
+  --jx-primary-bg-mid:     #{$jx-primary-bg-mid};
+  --jx-accent:             #{$jx-accent};
+  --jx-success:            #{$jx-success};
+  --jx-danger:             #{$jx-danger};
+  --jx-danger-bg:          #{$jx-danger-bg};
+  --jx-warning:            #{$jx-warning};
+  --jx-fill-handle:        #{$jx-fill-handle};
+
+  // ── Surfaces ──────────────────────────────────────────────────────────────
+  --jx-cell-bg:            #{$jx-cell-bg};
+  --jx-cell-alt-bg:        #{$jx-cell-alt-bg};
+  --jx-cell-soft-bg:       #{$jx-cell-soft-bg};
+  --jx-header-bg:          #{$jx-header-bg};
+  --jx-footer-bg:          #{$jx-footer-bg};
+  --jx-filter-bg:          #{$jx-filter-bg};
+  --jx-filter-input-bg:    #{$jx-filter-input-bg};
+  --jx-container-bg:       #{$jx-container-bg};
+  --jx-overlay-bg:         #{$jx-overlay-bg};
+
+  // ── Text ──────────────────────────────────────────────────────────────────
+  --jx-text:               #{$jx-text};
+  --jx-text-muted:         #{$jx-text-muted};
+  --jx-header-text:        #{$jx-header-text};
+  --jx-filter-input-color: #{$jx-filter-input-color};
+
+  // ── Borders ───────────────────────────────────────────────────────────────
+  --jx-border:             #{$jx-border};
+  --jx-border-strong:      #{$jx-border-strong};
+  --jx-filter-border:      #{$jx-filter-border};
+
+  // ── States ────────────────────────────────────────────────────────────────
+  --jx-selection:          #{$jx-selection};
+  --jx-selection-border:   #{$jx-selection-border};
+  --jx-selection-border-width: #{$jx-selection-border-width};
+  --jx-selection-range-bg: #{$jx-selection-range-bg};
+  --jx-frozen-selection-bg: #{$jx-frozen-selection-bg};
+  --jx-row-hover:          #{$jx-row-hover};
+
+  // ── Overlays — context menu ────────────────────────────────────────────────
+  --jx-ctx-bg:             #{$jx-ctx-bg};
+  --jx-ctx-border:         #{$jx-ctx-border};
+  --jx-ctx-text:           #{$jx-ctx-text};
+  --jx-ctx-hover-bg:       #{$jx-ctx-hover-bg};
+  --jx-ctx-separator:      #{$jx-ctx-separator};
+  --jx-ctx-danger:         #{$jx-ctx-danger};
+  --jx-ctx-danger-hover:   #{$jx-ctx-danger-hover};
+
+  // ── Overlays — autocomplete ────────────────────────────────────────────────
+  --jx-ac-bg:              #{$jx-ac-bg};
+  --jx-ac-border:          #{$jx-ac-border};
+  --jx-ac-text:            #{$jx-ac-text};
+  --jx-ac-hover-bg:        #{$jx-ac-hover-bg};
+  --jx-ac-hover-text:      #{$jx-ac-hover-text};
+  --jx-ac-active-bg:       #{$jx-ac-active-bg};
+
+  // ── Overlays — comment popup ───────────────────────────────────────────────
+  --jx-comment-bg:         #{$jx-comment-bg};
+  --jx-comment-border:     #{$jx-comment-border};
+  --jx-comment-header-bg:  #{$jx-comment-header-bg};
+  --jx-comment-header-text:#{$jx-comment-header-text};
+  --jx-comment-text:       #{$jx-comment-text};
+  --jx-indicator-danger:   #{$jx-indicator-danger};
+
+  // ── Add row/col ────────────────────────────────────────────────────────────
+  --jx-add-btn-color:      #{$jx-add-btn-color};
+  --jx-add-btn-bg:         #{$jx-add-btn-bg};
+  --jx-add-btn-border:     #{$jx-add-btn-border};
+  --jx-add-btn-hover-bg:   #{$jx-add-btn-hover-bg};
+  --jx-add-btn-hover-color:#{$jx-add-btn-hover-color};
+
+  // ── Scrollbar ─────────────────────────────────────────────────────────────
+  --jx-scrollbar-track:       #{$jx-scrollbar-track};
+  --jx-scrollbar-thumb:       #{$jx-scrollbar-thumb};
+  --jx-scrollbar-thumb-hover: #{$jx-scrollbar-thumb-hover};
+  --jx-scrollbar-size:        #{$jx-scrollbar-size};
+
+  // ── Shape ─────────────────────────────────────────────────────────────────
+  --jx-radius-sm:          #{$jx-radius-sm};
+  --jx-radius-md:          #{$jx-radius-md};
+  --jx-radius-lg:          #{$jx-radius-lg};
+  --jx-container-radius:   #{$jx-container-radius};
+
+  // ── Elevation ─────────────────────────────────────────────────────────────
+  --jx-shadow:             #{$jx-shadow};
+  --jx-shadow-overlay:     #{$jx-shadow-overlay};
+  --jx-container-shadow:   #{$jx-container-shadow};
+
+  // ── Dimensions ────────────────────────────────────────────────────────────
+  --jx-header-height:      #{$jx-header-height};
+  --jx-row-height:         #{$jx-row-height};
+  --jx-toolbar-height:     #{$jx-toolbar-height};
+
+  // ── Transition ────────────────────────────────────────────────────────────
+  --jx-transition:         #{$jx-transition};
+
+  // ── Legacy aliases (backward-compat with consumer code) ───────────────────
+  // These map old names used in pre-theme component styles.
+  --jx-border-color:       var(--jx-border);
+  --jx-text-color:         var(--jx-text);
+  --jx-row-hover-bg:       var(--jx-row-hover);
+  --jx-selection-color:    var(--jx-selection-border);
+
+  // ── jx-grid tokens ────────────────────────────────────────────────────────
+  // All grid tokens fall back to the shared --jx-* design tokens above, so
+  // a global theme change (e.g. --jx-border on :root) automatically flows
+  // into the grid. Override --jx-grid-* for grid-only adjustments.
+  --jx-grid-bg:                   #{$jx-grid-bg};
+  --jx-grid-border-color:         #{$jx-grid-border-color};
+  --jx-grid-border-width:         #{$jx-grid-border-width};
+  --jx-grid-radius:               #{$jx-grid-radius};
+  --jx-grid-header-bg:            #{$jx-grid-header-bg};
+  --jx-grid-header-color:         #{$jx-grid-header-color};
+  --jx-grid-header-font-weight:   #{$jx-grid-header-font-weight};
+  --jx-grid-header-border-color:  #{$jx-grid-header-border-color};
+  --jx-grid-header-padding-x:     #{$jx-grid-header-padding-x};
+  --jx-grid-header-padding-y:     #{$jx-grid-header-padding-y};
+  --jx-grid-cell-border-color:    #{$jx-grid-cell-border-color};
+  --jx-grid-cell-padding-x:       #{$jx-grid-cell-padding-x};
+  --jx-grid-cell-min-height:      #{$jx-grid-cell-min-height};
+  --jx-grid-row-hover-bg:         #{$jx-grid-row-hover-bg};
+  --jx-grid-row-selected-bg:      #{$jx-grid-row-selected-bg};
+  --jx-grid-empty-color:          #{$jx-grid-empty-color};
+  --jx-grid-empty-padding:        #{$jx-grid-empty-padding};
+  --jx-grid-attachment-color:     #{$jx-grid-attachment-color};
+  --jx-grid-formula-font-weight:  #{$jx-grid-formula-font-weight};
+  --jx-grid-total-font-weight:    #{$jx-grid-total-font-weight};
+  --jx-grid-number-font-variant:  #{$jx-grid-number-font-variant};
+}

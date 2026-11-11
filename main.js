@@ -44857,7 +44857,7 @@ function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template(rf,
     const _r40 = \u0275\u0275getCurrentView();
     \u0275\u0275elementContainerStart(0);
     \u0275\u0275elementStart(1, "span", 98);
-    \u0275\u0275listener("mousedown", function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_mousedown_1_listener($event) {
+    \u0275\u0275listener("pointerdown", function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_pointerdown_1_listener($event) {
       \u0275\u0275restoreView(_r40);
       const x_r38 = \u0275\u0275nextContext(3).index;
       \u0275\u0275nextContext();
@@ -44866,10 +44866,12 @@ function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template(rf,
       return \u0275\u0275resetView(ctx_r3.onInlineComponentMouseDown($event, x_r38, y_r36));
     })("mouseup", function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_mouseup_1_listener($event) {
       \u0275\u0275restoreView(_r40);
-      return \u0275\u0275resetView($event.stopPropagation());
+      const ctx_r3 = \u0275\u0275nextContext(5);
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentMouseUp($event));
     })("click", function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_click_1_listener($event) {
       \u0275\u0275restoreView(_r40);
-      return \u0275\u0275resetView($event.stopPropagation());
+      const ctx_r3 = \u0275\u0275nextContext(5);
+      return \u0275\u0275resetView(ctx_r3.onInlineComponentClick($event));
     })("focusout", function O_For_14_ng_container_4_td_4_ng_container_2_ng_container_1_Template_span_focusout_1_listener($event) {
       \u0275\u0275restoreView(_r40);
       const x_r38 = \u0275\u0275nextContext(3).index;
@@ -49179,6 +49181,8 @@ var O = class _O {
   sub = new Subscription();
   selecting = false;
   selectionStart = null;
+  selectionAnchor = null;
+  mouseSelectionHandled = false;
   _suppressFocusSelect = false;
   _cellStyleCache = /* @__PURE__ */ new Map();
   _cellClassCache = /* @__PURE__ */ new Map();
@@ -50110,20 +50114,18 @@ var O = class _O {
     if (this.activeCell = {
       x: e,
       y: t
-    }, !this.editing) if (o?.shiftKey) {
-      const o2 = this.workbook.getSelection(), n = o2?.x1 ?? e, r = o2?.y1 ?? t, i = this.options.selectionMode ?? $.Both;
-      this.workbook.setSelection({
-        x1: n,
-        y1: r,
-        x2: i !== $.Column ? e : n,
-        y2: i !== $.Row ? t : r
-      });
-    } else this.workbook.setSelection({
+    }, !this.editing) return o?.shiftKey && this.selectionAnchor ? void this.workbook.setSelection(this.getCellRangeSelection(this.selectionAnchor, {
+      x: e,
+      y: t
+    })) : (this.selectionAnchor = {
+      x: e,
+      y: t
+    }, void this.workbook.setSelection({
       x1: e,
       y1: t,
       x2: e,
       y2: t
-    });
+    }));
   }
   selectColumn(e, t) {
     if (this.suppressHeaderClick) return this.suppressHeaderClick = false, t?.preventDefault(), void t?.stopPropagation();
@@ -50335,7 +50337,7 @@ var O = class _O {
       const t2 = this.rowDrag.from, o2 = this.getRowDragDestination();
       return null !== o2 && (this.workbook.moveRow(t2, o2), this.suppressRowClick = true), this.rowDrag = null, e.preventDefault(), void this.cdr.markForCheck();
     }
-    if (this.headerResize) {
+    if (this.selecting && this.stopSelecting(), this.headerResize) {
       const {
         column: t2,
         startWidth: o2
@@ -50442,37 +50444,45 @@ var O = class _O {
     if (this.isEventInsideInlineComponent(o)) return this.activeCell = {
       x: e,
       y: t
-    }, void this.workbook.setSelection({
-      x1: e,
-      y1: t,
-      x2: e,
-      y2: t
-    });
+    }, this.selectionAnchor = {
+      x: e,
+      y: t
+    }, void this.select(e, t, o);
     o.preventDefault(), o.target?.ownerDocument?.dispatchEvent(new MouseEvent("mousedown", {
       bubbles: false,
       cancelable: false
     })), o.stopPropagation(), this.activeCell = {
       x: e,
       y: t
-    };
+    }, this.mouseSelectionHandled = true;
     const n = o.currentTarget;
-    this.focusCell(n), queueMicrotask(() => this.focusCell(n)), setTimeout(() => this.focusCell(n), 0), this.selecting = true, this.selectionStart = {
+    this.focusCell(n), queueMicrotask(() => this.focusCell(n)), setTimeout(() => this.focusCell(n), 0), this.selecting = true, this.selectionAnchor && o.shiftKey || (this.selectionAnchor = {
       x: e,
       y: t
-    }, this.select(e, t, o);
+    }), this.selectionStart = __spreadValues({}, this.selectionAnchor), this.select(e, t, o);
   }
   updateMouseSelection(e, t) {
     if (!this.selecting || !this.selectionStart) return;
     const {
       x: o,
       y: n
-    } = this.selectionStart, r = this.options.selectionMode ?? $.Both;
-    this.workbook.setSelection({
-      x1: o,
-      y1: n,
-      x2: r !== $.Column ? e : o,
-      y2: r !== $.Row ? t : n
-    });
+    } = this.selectionStart;
+    this.workbook.setSelection(this.getCellRangeSelection({
+      x: o,
+      y: n
+    }, {
+      x: e,
+      y: t
+    }));
+  }
+  getCellRangeSelection(e, t) {
+    const o = this.options.selectionMode ?? $.Both, n = o !== $.Column, r = o !== $.Row;
+    return {
+      x1: n ? Math.min(e.x, t.x) : e.x,
+      y1: r ? Math.min(e.y, t.y) : e.y,
+      x2: n ? Math.max(e.x, t.x) : e.x,
+      y2: r ? Math.max(e.y, t.y) : e.y
+    };
   }
   stopSelecting() {
     this.selecting = false, this.selectionStart = null;
@@ -50747,7 +50757,7 @@ var O = class _O {
       y1: o,
       x2: t,
       y2: o
-    })) : (this.select(t, o, e), this.usesInlineComponentEditor(t) && this.isEditable(t, o) ? (e.preventDefault(), e.stopPropagation(), void this.activateInlineComponent(t, o)) : void ("autocomplete" === this.columnType(t) && this.isEditable(t, o) && (e.preventDefault(), e.stopPropagation(), this.startEdit(t, o))));
+    })) : (this.mouseSelectionHandled ? this.mouseSelectionHandled = false : this.select(t, o, e), this.usesInlineComponentEditor(t) && this.isEditable(t, o) ? (e.preventDefault(), e.stopPropagation(), void this.activateInlineComponent(t, o)) : void ("autocomplete" === this.columnType(t) && this.isEditable(t, o) && (e.preventDefault(), e.stopPropagation(), this.startEdit(t, o))));
   }
   onCellKey(e, t, o) {
     if (this.activeCell = {
@@ -50891,15 +50901,23 @@ var O = class _O {
         y2: o
       }), void e.stopPropagation();
     }
-    this.activeCell = {
+    0 === e.button ? (this.workbook.events.tableActivate$.next(), V.activate(this.workbook), this.commitIfEditingDifferent(t, o), this.activeCell = {
       x: t,
       y: o
-    }, this.workbook.setSelection({
-      x1: t,
-      y1: o,
-      x2: t,
-      y2: o
-    }), this.workbook.events.tableActivate$.next(), V.activate(this.workbook), e.stopPropagation();
+    }, this.mouseSelectionHandled = true, this.selectionAnchor && e.shiftKey || (this.selectionAnchor = {
+      x: t,
+      y: o
+    }), this.select(t, o, e), e.shiftKey && e.preventDefault(), e.stopPropagation()) : e.stopPropagation();
+  }
+  onInlineComponentMouseUp(e) {
+    e.stopPropagation(), queueMicrotask(() => {
+      this.mouseSelectionHandled = false;
+    });
+  }
+  onInlineComponentClick(e) {
+    e.shiftKey && e.preventDefault(), e.stopPropagation(), queueMicrotask(() => {
+      this.mouseSelectionHandled = false;
+    });
   }
   getFillTargetRowFromMouseEvent(e, t) {
     const o = this.host?.nativeElement;
@@ -51192,11 +51210,13 @@ var O = class _O {
       x: e,
       y: t,
       cellName: this.cellName(e, t)
-    }), this.workbook.fireEvent("onfocus", null, e, t, o), this.commitIfEditingDifferent(e, t), this._suppressFocusSelect) this._suppressFocusSelect = false;
-    else if (!this.editing) {
-      this.workbook.recalculateAll();
-      const o2 = this.workbook.getSelection();
-      o2 && e >= Math.min(o2.x1, o2.x2) && e <= Math.max(o2.x1, o2.x2) && t >= Math.min(o2.y1, o2.y2) && t <= Math.max(o2.y1, o2.y2) || this.select(e, t);
+    }), this.workbook.fireEvent("onfocus", null, e, t, o), this.commitIfEditingDifferent(e, t), !this.mouseSelectionHandled) {
+      if (this._suppressFocusSelect) this._suppressFocusSelect = false;
+      else if (!this.editing) {
+        this.workbook.recalculateAll();
+        const o2 = this.workbook.getSelection();
+        o2 && e >= Math.min(o2.x1, o2.x2) && e <= Math.max(o2.x1, o2.x2) && t >= Math.min(o2.y1, o2.y2) && t <= Math.max(o2.y1, o2.y2) || this.select(e, t);
+      }
     }
   }
   commitIfEditingDifferent(e, t) {
@@ -52057,7 +52077,7 @@ var O = class _O {
     features: [\u0275\u0275ProvidersFeature([T]), \u0275\u0275NgOnChangesFeature],
     decls: 24,
     vars: 37,
-    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["mainHeaderCellTpl", ""], ["normalNestedCell", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "scroll", "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], ["aria-hidden", "true", 1, "jx-vscroll-spacer"], [3, "height", "hidden", "opacity"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow", 3, "innerHTML"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", "click", 4, "ngIf"], [4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "innerHTML", "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", 4, "ngIf"], [1, "jexcel_selectall", 3, "ngClass", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "hidden", "ngStyle"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngClass", "ngStyle"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click", "innerHTML"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle", "ngClass"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-col-filter-icon", 3, "jx-col-filter-icon--with-sort", "jx-col-filter-icon--active", 4, "ngIf"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [3, "innerHTML", 4, "ngIf"], [3, "innerHTML"], [1, "jx-col-filter-icon"], ["class", "jx-col-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-col-filter-icon-img", 3, "src"], [1, "jx-sort-icon"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngClass", "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "jx-filter-input--has-icon", "jx-filter-input--has-clear", "value", "input", 4, "ngIf"], ["type", "button", "class", "jx-filter-clear-btn", "aria-label", "Cancella filtro", 3, "mousedown", "click", 4, "ngIf"], ["class", "jx-filter-icon-overlay", "aria-hidden", "true", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], ["type", "button", "aria-label", "Cancella filtro", 1, "jx-filter-clear-btn", 3, "mousedown", "click"], ["aria-hidden", "true", 1, "jx-filter-icon-overlay"], ["class", "jx-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-filter-icon-img", 3, "src"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "innerHTML", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngClass", "ngStyle", "innerHTML"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "jx-frozen-row", "highlight", "highlight-selected", "jx-sel-top", "jx-sel-bottom", "jx-sel-left", "jx-sel-right", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [1, "jx-ac-editing-label", 3, "title"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", 4, "ngIf"], [1, "jexcel_row", 3, "ngClass", "ngStyle"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "ngClass", "ngStyle", 4, "ngIf"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click", "innerHTML"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon", 3, "innerHTML"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
+    consts: [["host", ""], ["comboMenuTpl", ""], ["defaultContextMenuTpl", ""], ["anchor", ""], ["mainHeaderCellTpl", ""], ["normalNestedCell", ""], ["defaultNestedTpl", ""], ["defaultHeaderTpl", ""], ["editTpl", ""], ["standardCellTpl", ""], ["standardEditTpl", ""], ["editorInput", ""], ["defaultFooterTpl", ""], [1, "jexcel_container", 3, "mouseup", "mouseleave", "ngStyle"], ["class", "jexcel_toolbar", 4, "ngIf"], [1, "jexcel_content", 3, "scroll", "ngStyle"], ["tabindex", "-1", 1, "jexcel"], [3, "width", 4, "ngIf"], [3, "width", "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "jx-sticky-header", 4, "ngIf"], ["aria-hidden", "true", 1, "jx-vscroll-spacer"], [3, "height", "hidden", "opacity"], [3, "jx-sticky-footer", 4, "ngIf"], ["class", "jx-add-row-bar", "title", "Aggiungi riga", 3, "click", 4, "ngIf"], ["class", "jx-loading-overlay", "aria-busy", "true", 4, "ngIf"], ["class", "jx-comment-popup", 3, "ngStyle", "click", 4, "ngIf"], ["class", "jx-ac-dropdown", 3, "ngStyle", "mousedown", 4, "ngIf"], ["class", "jx-pagination", 4, "ngIf"], [1, "jexcel_toolbar"], [4, "ngFor", "ngForOf"], ["class", "jx-toolbar-divisor", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons", 3, "click", 4, "ngIf"], ["class", "jexcel_toolbar_item", 3, "change", 4, "ngIf"], ["class", "jexcel_toolbar_item material-icons jx-toolbar-color", 4, "ngIf"], [4, "ngIf"], [1, "jx-toolbar-divisor"], [1, "jexcel_toolbar_item", "material-icons", 3, "click"], [1, "jexcel_toolbar_item", 3, "change"], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"], [1, "jexcel_toolbar_item", "material-icons", "jx-toolbar-color"], ["type", "color", 1, "jx-toolbar-color-input", 3, "input"], [1, "jx-toolbar-combo"], [1, "jx-toolbar-combo__btn", 3, "click"], [1, "jx-toolbar-combo__label"], [1, "jx-toolbar-combo__arrow", 3, "innerHTML"], [1, "jx-toolbar-combo__anchor", 3, "contextMenu", "contextMenuData", "contextMenuTypeButton", "contextMenuOffsetX", "contextMenuOffsetY", "contextMenuMinWidth", "contextMenuCloseOnClick"], [1, "jx-toolbar-combo-menu"], ["class", "jx-toolbar-combo-menu__item", 3, "active", "ngStyle", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-toolbar-combo-menu__item", 3, "mousedown", "click", "ngStyle"], [3, "hidden"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", "click", 4, "ngIf"], [4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jx-add-col-btn", "title", "Aggiungi colonna", 3, "innerHTML", "click", 4, "ngIf"], ["class", "jx-filter-row", 4, "ngIf"], ["class", "jexcel_selectall", 3, "ngClass", "ngStyle", 4, "ngIf"], [1, "jexcel_selectall", 3, "ngClass", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "hidden", "ngStyle"], [4, "ngComponentOutlet", "ngComponentOutletInputs"], [1, "jexcel_selectall", 3, "click", "ngClass", "ngStyle"], ["title", "Aggiungi colonna", 1, "jx-add-col-btn", 3, "click", "innerHTML"], [3, "mousedown", "mousemove", "mouseenter", "click", "hidden", "ngStyle", "ngClass"], [1, "jx-col-header-inner"], ["class", "jx-sort-icon jx-sort-icon--order-first", 4, "ngIf"], [1, "jx-col-header-label"], ["class", "jx-col-filter-icon", 3, "jx-col-filter-icon--with-sort", "jx-col-filter-icon--active", 4, "ngIf"], ["class", "jx-sort-icon", 3, "jx-sort-icon--push-right", 4, "ngIf"], [1, "jx-sort-icon", "jx-sort-icon--order-first"], [3, "innerHTML", 4, "ngIf"], [3, "innerHTML"], [1, "jx-col-filter-icon"], ["class", "jx-col-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-col-filter-icon-img", 3, "src"], [1, "jx-sort-icon"], [1, "jx-filter-row"], ["class", "jx-filter-spacer", 3, "ngClass", "ngStyle", 4, "ngIf"], ["class", "jx-filter-cell", 3, "hidden", "ngStyle", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "jx-filter-spacer", 3, "ngClass", "ngStyle"], [1, "jx-filter-cell", 3, "hidden", "ngStyle"], ["type", "text", "class", "jx-filter-input", "autocomplete", "off", 3, "jx-filter-input--has-icon", "jx-filter-input--has-clear", "value", "input", 4, "ngIf"], ["type", "button", "class", "jx-filter-clear-btn", "aria-label", "Cancella filtro", 3, "mousedown", "click", 4, "ngIf"], ["class", "jx-filter-icon-overlay", "aria-hidden", "true", 4, "ngIf"], ["class", "jx-filter-empty", 4, "ngIf"], ["type", "text", "autocomplete", "off", 1, "jx-filter-input", 3, "input", "value"], ["type", "button", "aria-label", "Cancella filtro", 1, "jx-filter-clear-btn", 3, "mousedown", "click"], ["aria-hidden", "true", 1, "jx-filter-icon-overlay"], ["class", "jx-filter-icon-img", "alt", "", 3, "src", 4, "ngIf"], ["alt", "", 1, "jx-filter-icon-img", 3, "src"], [1, "jx-filter-empty"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", "selected", "jx-frozen-row", "jx-row-draggable", "jx-row-dragging", "jx-row-drop-top", "jx-row-drop-bottom", "jx-row-resizable", "jx-row-resizing", "innerHTML", "mousedown", "mousemove", "mouseenter", "click", 4, "ngIf"], [1, "jexcel_row", 3, "mousedown", "mousemove", "mouseenter", "click", "ngClass", "ngStyle", "innerHTML"], [3, "hidden", "ngStyle", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "jx-frozen-row", "highlight", "highlight-selected", "jx-sel-top", "jx-sel-bottom", "jx-sel-left", "jx-sel-right", "jx-fill-preview", "jx-fill-preview-top", "jx-fill-preview-bottom", "jx-fill-preview-left", "jx-fill-preview-right", "readonly", "editor", "jx-cell-copying", "ngClass", "jx-has-comment", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass", "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", 4, "ngIf"], [3, "mousedown", "mouseenter", "click", "focus", "dblclick", "keydown", "hidden", "ngStyle", "ngClass", "contextMenu", "contextMenuData", "contextMenuDisabled", "contextMenuClass"], ["class", "jx-comment-indicator", 3, "click", 4, "ngIf"], ["class", "jx-fill-handle", "title", "Trascina per riempire le celle", 3, "jx-fill-handle--preview-destination", "mousedown", 4, "ngIf"], [1, "jx-comment-indicator", 3, "click"], ["data-jx-inline-editor", "true", "tabindex", "-1", 1, "jx-angular-cell-host", 3, "pointerdown", "mouseup", "click", "focusout", "keydown"], [3, "ngSwitch"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "checkbox", 3, "checked", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", 4, "ngSwitchCase"], [3, "title", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "date", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "color", 3, "ngModel", "disabled", "mousedown", "mouseup", "click", "focusout", "keydown", "change", 4, "ngSwitchCase"], ["data-jx-inline-editor", "true", "class", "jx-inline-control", "type", "button", 3, "mousedown", "mouseup", "click", "focusout", "keydown", 4, "ngSwitchCase"], [3, "innerHTML", 4, "ngSwitchCase"], [4, "ngSwitchCase"], [3, "formula", "title", 4, "ngSwitchDefault"], ["data-jx-inline-editor", "true", "type", "checkbox", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "checked", "disabled"], ["data-jx-inline-editor", "true", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "ngModelChange", "ngModel", "disabled"], [3, "ngValue", 4, "ngFor", "ngForOf"], [3, "ngValue"], [3, "title"], ["data-jx-inline-editor", "true", "type", "date", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "color", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown", "change", "ngModel", "disabled"], ["data-jx-inline-editor", "true", "type", "button", 1, "jx-inline-control", 3, "mousedown", "mouseup", "click", "focusout", "keydown"], [1, "jx-ac-editing-label", 3, "title"], ["type", "text", 1, "editor", "jx-ac-input", "jx-ac-input--anchor", 3, "click", "mousedown", "mouseup", "focus", "keydown", "blur", "value"], [1, "editor", 3, "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "type", "ngModel"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel", "mask", "maskAllowedRegex", "maskToken", "maskAllowEmpty"], [1, "editor", 3, "ngModelChange", "click", "mousedown", "mouseup", "focus", "keydown", "blur", "type", "ngModel"], ["title", "Trascina per riempire le celle", 1, "jx-fill-handle", 3, "mousedown"], [3, "hidden", 4, "ngFor", "ngForOf", "ngForTrackBy"], ["class", "jexcel_row", 3, "ngClass", "ngStyle", 4, "ngIf"], [1, "jexcel_row", 3, "ngClass", "ngStyle"], ["class", "jx-footer-cell", 3, "hidden", "jx-frozen-col", "jx-frozen-col-right", "jx-frozen-col-right-first", "ngClass", "ngStyle", 4, "ngIf"], [1, "jx-footer-cell", 3, "hidden", "ngClass", "ngStyle"], ["title", "Aggiungi riga", 1, "jx-add-row-bar", 3, "click"], ["aria-busy", "true", 1, "jx-loading-overlay"], [1, "jx-loading-spinner"], [1, "jx-comment-popup", 3, "click", "ngStyle"], [1, "jx-comment-popup__header"], [1, "jx-comment-popup__label"], ["type", "button", "aria-label", "Chiudi", 1, "jx-comment-popup__close", 3, "click", "innerHTML"], [1, "jx-comment-popup__body"], [1, "jx-ac-dropdown", 3, "mousedown", "ngStyle"], [1, "jx-ac-filter-bar", 3, "mousedown"], ["type", "text", "placeholder", "Filtra\u2026", "autocomplete", "off", 1, "jx-ac-filter-input", 3, "input", "keydown", "blur", "value"], ["class", "jx-ac-loading", 4, "ngIf"], ["class", "jx-ac-list", "role", "listbox", 4, "ngIf"], [1, "jx-ac-loading"], [1, "jx-ac-spinner"], ["role", "listbox", 1, "jx-ac-list"], ["class", "jx-ac-item jx-ac-item--empty", 4, "ngIf"], ["class", "jx-ac-item", "role", "option", 3, "jx-ac-item--active", "mousedown", "click", 4, "ngFor", "ngForOf"], [1, "jx-ac-item", "jx-ac-item--empty"], ["role", "option", 1, "jx-ac-item", 3, "mousedown", "click"], [3, "click"], [1, "jx-ctx-icon", 3, "innerHTML"], [1, "divider"], [3, "click", 4, "ngIf"], ["class", "danger", 3, "click", 4, "ngIf"], [1, "danger", 3, "click"], [1, "jx-pagination"], ["type", "button", "aria-label", "Prima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina precedente", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Pagina successiva", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], ["type", "button", "aria-label", "Ultima pagina", 1, "jx-page-btn", 3, "click", "disabled", "innerHTML"], [1, "jx-page-info"], ["type", "button", 1, "jx-page-btn", "jx-page-btn--num", 3, "click"]],
     template: function O_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = \u0275\u0275getCurrentView();
@@ -52459,10 +52479,10 @@ var O = class _O {
                 <span\r
                   class="jx-angular-cell-host"\r
                   data-jx-inline-editor="true"\r
-                  tabindex="-1"\r
-                  (mousedown)="onInlineComponentMouseDown($event, x, y)"\r
-                  (mouseup)="$event.stopPropagation()"\r
-                  (click)="$event.stopPropagation()"\r
+                  tabindex="-1"
+                  (pointerdown)="onInlineComponentMouseDown($event, x, y)"
+                  (mouseup)="onInlineComponentMouseUp($event)"
+                  (click)="onInlineComponentClick($event)"
                   (focusout)="onInlineComponentBlur($event,x,y)"\r
                   (keydown)="onInlineComponentKey($event,x,y)"\r
                 >\r

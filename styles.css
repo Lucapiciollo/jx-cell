@@ -271,6 +271,9 @@ jx-table .jexcel input.editor {
   -webkit-user-select: text;
   user-select: text;
 }
+jx-table .jexcel tbody td:focus {
+  outline: none;
+}
 jx-table .jexcel td input,
 jx-table .jexcel td textarea,
 jx-table .jexcel td select {

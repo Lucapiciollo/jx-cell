@@ -1,9 +1,11 @@
 # JxCell
 
-> **Componente table per Angular** — v6.9.7
+> **Componente table per Angular** — v6.10.11
 >
 > Un foglio di calcolo completo e personalizzabile per Angular 17–19.  
 > API TypeScript tipizzata · Temi via CSS custom properties · Icone personalizzabili (`JX_ICONS`) · Event bus RxJS · Celle Angular personalizzate · Footer collassabili · Formule nei titoli.
+>
+> 🚀 **Demo live:** [Apri la demo interattiva](https://lucapiciollo.github.io/jx-cell/) · 📦 **npm:** [jx-cell](https://www.npmjs.com/package/jx-cell)
 
 ---
 
